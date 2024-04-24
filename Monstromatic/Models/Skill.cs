@@ -1,32 +1,36 @@
 ﻿namespace Monstromatic.Models;
 
-public class Skill 
+public class Skill
 {
+    private const int MinValue = 1;
     private readonly int _featuresModificator;
-    private int _modificator = 0;
-    private int _level;
     
     public Skill(string name, int level, int featuresModificator)
     {
         Name = name;
-        _level = level;
+        Level = level;
+        Modificator = 0;
         _featuresModificator = featuresModificator;
     }
     public string Name { get; }
-    public int Value => Level + _modificator + _featuresModificator;
-    public int Level
+    public int Value => GetValue();
+    private int Modificator { get; set; }
+    public int Level { get; set; }
+    
+    public void Increment()
     {
-        get => _level;
-        set
-        {
-            _level = value;
-            
-        }
+        Modificator++;
     }
 
-    public int SetModificator(int value)
+    public void Decrement()
     {
-        _modificator = value;
-        return Value;
+        if (Value - 1 >= MinValue)
+            Modificator--;
+    }
+
+    private int GetValue()
+    {
+        var value = Level + Modificator + _featuresModificator;
+        return value < MinValue ? MinValue : value;
     }
 }
