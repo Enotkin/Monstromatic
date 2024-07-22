@@ -1,0 +1,20 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Monstromatic.ViewModels"
+        xmlns:vm="clr-namespace:Monstromatic.ViewModels"
+        xmlns:views="clr-namespace:Monstromatic.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Monstromatic.Views.TestWindowView"
+        x:DataType="vm:TestWindowViewModel"
+        Title="TestWindow">
+        <Design.DataContext>
+                <local:TestWindowViewModel/>
+        </Design.DataContext>
+        <StackPanel>
+                <TextBlock Text="{Binding Pidor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <views:MonsterView x:Name="Monster" DataContext="{Binding MonsterViewModel}"/>
+        </StackPanel>
+        
+</Window>

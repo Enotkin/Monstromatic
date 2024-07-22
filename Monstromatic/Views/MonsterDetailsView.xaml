@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         x:Class="Monstromatic.Views.MonsterDetailsView"
         Title="{Binding Name}"
-        SystemDecorations="None"
+        SystemDecorations="BorderOnly"
         SizeToContent="Height"
         CanResize="True"
         Width="350"

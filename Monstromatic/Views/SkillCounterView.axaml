@@ -8,7 +8,7 @@
              x:DataType="viewModels:SkillCounterViewModel"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=SkillCounterViewModel}">
     <StackPanel>
-        <Label Content="{Binding  SkillName}" HorizontalAlignment="Center" Height="25" />
+        <Label Content="{Binding  SkillName}" HorizontalAlignment="Center" Height="25" FontSize="12"/>
         <Grid RowDefinitions="*, *" ColumnDefinitions="*, *">
             
             <Grid.Styles>

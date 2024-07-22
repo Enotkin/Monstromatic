@@ -21,7 +21,7 @@ namespace Monstromatic.ViewModels
 
         public int Level
         {
-            get => _level + GetResultLevelModifier();
+            get => (int)(_level + GetResultLevelModifier());
             set => this.RaiseAndSetIfChanged(ref _level, value);
         }
 
@@ -53,11 +53,11 @@ namespace Monstromatic.ViewModels
         
         private List<MonsterFeature> Features { get; }
 
-        private int AttackModifier => Features.Sum(f => f.AttackModifier) + 1;
+        private int AttackModifier =>   1;
 
-        private int DefenceModifier => Features.Sum(f => f.DefenceModifier) + 1;
+        private int DefenceModifier =>  1;
 
-        private int StaminaModifier => Features.Sum(f => f.StaminaModifier) + 1;
+        private int StaminaModifier =>  1;
 
         public MonsterDetailsViewModel()
         {
@@ -131,7 +131,7 @@ namespace Monstromatic.ViewModels
             Stamina = Level * StaminaModifier;
         }
         
-        private int GetResultLevelModifier()
+        private double GetResultLevelModifier()
         {
             var advantageModifier = (HasAdvantage ? 1 : 0) - (HasDisadvantage ? 1 : 0);
             var featuresModifier = Features.Sum(f => f.LevelModifier);

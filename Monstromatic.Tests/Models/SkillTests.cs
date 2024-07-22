@@ -12,8 +12,8 @@ public class SkillTests
     {
         //Arrange
         const int level = 2;
-        const int featureModificator = 0;
-        const int expectedValue = level + featureModificator;
+        const int featureModificator = 1;
+        const int expectedValue = level * featureModificator;
         
         //Act
         var skill = new Skill("TestName", level, featureModificator);
@@ -37,12 +37,12 @@ public class SkillTests
     }
     
     [Test]
-    public void Increment_Skill_ReturnIncrementedValue()
+    public void Increment_ReturnIncrementedValue()
     {
         //Arrange
         const int level = 2;
-        const int featureModificator = 0;
-        const int expectedValue = level + featureModificator + 1;
+        const int featureModificator = 1;
+        const int expectedValue = level + 1;
         
         var skill = new Skill("TestName", level, featureModificator);
         
@@ -54,7 +54,7 @@ public class SkillTests
     }
     
     [Test]
-    public void Decrement_Skill_ReturnDecrementedValue()
+    public void Decrement_ReturnDecrementedValue()
     {
         //Arrange
         const int level = 2;

@@ -4,7 +4,10 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Monstromatic.Data;
+using Monstromatic.Data.AppSettingsProvider;
+using Monstromatic.Data.Interfaces;
 using Monstromatic.Models;
+using Monstromatic.Services;
 using Monstromatic.Utils;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -25,12 +28,12 @@ namespace Monstromatic.ViewModels
 
         public IEnumerable<FeatureViewModel> Features => GetFeatureViewModels();
         public IEnumerable<string> Qualities => _settingsProvider.Settings.MonsterQualities.Select(x => x.Key);
-        public ReactiveCommand<Unit, Unit> GenerateMonsterCommand { get; }
+        public ReactiveCommand<Unit, Unit> GenerateEncounterCommand { get; }
         public ReactiveCommand<Unit, Unit> ShowAboutCommand { get; }
         public ReactiveCommand<string, Unit> ShowSettingsCommand { get; }
         public ReactiveCommand<Unit, Unit> ResetSettingsCommand { get; }
 
-        public Interaction<MonsterDetailsViewModel, Unit> ShowNewMonsterWindow { get; } = new ();
+        public Interaction<EncounterViewModel, Unit> ShowNewMonsterWindow { get; } = new ();
         public Interaction<Unit, Unit> ShowAboutDialog { get; } = new ();
         public Interaction<Unit, bool> ConfirmResetChanges { get; } = new();
         
@@ -39,11 +42,11 @@ namespace Monstromatic.ViewModels
             ProcessHelper = processHelper;
             _settingsProvider = settingsProvider;
 
-            var canGenerateMonster = this
+            var canGenerateEncounter = this
                 .WhenAnyValue(x => x.Name, x => x.SelectedQuality,
                     (name, quality) => !string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(quality));
             
-            GenerateMonsterCommand = ReactiveCommand.CreateFromTask(GenerateNewMonster, canGenerateMonster);
+            GenerateEncounterCommand = ReactiveCommand.CreateFromTask(GenerateNewEncounter, canGenerateEncounter);
             ShowAboutCommand = ReactiveCommand.CreateFromTask(async () => await ShowAboutDialog.Handle(Unit.Default));
             ShowSettingsCommand = ReactiveCommand.CreateFromTask<string>(ShowSettings);
             ResetSettingsCommand = ReactiveCommand.CreateFromTask(ResetSettings);
@@ -59,10 +62,12 @@ namespace Monstromatic.ViewModels
             }
         }
 
-        private async Task GenerateNewMonster()
+        private async Task GenerateNewEncounter()
         {
-            var monster = new MonsterDetailsViewModel(Name, _settingsProvider.Settings.MonsterQualities[SelectedQuality], _featureController.CreateBundle());
-            await ShowNewMonsterWindow.Handle(monster);
+            var baseMonsterLevel = _settingsProvider.Settings.MonsterQualities[SelectedQuality];
+            var encounter = new Encounter(Name, baseMonsterLevel, _featureController.CreateFeaturesBundle());
+            var encounterViewModel = new EncounterViewModel(encounter);
+            await ShowNewMonsterWindow.Handle(encounterViewModel);
         }
 
         private async Task ShowSettings(string path)

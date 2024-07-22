@@ -1,0 +1,126 @@
+﻿[
+  {
+    "Key": "Vigilant",
+    "DisplayName": "Бдительный",
+    "LevelModifier" : "1.5"
+  },
+  {
+    "Key": "Big",
+    "DisplayName": "Большой",
+    "HealthModifier" : 1.5,
+    "SpeedModifier" : 1.5
+  },
+  {
+    "Key": "Armored",
+    "DisplayName": "Броня/Панцирь",
+    "Description": "Броня - Уязвим к бронебойным атакам",
+    "DefenceModifier" : 1.5
+  },
+  {
+    "Key": "Fast",
+    "DisplayName": "Быстрый",
+    "SpeedModifier" : 1.5
+  },
+  {
+    "Key": "HighTech",
+    "DisplayName": "Высокотех.",
+    "LevelModifier" : 1.5
+  },
+  {
+    "Key": "Giant",
+    "DisplayName": "Гигант",
+    "Description": "Гигант - Уязвим к массовым атакам",
+    "PerceptionModifier" : 0.5,
+    "DefenceModifier" : 1.5,
+    "AttackModifier" : 1.5,
+    "HealthModifier" : 1.5,
+    "SpeedModifier" : 1.5
+  },
+  {
+    "Key": "RangeAttack",
+    "DisplayName": "Дальний Бой",
+    "Description": "Стрелок - атакует на расстоянии, уязвим к ближним атакам"
+  },
+  {
+    "Key": "Longlived",
+    "DisplayName": "Долгожитель",
+    "LevelModifier" : 1.5
+  },
+  {
+    "Key": "Animal",
+    "DisplayName": "Злой Хищник",
+    "LevelModifier" : 1.5
+  },
+  {
+    "Key": "Sorcerer",
+    "DisplayName": "Колдун",
+    "LevelModifier" : 1.5
+  },
+  {
+    "Key": "Dexterous",
+    "DisplayName": "Ловкий",
+    "DefenceModifier" : 1.5
+  },
+  {
+    "Key": "Small",
+    "DisplayName": "Маленький",
+    "Description": "Маленький - Уязвим к массовым атакам",
+    "DefenceModifier" : 1.5,
+    "AttackModifier" : 0.5,
+    "HealthModifier" : 0.5
+  },
+  {
+    "Key": "MassDestruction",
+    "DisplayName": "Массовая Поражение",
+    "Description": "Атакует Несколько целей"
+  },
+  {
+    "Key": "PowerfulAttack",
+    "DisplayName": "Мощная Атака",
+    "Description": "Большое или Бронебойное Оружие, либо Яд",
+    "AttackModifier" : 1.5
+  },
+  {
+    "Key": "Fly",
+    "DisplayName": "Полёт",
+    "Description": "Летает - Уязвим к дальнобойным атакам",
+    "DefenceModifier" : 1.5,
+    "SpeedModifier" : 1.5
+  },
+  {
+    "Key": "Unnatural",
+    "DisplayName": "Потусторонний или Конструкт",
+    "Description": "Уязвим к определенным видам атака",
+    "DefenceModifier" : 1.5
+  },
+  {
+    "Key": "Intelligent",
+    "DisplayName": "Разумный",
+    "TrickeryModifier" : 1.5
+  },
+  {
+    "Key": "Regeneration",
+    "DisplayName": "Регенерация",
+    "HealthModifier" : 1.5
+  },
+  {
+    "Key": "Coward",
+    "DisplayName": "Трус",
+    "Description": "Бежит после первой раны"
+  },
+  {
+    "Key": "Berserker",
+    "DisplayName": "Берсерк",
+    "Description": "Не бежит"
+  },
+  {
+    "Key": "Sharyony",
+    "DisplayName": "Шарёный",
+    "TrickeryModifier" : 1.5
+  },
+  {
+    "Key": "Exotic",
+    "DisplayName": "Экзотик",
+    "LevelModifier" : 1.5
+  }
+]

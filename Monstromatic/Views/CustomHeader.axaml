@@ -1,0 +1,102 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:Monstromatic.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Monstromatic.Views.CustomHeader">
+    <Grid VerticalAlignment="Top">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="{Binding}" />
+        </Grid.RowDefinitions>
+        
+        <Border>
+            <Grid.RowSpan>2</Grid.RowSpan>
+            <Border.BorderThickness>2</Border.BorderThickness>
+        </Border>
+        
+        <Grid Grid.Row="0" Name="Header" ColumnDefinitions="40,*,50,40">
+            
+            <!-- <Стили> -->
+            <Grid.Styles>
+                <Style Selector="Grid > Button">
+                    <Setter Property="Width" Value="20"></Setter>
+                    <Setter Property="Height" Value="20"></Setter>
+                    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                    <Setter Property="FontSize" Value="9"></Setter>
+                </Style>
+                <Style Selector="Button.round /template/ ContentPresenter">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </Grid.Styles>
+            
+            <!-- <Кнопка раскрытия окна> -->
+            <Button Grid.Column="0" Classes="round" Click="ExpandButton_Click" Background="{StaticResource MonstromaticAccent}">
+                <Button.RenderTransform>
+                    <RotateTransform Angle="0">
+                        <RotateTransform.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="Angle" Duration="0:0:0.1" Easing="SplineEasing"/>
+                            </Transitions>
+                        </RotateTransform.Transitions>
+                    </RotateTransform>
+                </Button.RenderTransform>
+                
+                <Path Data="M 0 5 L 5 0 L 10 5" Stroke="{StaticResource ThemeControlHighlightLowBrush}" StrokeThickness="2"></Path>
+            </Button>
+            
+            <!-- Кнопки изменения уровня -->
+            <StackPanel Grid.Column="1" Margin="5">
+                <StackPanel.Styles>
+                    <Style Selector="StackPanel > TextBlock">
+                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="IsHitTestVisible" Value="False" />
+                    </Style>
+                    <Style Selector="Button.LevelModifier">
+                        <Setter Property="Margin" Value="5,-2,5,2" />
+                    </Style>
+                </StackPanel.Styles>
+                
+                <TextBlock Text="{Binding $parent[views:CustomHeader].MonsterName}"/>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <!-- <Button Command="{Binding DecreaseLevelCommand}" Classes="LevelModifier">&lt;&lt;</Button> -->
+                    <TextBlock Text="{Binding $parent[views:CustomHeader].MonsterLevel, StringFormat=Ур. \{0\}}"/>
+                    <!-- <Button Command="{Binding IncreaseLevelCommand}" Classes="LevelModifier">&gt;&gt;</Button> -->
+                </StackPanel>        
+            </StackPanel>
+            
+            <!-- Выбор цвета окна --> 
+            <Grid Grid.Column="2">
+                <ComboBox Height="35" Name="ColorSelector" SelectionChanged="ColorSelectorOnSelectionChanged" 
+                          IsVisible="{Binding $parent[views:CustomHeader].IsColorSelectorVisible}">
+                   
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3" />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                    
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Rectangle Width="20" Height="20" Margin="3" Stroke="Black" StrokeThickness="1" Fill="{Binding $parent.Content}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    
+                </ComboBox>
+            </Grid>
+            
+            <!-- Закрыте окна --> 
+            <Button Grid.Column="3" Click="CloseButton_Click" Background="#bb0000">
+                <Path Data="M 0 0 L 10 10 M 0 10 L 10 0" Stroke="{StaticResource ThemeControlHighlightLowBrush}" StrokeThickness="2"></Path>
+            </Button>
+            
+        </Grid>
+    </Grid>
+</UserControl>

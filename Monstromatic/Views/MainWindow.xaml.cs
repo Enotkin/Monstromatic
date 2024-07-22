@@ -33,9 +33,9 @@ namespace Monstromatic.Views
             AvaloniaXamlLoader.Load(this);
         }
         
-        private static void DoShowNewMonster(InteractionContext<MonsterDetailsViewModel, Unit> interaction)
+        private static void DoShowNewMonster(InteractionContext<EncounterViewModel, Unit> interaction)
         {
-            var dialog = new MonsterDetailsView
+            var dialog = new EncounterView
             {
                 DataContext = interaction.Input
             };

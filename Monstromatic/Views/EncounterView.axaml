@@ -1,0 +1,103 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Monstromatic.Views;assembly=Monstromatic"
+        xmlns:vm="clr-namespace:Monstromatic.ViewModels;assembly=Monstromatic"
+        xmlns:conv="clr-namespace:Monstromatic.Converters;assembly=Monstromatic"
+        mc:Ignorable="d"
+        x:Class="Monstromatic.Views.EncounterView"
+        Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=EncounterViewModel}"
+        SystemDecorations="BorderOnly"
+        SizeToContent="Height"
+        CanResize="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaToDecorationsHint="True"
+        Width="250"
+        MaxWidth="250"
+        MinWidth="250">
+    <Window.Resources>
+        <conv:DoubleToGridLengthConverter x:Key="GridLengthConverter"/>
+        <conv:GridHeightFeatureCountConverter x:Key="FeatureCountConverter" />
+    </Window.Resources>
+    <Border Name="Border" BorderThickness="2">
+        <Grid VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Заголовок окна -->
+            <Grid Grid.Row="0" Name="Header" Background="Transparent" PointerPressed="Header_PointerPressed">
+                <views:CustomHeader Name="CustomHeader" 
+                                    MonsterName="{Binding Name}" 
+                                    MonsterLevel="{Binding Level}"/>
+            </Grid>
+
+            <!-- -->
+            <Grid Grid.Row="1" Name="ExpandableGrid" VerticalAlignment="Stretch">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="50"/>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Grid Row="0" Margin="5">
+                    <Border BorderBrush="{StaticResource ThemeControlHighlightLowBrush}" BorderThickness="2"
+                            CornerRadius="5">
+                        <ItemsControl VerticalAlignment="Stretch" ItemsSource="{Binding DescriptiveFeatures}">
+                
+                            <ItemsControl.Styles>
+                                <Style Selector="TextBlock:pointerover">
+                                    <Setter Property="Background" Value="{StaticResource ThemeControlHighlightLowBrush}"/>
+                                </Style>
+                            </ItemsControl.Styles>
+                
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel MaxWidth="230" Margin="0,5,0,0"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                        <TextBlock Margin="10,3,10,3" Height="25" FontSize="14" TextWrapping="Wrap"
+                                                   Text="{Binding Description}" ToolTip.Tip="{Binding Description}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                
+                        </ItemsControl>
+                    </Border>
+                </Grid>
+                
+                <!-- Кнопка добавления монстра -->
+                <Grid Grid.Row="1" Width="60" Height="30">
+                    <Button Command="{Binding AddMonsterCommand}" />
+                </Grid>
+            
+                <!-- Панель отображения монстров-->
+                <Grid Grid.Row="2" Margin="5, 15, 5, 10">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl Name="MonsterItemControl" ItemsSource="{Binding Monsters}">
+                    
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Margin="5"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                    
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:MonsterViewModel}">
+                                    <views:MonsterView Margin="0, 5, 0, 5"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                    
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+            
+        </Grid>
+    </Border>
+</Window>

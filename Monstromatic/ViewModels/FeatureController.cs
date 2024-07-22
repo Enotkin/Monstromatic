@@ -30,5 +30,10 @@ namespace Monstromatic.ViewModels
             var mutexes = SelectedFeatures.Items.SelectMany(f => f.ExcludedFeatures);
             return SelectedFeatures.Items.Except(mutexes);
         }
+
+        public FeaturesBundle CreateFeaturesBundle()
+        {
+            return new FeaturesBundle(CreateBundle());
+        }
     }
 }

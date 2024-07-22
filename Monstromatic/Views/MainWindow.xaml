@@ -81,7 +81,7 @@
                     </ListBox>
                     <StackPanel Orientation="Vertical" Margin="3,0,3,10" VerticalAlignment="Bottom">
                         <TextBox Text="{Binding Name}" Watermark="Имя" FontSize="16" Margin="0,0,0,10" />
-                        <Button Content="Генерировать" Height="50" Command="{Binding GenerateMonsterCommand}" />
+                        <Button Content="Генерировать" Height="50" Command="{Binding GenerateEncounterCommand}" />
                     </StackPanel>
                 </Grid>
                 <HeaderedContentControl Grid.Column="1" Margin="3" Header="Особенности"

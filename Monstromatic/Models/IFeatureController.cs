@@ -12,5 +12,7 @@ namespace Monstromatic.Models
         void RemoveFeature(MonsterFeature feature);
 
         IEnumerable<MonsterFeature> CreateBundle();
+        
+        FeaturesBundle CreateFeaturesBundle();
     }
 }

@@ -1,0 +1,48 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:Monstromatic.Views;assembly=Monstromatic"
+             xmlns:viewModels="clr-namespace:Monstromatic.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Monstromatic.Views.MonsterView"
+             x:DataType="viewModels:MonsterViewModel"
+             Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=MonsterViewModel}">
+    <Border Name="Border" BorderThickness="2" BorderBrush="{Binding #Header.CurrentBrush}" CornerRadius="10">
+        <StackPanel>
+
+            <views:CustomHeader Name="Header"
+                                MonsterLevel="{Binding Level}"
+                                MonsterName="{Binding Name}"
+                                IsColorSelectorVisible="False"/>
+
+
+            <Grid VerticalAlignment="Top" Name="ExpanderGrid" ColumnDefinitions="*,*,*" RowDefinitions="*, *">
+
+                <Grid.Styles>
+                    <Style Selector="views|SkillCounterView">
+                        <Setter Property="Margin" Value="5" />
+                    </Style>
+                </Grid.Styles>
+
+                <views:SkillCounterView Grid.Column="0" Grid.Row="0"
+                                        DataContext="{Binding Attack}" />
+
+                <views:SkillCounterView Grid.Column="1" Grid.Row="0"
+                                        DataContext="{Binding Defence}" />
+
+                <views:SkillCounterView Grid.Column="2" Grid.Row="0"
+                                        DataContext="{Binding Health}" />
+
+                <views:SkillCounterView Grid.Column="0" Grid.Row="1"
+                                        DataContext="{Binding Perception}" />
+
+                <views:SkillCounterView Grid.Column="1" Grid.Row="1"
+                                        DataContext="{Binding Will}" />
+
+                <views:SkillCounterView Grid.Column="2" Grid.Row="1"
+                                        DataContext="{Binding Trickery}" />
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -6,22 +6,81 @@ namespace Monstromatic.Models
 {
     public class MonsterFeature
     {  
+        /// <summary>
+        /// Id особенности
+        /// </summary>
         public string Key { get; init; }
+        
+        /// <summary>
+        /// Отображаемое имя
+        /// </summary>
         public string DisplayName { get; init; }
+        
+        /// <summary>
+        /// Расширенное отображаемое имя
+        /// </summary>
         public string DetailsDisplayName { get; init; }
-        public int LevelModifier { get; init; }
-        public int AttackModifier { get; init; }
-        public int DefenceModifier { get; init; }
-        public int StaminaModifier { get; init; }
+        
+        /// <summary>
+        /// Модификатор уровня
+        /// </summary>
+        public double LevelModifier { get; set; }
+        
+        /// <summary>
+        /// Модификатор атаки
+        /// </summary>
+        public double AttackModifier { get; set; }
+        
+        /// <summary>
+        /// Модификатор защиты
+        /// </summary>
+        public double DefenceModifier { get; set; }
+        
+        /// <summary>
+        /// Модификатор здоровья
+        /// </summary>
+        public double HealthModifier { get; set; }
+        
+        /// <summary>
+        /// Модификатор восприятия
+        /// </summary>
+        public double PerceptionModifier { get; set; }
+        
+        /// <summary>
+        /// Модификатор воли
+        /// </summary>
+        public double WillModifier { get; set; }
+        
+        /// <summary>
+        /// Модификатор хитрости
+        /// </summary>
+        public double TrickeryModifier { get; set; }
+        
+        /// <summary>
+        /// Описание эффекта особенности
+        /// </summary>
         public string Description { get; init; }
-        public bool IsHidden { get; init; }
 
+        /// <summary>
+        /// Флаг сокрытия отображения особеннсти
+        /// </summary>
+        public bool IsHidden { get; } = false;
+
+        /// <summary>
+        /// Список Id особенностей несовместимых с текущей
+        /// </summary>
         [JsonPropertyName("IncompatibleFeatures")]
         public IReadOnlyCollection<string> IncompatibleFeaturesKeys { get; init; } = Array.Empty<string>();
         
+        /// <summary>
+        /// Список Id особенностей включенных в текущую
+        /// </summary>
         [JsonPropertyName("IncludedFeatures")]
         public IReadOnlyCollection<string> IncludedFeaturesKeys { get; init; } = Array.Empty<string>();
         
+        /// <summary>
+        /// Список Id особенностей исключенных при взятие текущей
+        /// </summary>
         [JsonPropertyName("ExcludedFeatures")]
         public IReadOnlyCollection<string> ExcludedFeaturesKeys { get; init; } = Array.Empty<string>();
         

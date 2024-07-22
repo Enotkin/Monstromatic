@@ -1,26 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Monstromatic.Data.Interfaces;
 using Monstromatic.Models;
 
-namespace Monstromatic.Data;
-
-public interface IAppSettingsProvider
-{
-    MonstromaticSettings Settings { get; }
-    IEnumerable<MonsterFeature> Features { get; }
-    void Reload();
-    void Reset();
-}
+namespace Monstromatic.Data.AppSettingsProvider;
 
 public class AppSettingsProvider : IAppSettingsProvider
 {
-    private readonly IAppDataStorage<MonstromaticSettings> _settingsStorage;
-    private readonly IAppDataStorage<MonsterFeature[]> _featuresStorage;
+    private readonly IAppBaseDataStorage<MonstromaticSettings> _settingsStorage;
+    private readonly IAppBaseDataStorage<MonsterFeature[]> _featuresStorage;
     
     public MonstromaticSettings Settings { get; private set; }
     public IEnumerable<MonsterFeature> Features { get; private set; }
 
-    public AppSettingsProvider(IAppDataStorage<MonstromaticSettings> settingsStorage, IAppDataStorage<MonsterFeature[]> featuresStorage)
+    public AppSettingsProvider(IAppBaseDataStorage<MonstromaticSettings> settingsStorage, IAppBaseDataStorage<MonsterFeature[]> featuresStorage)
     {
         _settingsStorage = settingsStorage;
         _featuresStorage = featuresStorage;

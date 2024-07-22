@@ -2,9 +2,9 @@
 using Monstromatic.Models;
 using Monstromatic.Utils;
 
-namespace Monstromatic.Data;
+namespace Monstromatic.Data.Storages;
 
-public class FeaturesStorage : AppDataFileStorageBase<MonsterFeature[]>
+public class FeaturesStorage : AppBaseDataFileStorageBase<MonsterFeature[]>
 {
     public FeaturesStorage() : base(StorageHelper.FeaturesFileName, "Features.json")
     {
