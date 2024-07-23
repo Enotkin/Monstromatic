@@ -35,7 +35,7 @@ public class Encounter
 
     public Monster AddMonster()
     {
-        var monster = new Monster(Level, Name, _featuresBundle);
+        var monster = new Monster(Level, string.Format(MonsterNamePattern, Name, _lastMonsterIdificatorLetter++), _featuresBundle);
         _monsters.Add(monster.Id, monster);
         return monster;
     }
