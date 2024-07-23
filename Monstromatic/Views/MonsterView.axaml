@@ -10,15 +10,17 @@
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=MonsterViewModel}">
     <Border Name="Border" BorderThickness="2" BorderBrush="{Binding #Header.CurrentBrush}" CornerRadius="10">
         <StackPanel>
+            <RadioButton Name="LifeStatus" IsChecked="{Binding IsAlive}" IsVisible="False"/>
+            <Button Command="{Binding CloseCommand}" IsVisible="False"/>
 
             <views:CustomHeader Name="Header"
                                 MonsterLevel="{Binding Level}"
                                 MonsterName="{Binding Name}"
+                                CloseButtonCommand="{Binding CloseCommand}"
                                 IsColorSelectorVisible="False"/>
 
 
             <Grid VerticalAlignment="Top" Name="ExpanderGrid" ColumnDefinitions="*,*,*" RowDefinitions="*, *">
-
                 <Grid.Styles>
                     <Style Selector="views|SkillCounterView">
                         <Setter Property="Margin" Value="5" />

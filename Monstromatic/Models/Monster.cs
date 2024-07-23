@@ -25,7 +25,8 @@ public class Monster
     
     public Monster(int level, string name, FeaturesBundle featuresBundle)
     {
-        Id = new Guid();
+        Id = Guid.NewGuid();
+        
         _level = (int)(level + featuresBundle.LevelModificator);
         Name = name;
         

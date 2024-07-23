@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -13,18 +14,18 @@ namespace Monstromatic.ViewModels;
 public class EncounterViewModel : ViewModelBase
 {
     private readonly Encounter _encounter;
-
     
-
     public EncounterViewModel(Encounter encounter)
     {
         _encounter = encounter;
         var monsterViewModel = new MonsterViewModel(_encounter.Monsters.First());
+        monsterViewModel.RemovingMonsterEventInv += RemoveMonster;
         Monsters = new ObservableCollection<MonsterViewModel> { monsterViewModel };
         
         Monsters.CollectionChanged += MonstersOnCollectionChanged;
 
         AddMonsterCommand = ReactiveCommand.Create(AddMonster);
+        RemoveMonsterCommand = ReactiveCommand.Create<Guid>(RemoveMonster);
     }
     
     public Interaction<Unit, Unit> MonsterCreated { get; } = new();
@@ -41,6 +42,8 @@ public class EncounterViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> AddMonsterCommand { get; }
     
+    public ReactiveCommand<Guid, Unit> RemoveMonsterCommand { get; set; }
+    
     public IEnumerable<MonsterFeature> DescriptiveFeatures =>
         _encounter.Features.Where(f => !string.IsNullOrEmpty(f.Description));
     
@@ -53,6 +56,14 @@ public class EncounterViewModel : ViewModelBase
     {
         var monster = _encounter.AddMonster();
         var monsterViewModel = new MonsterViewModel(monster);
+        monsterViewModel.RemovingMonsterEventInv += RemoveMonster;
         Monsters.Add(monsterViewModel);
+    }
+
+    private void RemoveMonster(Guid monsterId)
+    {
+        var removingMonsterViewModel = Monsters.First(m => m.Id == monsterId);
+        Monsters.Remove(removingMonsterViewModel);
+        _encounter.RemoveMonster(monsterId);
     }
 }

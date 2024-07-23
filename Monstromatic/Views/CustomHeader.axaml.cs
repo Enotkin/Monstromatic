@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Reactive;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using ReactiveUI;
 
 namespace Monstromatic.Views;
 
@@ -17,6 +19,15 @@ public partial class CustomHeader : UserControl
 
     public delegate void ChangeColor(IBrush brush);
     public event ChangeColor ChangeColorSender;
+    
+    public static readonly StyledProperty<ICommand> CloseButtonCommandProperty =
+        AvaloniaProperty.Register<CustomHeader, ICommand>(nameof(CloseButtonCommand));
+    
+    public ICommand CloseButtonCommand
+    {
+        get => GetValue(CloseButtonCommandProperty);
+        set => SetValue(CloseButtonCommandProperty, value);
+    }
 
     public bool IsExpanded { get; set; } = true;
     public IBrush CurrentBrush { get; private set; }
@@ -80,7 +91,8 @@ public partial class CustomHeader : UserControl
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
-        CloseSender!.Invoke();
+        CloseButtonCommand?.Execute(null);
+        CloseSender?.Invoke();
     }
     
     private void ColorSelectorOnSelectionChanged(object sender, SelectionChangedEventArgs e)

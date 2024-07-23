@@ -31,7 +31,8 @@
             <Grid Grid.Row="0" Name="Header" Background="Transparent" PointerPressed="Header_PointerPressed">
                 <views:CustomHeader Name="CustomHeader" 
                                     MonsterName="{Binding Name}" 
-                                    MonsterLevel="{Binding Level}"/>
+                                    MonsterLevel="{Binding Level}"
+                                    CloseButtonCommand="{Binding }"/>
             </Grid>
 
             <!-- -->

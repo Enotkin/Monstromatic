@@ -35,5 +35,11 @@ namespace Monstromatic.Views
             var border = this.GetControl<Border>("Border");
             border.BorderBrush = brush;
         }
+
+        public void HeaderCloseEventHandler()
+        {
+            var radioButton = this.GetControl<RadioButton>("LifeStatus");
+            radioButton.IsChecked = false;
+        }
     }
 }
