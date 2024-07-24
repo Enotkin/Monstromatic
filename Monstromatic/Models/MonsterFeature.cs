@@ -64,7 +64,7 @@ namespace Monstromatic.Models
         /// <summary>
         /// Флаг сокрытия отображения особеннсти
         /// </summary>
-        public bool IsHidden { get; } = false;
+        public bool IsHidden { get; init; } = false;
 
         /// <summary>
         /// Список Id особенностей несовместимых с текущей

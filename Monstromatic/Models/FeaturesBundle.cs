@@ -9,10 +9,25 @@ public class FeaturesBundle
 {
     private readonly List<MonsterFeature> _features;
     private const double BaseModificator = 1.0;
-    
+
     public FeaturesBundle(IEnumerable<MonsterFeature> features)
     {
+        var defaultFeature = new MonsterFeature
+        {
+            Key = "Default",
+            DisplayName = "DefaultFeature",
+            LevelModifier = 0,
+            AttackModifier = 1.0,
+            DefenceModifier = 1.5,
+            HealthModifier = 2.0,
+            PerceptionModifier = 1.0,
+            WillModifier = 1.0,
+            TrickeryModifier = 1.0,
+            IsHidden = true
+        };
+        
         _features = features.AsList();
+        _features.Add(defaultFeature);
         
         LevelModificator = _features.Sum(f => f.LevelModifier);
 
