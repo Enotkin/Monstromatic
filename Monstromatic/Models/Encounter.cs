@@ -7,13 +7,22 @@ namespace Monstromatic.Models;
 public class Encounter
 {
     private readonly FeaturesBundle _featuresBundle;
-    private Dictionary<Guid, Monster> _monsters;
+    private int _level;
+    private readonly Dictionary<Guid, Monster> _monsters;
 
-    private char _lastMonsterIdificatorLetter = (char)65;
+    private char _lastMonsterIdentifierLetter = (char)65; //Буква А
     private const string MonsterNamePattern = "{0} - {1}";
     public string Name { get; }
 
-    public int Level { get; set; }
+    public int Level
+    {
+        get => _level;
+        set
+        {
+            _level = value;
+            UpdateMonstersLevel();
+        }
+    }
 
     public IReadOnlyCollection<MonsterFeature> Features => _featuresBundle.Features;
 
@@ -25,17 +34,17 @@ public class Encounter
     public Encounter(string name, int baseLevel, FeaturesBundle featuresBundle)
     {
         Name = name;
-        Level = baseLevel;
+        _level = baseLevel;
         _featuresBundle = featuresBundle;
         _monsters = new Dictionary<Guid, Monster>();
         
-        var initMonster = new Monster(Level, string.Format(MonsterNamePattern, Name, _lastMonsterIdificatorLetter++),_featuresBundle);
+        var initMonster = new Monster(_level, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++),_featuresBundle);
         _monsters.Add(initMonster.Id, initMonster);
     }
 
     public Monster AddMonster()
     {
-        var monster = new Monster(Level, string.Format(MonsterNamePattern, Name, _lastMonsterIdificatorLetter++), _featuresBundle);
+        var monster = new Monster(_level, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++), _featuresBundle);
         _monsters.Add(monster.Id, monster);
         return monster;
     }
@@ -43,5 +52,11 @@ public class Encounter
     public void RemoveMonster(Guid monsterId)
     {
         _monsters.Remove(monsterId);
+    }
+
+    private void UpdateMonstersLevel()
+    {
+        foreach (var monster in Monsters) 
+            monster.Level = _level;
     }
 }

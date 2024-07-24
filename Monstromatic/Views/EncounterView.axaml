@@ -32,7 +32,8 @@
                 <views:CustomHeader Name="CustomHeader" 
                                     MonsterName="{Binding Name}" 
                                     MonsterLevel="{Binding Level}"
-                                    CloseButtonCommand="{Binding }"/>
+                                    IncreaseLevelCommand="{Binding AddLevelCommand}"
+                                    DecreaseLevelCommand="{Binding RemoveLevelCommand}"/>
             </Grid>
 
             <!-- -->

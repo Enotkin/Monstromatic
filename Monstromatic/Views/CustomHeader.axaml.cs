@@ -19,15 +19,6 @@ public partial class CustomHeader : UserControl
 
     public delegate void ChangeColor(IBrush brush);
     public event ChangeColor ChangeColorSender;
-    
-    public static readonly StyledProperty<ICommand> CloseButtonCommandProperty =
-        AvaloniaProperty.Register<CustomHeader, ICommand>(nameof(CloseButtonCommand));
-    
-    public ICommand CloseButtonCommand
-    {
-        get => GetValue(CloseButtonCommandProperty);
-        set => SetValue(CloseButtonCommandProperty, value);
-    }
 
     public bool IsExpanded { get; set; } = true;
     public IBrush CurrentBrush { get; private set; }
@@ -40,14 +31,35 @@ public partial class CustomHeader : UserControl
         FillColorSelector(coloredBrushes);
     }
     
+    public static readonly StyledProperty<ICommand> DecreaseLevelCommandProperty =
+        AvaloniaProperty.Register<CustomHeader, ICommand>(nameof(DecreaseLevelCommand));
+
+    public ICommand DecreaseLevelCommand
+    {
+        get => GetValue(DecreaseLevelCommandProperty);
+        set => SetValue(DecreaseLevelCommandProperty, value);
+    }
+    
+    public static readonly StyledProperty<ICommand> IncreaseLevelCommandProperty =
+        AvaloniaProperty.Register<CustomHeader, ICommand>(nameof(IncreaseLevelCommand));
+
+    public ICommand IncreaseLevelCommand
+    {
+        get => GetValue(IncreaseLevelCommandProperty);
+        set => SetValue(IncreaseLevelCommandProperty, value);
+    }
+    
+    public static readonly StyledProperty<ICommand> CloseButtonCommandProperty =
+        AvaloniaProperty.Register<CustomHeader, ICommand>(nameof(CloseButtonCommand));
+    
+    public ICommand CloseButtonCommand
+    {
+        get => GetValue(CloseButtonCommandProperty);
+        set => SetValue(CloseButtonCommandProperty, value);
+    }
+    
     public static readonly StyledProperty<string> MonsterNameProperty =
         AvaloniaProperty.Register<CustomHeader, string>(nameof(MonsterName));
-
-    public static readonly StyledProperty<int> MonsterLevelProperty =
-        AvaloniaProperty.Register<CustomHeader, int>(nameof(MonsterLevel));
-
-    public static readonly StyledProperty<bool> IsColorSelectorVisibleProperty =
-        AvaloniaProperty.Register<CustomHeader, bool>(nameof(IsColorSelectorVisible), true);
     
     public string MonsterName
     {
@@ -55,11 +67,17 @@ public partial class CustomHeader : UserControl
         set => SetValue(MonsterNameProperty, value);
     }
     
+    public static readonly StyledProperty<int> MonsterLevelProperty =
+        AvaloniaProperty.Register<CustomHeader, int>(nameof(MonsterLevel));
+    
     public int MonsterLevel
     {
         get => GetValue(MonsterLevelProperty);
         set => SetValue(MonsterLevelProperty, value);
     }
+    
+    public static readonly StyledProperty<bool> IsColorSelectorVisibleProperty =
+        AvaloniaProperty.Register<CustomHeader, bool>(nameof(IsColorSelectorVisible), true);
 
     public bool IsColorSelectorVisible
     {

@@ -66,9 +66,9 @@
                 <TextBlock Text="{Binding $parent[views:CustomHeader].MonsterName}"/>
                 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <!-- <Button Command="{Binding DecreaseLevelCommand}" Classes="LevelModifier">&lt;&lt;</Button> -->
+                    <Button Command="{Binding $parent[views:CustomHeader].DecreaseLevelCommand}" Classes="LevelModifier">&lt;&lt;</Button>
                     <TextBlock Text="{Binding $parent[views:CustomHeader].MonsterLevel, StringFormat=Ур. \{0\}}"/>
-                    <!-- <Button Command="{Binding IncreaseLevelCommand}" Classes="LevelModifier">&gt;&gt;</Button> -->
+                    <Button Command="{Binding $parent[views:CustomHeader].IncreaseLevelCommand}" Classes="LevelModifier">&gt;&gt;</Button>
                 </StackPanel>        
             </StackPanel>
             

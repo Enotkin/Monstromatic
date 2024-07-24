@@ -55,23 +55,28 @@ public class MonsterViewModel : ViewModelBase
         Will = new SkillCounterViewModel(monster.Speed);
         Trickery = new SkillCounterViewModel(monster.Trickery);
 
-        _skillsVm = new List<SkillCounterViewModel>
-        {
-            Attack, Defence, Health, Perception, Will, Trickery
-        };
+        _skillsVm = [Attack, Defence, Health, Perception, Will, Trickery];
 
         this.WhenAnyValue(x => x.IsAlive).Subscribe(x => RemoveMonster());
+        this.WhenAnyValue(vm => vm._monster.Level).Subscribe(_ => UpdateSkills());
     }
     
     public int Level
     {
         get => _monster.Level;
-        set {
+        set
+        {
             _monster.Level = value;
-            foreach (var skillVm in _skillsVm)
-            {
-                skillVm.RaisePropertyChanged(nameof(skillVm.SkillValue));
-            }
+            this.RaisePropertyChanged();
+            UpdateSkills();
+        }
+    }
+
+    private void UpdateSkills()
+    {
+        foreach (var skillVm in _skillsVm)
+        {
+            skillVm.RaisePropertyChanged(nameof(skillVm.SkillValue));
         }
     }
 
@@ -80,6 +85,8 @@ public class MonsterViewModel : ViewModelBase
         RemovingMonsterEventInv?.Invoke(_monster.Id);
     }
 
-
-    
+    public void UpdateLevel()
+    {
+        Level = _monster.Level;
+    }
 }

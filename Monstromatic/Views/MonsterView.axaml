@@ -14,9 +14,11 @@
             <Button Command="{Binding CloseCommand}" IsVisible="False"/>
 
             <views:CustomHeader Name="Header"
-                                MonsterLevel="{Binding Level}"
+                                MonsterLevel="{Binding Level, Mode=TwoWay}"
                                 MonsterName="{Binding Name}"
                                 CloseButtonCommand="{Binding CloseCommand}"
+                                IncreaseLevelCommand="{Binding AddLevel}"
+                                DecreaseLevelCommand="{Binding RemoveLevel}"
                                 IsColorSelectorVisible="False"/>
 
 
