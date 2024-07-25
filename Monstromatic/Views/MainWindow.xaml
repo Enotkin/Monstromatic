@@ -73,20 +73,21 @@
                                         <ToggleButton Margin="0,5,0,5" Height="30"
                                                       Content="{Binding}"
                                                       IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
-                                                      IsHitTestVisible="{TemplateBinding IsSelected, Converter={StaticResource BoolInverseConverter}}" />
+                                                      IsHitTestVisible="{TemplateBinding IsSelected, Converter={StaticResource BoolInverseConverter}}" 
+                                                      CornerRadius="3"/>
                                     </ControlTemplate>
                                 </Setter>
                             </Style>
                         </ListBox.Styles>
                     </ListBox>
                     <StackPanel Orientation="Vertical" Margin="3,0,3,10" VerticalAlignment="Bottom">
-                        <TextBox Text="{Binding Name}" Watermark="Имя" FontSize="16" Margin="0,0,0,10" />
-                        <Button Content="Генерировать" Height="50" Command="{Binding GenerateEncounterCommand}" />
+                        <TextBox Text="{Binding Name}" Watermark="Имя" FontSize="16" Margin="0,0,0,10" CornerRadius="3"/>
+                        <Button Content="Генерировать" Height="50" Command="{Binding GenerateEncounterCommand}" CornerRadius="3" />
                     </StackPanel>
                 </Grid>
                 <HeaderedContentControl Grid.Column="1" Margin="3" Header="Особенности"
-                                        Background="{StaticResource ThemeControlHighlightLowBrush}">
-                    <ItemsControl ItemsSource="{Binding Features}">
+                                        Background="{StaticResource ThemeControlHighlightLowBrush}" >
+                    <ItemsControl ItemsSource="{Binding Features}" >
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="4" />

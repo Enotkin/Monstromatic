@@ -8,13 +8,14 @@
     <Grid VerticalAlignment="Top">
         
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
+            <RowDefinition Height="55" />
             <RowDefinition Height="{Binding}" />
         </Grid.RowDefinitions>
         
         <Border>
             <Grid.RowSpan>2</Grid.RowSpan>
             <Border.BorderThickness>2</Border.BorderThickness>
+            <Border.CornerRadius>10, 10, 0, 0</Border.CornerRadius>
         </Border>
         
         <Grid Grid.Row="0" Name="Header" ColumnDefinitions="40,*,50,40">
@@ -63,7 +64,7 @@
                     </Style>
                 </StackPanel.Styles>
                 
-                <TextBlock Text="{Binding $parent[views:CustomHeader].MonsterName}"/>
+                <TextBlock Text="{Binding $parent[views:CustomHeader].MonsterName}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Command="{Binding $parent[views:CustomHeader].DecreaseLevelCommand}" Classes="LevelModifier">&lt;&lt;</Button>

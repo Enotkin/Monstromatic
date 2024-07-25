@@ -58,6 +58,8 @@ public class EncounterViewModel : ViewModelBase
             }
         }
     }
+    
+    public int MonsterCount => _encounter.Monsters.Count;
 
     public ObservableCollection<MonsterViewModel> Monsters { get; set; }
 
@@ -85,10 +87,21 @@ public class EncounterViewModel : ViewModelBase
         Monsters.Add(monsterViewModel);
     }
 
-    private void RemoveMonster(Guid monsterId)
+    private void RemoveMonster(Guid monsterId = default)
     {
-        var removingMonsterViewModel = Monsters.First(m => m.Id == monsterId);
+        if (Monsters.Count == 0)
+        {
+            return;
+        }
+        var removingMonsterViewModel = GetMonsterViewModelForRemoving(monsterId);
         Monsters.Remove(removingMonsterViewModel);
         _encounter.RemoveMonster(monsterId);
+    }
+
+    private MonsterViewModel GetMonsterViewModelForRemoving(Guid monsterId)
+    {
+        return monsterId == Guid.Empty 
+            ? Monsters.OrderBy(m => m.Name.Last()).Last() 
+            : Monsters.First(m => m.Id == monsterId);
     }
 }
