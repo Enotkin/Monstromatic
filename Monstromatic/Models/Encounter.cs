@@ -57,6 +57,6 @@ public class Encounter
     private void UpdateMonstersLevel()
     {
         foreach (var monster in Monsters) 
-            monster.Level = _level;
+            monster.EncounterLevel = _level;
     }
 }

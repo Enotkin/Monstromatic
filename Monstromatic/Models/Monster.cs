@@ -7,7 +7,8 @@ public class Monster
 {
     public Guid Id { get; }
     
-    private int _level;
+    private int _encounterLevel;
+    private int _personalMonsterLevel;
 
     private List<Skill> Skills { get;  }
     
@@ -27,34 +28,47 @@ public class Monster
     {
         Id = Guid.NewGuid();
         
-        _level = (int)(level + featuresBundle.LevelModificator);
+        _encounterLevel = (int)(level + featuresBundle.LevelModificator);
+        _personalMonsterLevel = 0;
         Name = name;
         
-        Attack = new Skill("Атака", _level, featuresBundle.AttackModificator) ;
-        Defence = new Skill("Защита", _level, featuresBundle.DefenceModificator) ;
-        Health = new Skill("Здоровье", _level, featuresBundle.HealthModificator) ;
-        Perception = new Skill("Восприятие", _level, featuresBundle.PerceptionModificator) ;
-        Speed = new Skill("Воля", _level, featuresBundle.WillModificator) ;
-        Trickery = new Skill("Хитрость", _level, featuresBundle.TrickeryModificator);
+        Attack = new Skill("Атака", _encounterLevel, featuresBundle.AttackModificator) ;
+        Defence = new Skill("Защита", _encounterLevel, featuresBundle.DefenceModificator) ;
+        Health = new Skill("Здоровье", _encounterLevel, featuresBundle.HealthModificator) ;
+        Perception = new Skill("Восприятие", _encounterLevel, featuresBundle.PerceptionModificator) ;
+        Speed = new Skill("Воля", _encounterLevel, featuresBundle.WillModificator) ;
+        Trickery = new Skill("Хитрость", _encounterLevel, featuresBundle.TrickeryModificator);
 
-        Skills = new List<Skill> { Attack, Defence, Health, Perception, Speed, Trickery};
+        Skills = [Attack, Defence, Health, Perception, Speed, Trickery];
     }
 
-    public int Level
+    public int EncounterLevel
     {
-        get => _level;
+        get => _encounterLevel;
         set
         {
-            _level = value;
-            UpdateSkills(_level);
+            _encounterLevel = value;
+            UpdateSkills();
+        }
+    }
+    
+    public int Level => _encounterLevel + _personalMonsterLevel;
+
+    public int PersonalLevel
+    {
+        get => _personalMonsterLevel;
+        set
+        {
+            _personalMonsterLevel = value;
+            UpdateSkills();
         }
     }
 
-    private void UpdateSkills(int newLevel)
+    private void UpdateSkills()
     {
         foreach (var skill in Skills)
         {
-            skill.Level = newLevel;
+            skill.Level = Level;
         }
     }
     

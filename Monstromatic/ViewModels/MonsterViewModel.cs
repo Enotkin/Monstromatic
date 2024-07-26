@@ -36,14 +36,16 @@ public class MonsterViewModel : ViewModelBase
         Id = _monster.Id;
         AddLevel = ReactiveCommand.Create(() =>
         {        
-            Level++;
+            _monster.PersonalLevel++;
             this.RaisePropertyChanged(nameof(Level));
+            UpdateSkills();
         });
         
         RemoveLevel = ReactiveCommand.Create(() =>
         {        
-            Level--;
+            _monster.PersonalLevel--;
             this.RaisePropertyChanged(nameof(Level));
+            UpdateSkills();
         });
 
         CloseCommand = ReactiveCommand.Create(RemoveMonster);
@@ -61,16 +63,7 @@ public class MonsterViewModel : ViewModelBase
         this.WhenAnyValue(vm => vm._monster.Level).Subscribe(_ => UpdateSkills());
     }
     
-    public int Level
-    {
-        get => _monster.Level;
-        set
-        {
-            _monster.Level = value;
-            this.RaisePropertyChanged();
-            UpdateSkills();
-        }
-    }
+    public int Level => _monster.Level;
 
     private void UpdateSkills()
     {
@@ -87,6 +80,7 @@ public class MonsterViewModel : ViewModelBase
 
     public void UpdateLevel()
     {
-        Level = _monster.Level;
+        this.RaisePropertyChanged(nameof(Level));
+        UpdateSkills();
     }
 }
