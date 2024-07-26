@@ -18,14 +18,17 @@
             </Grid.Styles>
             
             <Button Grid.Row="0" Grid.Column="0" 
-                    Content="+" Command="{Binding Increase}"/>
+                    Content="+" Command="{Binding Increase}" FontWeight="Bold"/>
             
             <TextBox Grid.Row="0" Grid.Column="1" 
                      Text="{Binding SkillValue}"
                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
             
             <Button Grid.Row="1" Grid.Column="0" 
-                    Content="-" Command="{Binding Decrease}"/>
+                    Content="-" Command="{Binding Decrease}" FontWeight="Bold"/>
+            
+            <Button Grid.Row="1" Grid.Column="1" 
+                    Content="R" Command="{Binding Reset}" FontWeight="Bold"/>
         </Grid>
     </StackPanel>
 </UserControl>

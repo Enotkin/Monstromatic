@@ -54,9 +54,14 @@ public class Skill(string name, int level, double defaultModificator, double fea
             _modificator--;
     }
 
+    public void Reset()
+    {
+        _modificator = 0;
+    }
+
     private int GetValue()
     {
-        var value = (int)(Level * defaultModificator * _featuresModificator+ _modificator);
+        var value = (int)(Level * defaultModificator * _featuresModificator + _modificator);
         return value < MinValue ? MinValue : value;
     }
 }
