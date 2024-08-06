@@ -9,7 +9,7 @@ namespace Monstromatic.Utils;
 
 public class ServiceHub
 {
-    public static readonly ServiceHub Default = new ServiceHub();
+    public static readonly ServiceHub Default = new();
 
     public readonly ServiceProvider ServiceProvider;
 

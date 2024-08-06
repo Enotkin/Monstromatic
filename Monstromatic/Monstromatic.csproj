@@ -26,6 +26,8 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\**" />
+    <Compile Remove="ViewModels\FeatureController.cs" />
+    <Compile Remove="Models\IFeatureController.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0-rc1.1" />
@@ -47,6 +49,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Storages\DefaultSettings.json" />
     <EmbeddedResource Include="Data\Storages\Features.json" />
+    <EmbeddedResource Include="Data\Resources\DefaultSettings.json" />
+    <EmbeddedResource Include="Data\Resources\DefaultFeatures.json" />
     <None Remove="Data\DefaultSettings.json" />
   </ItemGroup>
 </Project>

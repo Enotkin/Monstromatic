@@ -2,7 +2,7 @@
   {
     "Key": "Vigilant",
     "DisplayName": "Бдительный",
-    "LevelModifier" : "1.5"
+    "LevelModifier" : 1.5
   },
   {
     "Key": "Big",

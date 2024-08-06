@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Monstromatic.Data;
+using Monstromatic.Data.Resources;
 using Monstromatic.Data.Storages;
 using Monstromatic.Models;
 using NUnit.Framework;
@@ -17,4 +18,10 @@ public class jsonParsingTest
 
         var result = ss.Read();
     }
+    [Test]
+    public void faa()
+    {
+        var resources = Resources.DefaultSettingsData;
+    }
+    
 }
