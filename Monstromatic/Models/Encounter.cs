@@ -34,11 +34,11 @@ public class Encounter
     public Encounter(string name, int baseLevel, FeaturesBundle featuresBundle)
     {
         Name = name;
-        _level = baseLevel;
+        _level = baseLevel + featuresBundle.LevelModificator;
         _featuresBundle = featuresBundle;
         _monsters = new Dictionary<Guid, Monster>();
         
-        var initMonster = new Monster(_level, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++),_featuresBundle);
+        var initMonster = new Monster(baseLevel, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++),_featuresBundle);
         _monsters.Add(initMonster.Id, initMonster);
     }
 

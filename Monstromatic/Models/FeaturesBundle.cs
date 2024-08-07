@@ -28,7 +28,7 @@ public class FeaturesBundle
         _features = features.AsList();
         _features.Add(defaultFeature);
         
-        LevelModificator = _features.Sum(f => f.LevelModifier);
+        LevelModificator = (int)_features.Sum(f => f.LevelModifier);
 
         if (_features.Any(f => f.AttackModifier != 0))
         {
@@ -62,7 +62,7 @@ public class FeaturesBundle
         }
     }
 
-    public double LevelModificator { get; }
+    public int LevelModificator { get; }
     public double AttackModificator { get; } = 1.0;
     public double DefenceModificator { get; } = 1.0;
     public double HealthModificator { get; } = 1.0;
