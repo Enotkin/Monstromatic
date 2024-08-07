@@ -19,8 +19,8 @@ public class FeaturesBundle
             AttackModifier = 1.0,
             DefenceModifier = 1.5,
             HealthModifier = 2.0,
-            PerceptionModifier = 1.0,
-            WillModifier = 1.0,
+            KnowledgeModifier = 1.0,
+            TemperModifier = 1.0,
             TrickeryModifier = 1.0,
             IsHidden = true
         };
@@ -46,14 +46,14 @@ public class FeaturesBundle
             HealthModificator = BaseModificator + _features.Where(f => f.HealthModifier != 0).Select(f => f.HealthModifier - BaseModificator).Sum();
         }
         
-        if (_features.Any(f => f.PerceptionModifier != 0))
+        if (_features.Any(f => f.KnowledgeModifier != 0))
         {
-            PerceptionModificator = BaseModificator + _features.Where(f => f.PerceptionModifier != 0).Select(f => f.PerceptionModifier - BaseModificator).Sum();
+            KnowledgeModificator = BaseModificator + _features.Where(f => f.KnowledgeModifier != 0).Select(f => f.KnowledgeModifier - BaseModificator).Sum();
         }
         
-        if (_features.Any(f => f.WillModifier != 0))
+        if (_features.Any(f => f.TemperModifier != 0))
         {
-            WillModificator = BaseModificator + _features.Where(f => f.WillModifier != 0).Select(f => f.WillModifier - BaseModificator).Sum();
+            TemperModificator = BaseModificator + _features.Where(f => f.TemperModifier != 0).Select(f => f.TemperModifier - BaseModificator).Sum();
         }
         
         if (_features.Any(f => f.TrickeryModifier != 0))
@@ -66,8 +66,8 @@ public class FeaturesBundle
     public double AttackModificator { get; } = 1.0;
     public double DefenceModificator { get; } = 1.0;
     public double HealthModificator { get; } = 1.0;
-    public double PerceptionModificator { get; } = 1.0;
-    public double WillModificator { get; } = 1.0;
+    public double KnowledgeModificator { get; } = 1.0;
+    public double TemperModificator { get; } = 1.0;
     public double TrickeryModificator { get; } = 1.0;
 
     public IReadOnlyCollection<MonsterFeature> Features => _features;

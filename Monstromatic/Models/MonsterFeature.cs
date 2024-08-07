@@ -44,12 +44,12 @@ public class MonsterFeature
     /// <summary>
     /// Модификатор восприятия
     /// </summary>
-    public double PerceptionModifier { get; set; }
+    public double KnowledgeModifier { get; set; }
         
     /// <summary>
     /// Модификатор воли
     /// </summary>
-    public double WillModifier { get; set; }
+    public double TemperModifier { get; set; }
         
     /// <summary>
     /// Модификатор хитрости

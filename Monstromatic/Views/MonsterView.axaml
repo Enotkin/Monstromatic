@@ -39,10 +39,10 @@
                                         DataContext="{Binding Health}" />
 
                 <views:SkillCounterView Grid.Column="0" Grid.Row="1"
-                                        DataContext="{Binding Perception}" />
+                                        DataContext="{Binding Knowledge}" />
 
                 <views:SkillCounterView Grid.Column="1" Grid.Row="1"
-                                        DataContext="{Binding Will}" />
+                                        DataContext="{Binding Temper}" />
 
                 <views:SkillCounterView Grid.Column="2" Grid.Row="1"
                                         DataContext="{Binding Trickery}" />

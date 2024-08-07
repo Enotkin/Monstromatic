@@ -18,9 +18,9 @@ public class Monster
     
     public Skill Health { get; set; }
     
-    public Skill Perception { get; set; }
+    public Skill Knowledge { get; set; }
     
-    public Skill Speed { get; set; }
+    public Skill Temper { get; set; }
     
     public Skill Trickery { get; set; }
     
@@ -35,11 +35,11 @@ public class Monster
         Attack = new Skill("Атака", _encounterLevel, featuresBundle.AttackModificator) ;
         Defence = new Skill("Защита", _encounterLevel, featuresBundle.DefenceModificator) ;
         Health = new Skill("Здоровье", _encounterLevel, featuresBundle.HealthModificator) ;
-        Perception = new Skill("Восприятие", _encounterLevel, featuresBundle.PerceptionModificator) ;
-        Speed = new Skill("Воля", _encounterLevel, featuresBundle.WillModificator) ;
+        Knowledge = new Skill("Познание", _encounterLevel, featuresBundle.KnowledgeModificator) ;
+        Temper = new Skill("Характер", _encounterLevel, featuresBundle.TemperModificator) ;
         Trickery = new Skill("Хитрость", _encounterLevel, featuresBundle.TrickeryModificator);
 
-        Skills = [Attack, Defence, Health, Perception, Speed, Trickery];
+        Skills = [Attack, Defence, Health, Knowledge, Temper, Trickery];
     }
 
     public int EncounterLevel

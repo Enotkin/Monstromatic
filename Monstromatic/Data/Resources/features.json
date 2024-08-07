@@ -30,7 +30,7 @@
     "Key": "Giant",
     "DisplayName": "Гигант",
     "Description": "Гигант - Уязвим к массовым атакам",
-    "PerceptionModifier" : 0.5,
+    "KnowledgeModifier" : 0.5,
     "DefenceModifier" : 1.5,
     "AttackModifier" : 1.5,
     "HealthModifier" : 1.5,
