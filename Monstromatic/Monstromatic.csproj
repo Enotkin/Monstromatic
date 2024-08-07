@@ -47,8 +47,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Storages\DefaultSettings.json" />
-    <EmbeddedResource Include="Data\Storages\Features.json" />
     <EmbeddedResource Include="Data\Resources\DefaultSettings.json" />
     <EmbeddedResource Include="Data\Resources\DefaultFeatures.json" />
     <None Remove="Data\DefaultSettings.json" />

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using Monstromatic.Data;
-using Monstromatic.Data.Resources;
-using Monstromatic.Data.Storages;
-using Monstromatic.Models;
+﻿using Monstromatic.Data.Resources;
 using NUnit.Framework;
 
 namespace Monstromatic.Tests;
@@ -14,9 +10,9 @@ public class jsonParsingTest
     {
         var fileName = @"C:\Users\User\AppData\Roaming\Monstromatic\features.json";
         
-        var ss = new FileBaseDataStorage<List<MonsterFeature>>(fileName);
+        // var ss = new FileBaseDataStorage<List<MonsterFeature>>(fileName);
 
-        var result = ss.Read();
+        // var result = ss.Read();
     }
     [Test]
     public void faa()

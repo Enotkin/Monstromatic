@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Monstromatic.Data;
+﻿using System.Collections.Generic;
 using Monstromatic.Data.AppSettingsProvider;
-using Monstromatic.Data.Interfaces;
 using Monstromatic.Models;
 using Monstromatic.Utils;
 using ReactiveUI.Fody.Helpers;

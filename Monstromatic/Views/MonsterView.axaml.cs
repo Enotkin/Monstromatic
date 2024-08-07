@@ -2,7 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using ReactiveUI;
 
 namespace Monstromatic.Views
 {

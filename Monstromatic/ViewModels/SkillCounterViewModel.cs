@@ -1,10 +1,6 @@
 ﻿using System.Reactive;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Monstromatic.Models;
-using Monstromatic.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Monstromatic.ViewModels;
 

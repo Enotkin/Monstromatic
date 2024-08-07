@@ -1,7 +1,6 @@
 ﻿using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Monstromatic.ViewModels;
-using ReactiveUI;
 
 namespace Monstromatic.Views;
 
