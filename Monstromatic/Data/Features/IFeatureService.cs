@@ -8,4 +8,6 @@ public interface IFeatureService
     public IReadOnlyCollection<MonsterFeature> Features { get; }
 
     public void Reload();
+
+    public void ResetToDefault();
 }

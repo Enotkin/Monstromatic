@@ -25,7 +25,6 @@ public class ServiceHub
         services.AddTransient<MainWindowViewModel>();
         services.AddSingleton<TestWindowViewModel>();
         services.AddSingleton<IAppBaseDataStorage<MonstromaticSettings>, SettingsStorage>();
-        services.AddSingleton<IAppBaseDataStorage<MonsterFeature[]>, FeaturesStorage>();
         services.AddSingleton<IAppSettingsProvider, AppSettingsProvider>();
         services.AddSingleton<IProcessHelper, ProcessHelper>();
     }

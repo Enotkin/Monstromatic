@@ -7,6 +7,7 @@ using Monstromatic.Data;
 using Monstromatic.Data.AppSettingsProvider;
 using Monstromatic.Data.Features;
 using Monstromatic.Data.FeatureService;
+using Monstromatic.Data.Services;
 using Monstromatic.Models;
 using Monstromatic.Utils;
 using ReactiveUI;
@@ -80,7 +81,6 @@ public class MainWindowViewModel : ViewModelBase
 
     private void RefreshControls()
     {
-        _featureService.Reload();
         _settingsProvider.Reload();
         this.RaisePropertyChanged(nameof(Features));
         this.RaisePropertyChanged(nameof(Qualities));
@@ -88,7 +88,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private IEnumerable<FeatureViewModel> GetFeatureViewModels()
     {
-        return _featureService.Features
+        return _settingsProvider.Features
             .Where(f => f is { IsHidden: false })
             .Select(f => new FeatureViewModel(f, _featureController))
             .OrderBy(f => f.DisplayName);

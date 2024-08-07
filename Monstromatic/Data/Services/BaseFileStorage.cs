@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using Monstromatic.Models;
 
-namespace Monstromatic.Data.Features;
+namespace Monstromatic.Data.Services;
 
-public class FeatureService : IFeatureService
+public class BaseFileStorage<T>
 {
-    private readonly string _defaultFeatureFilePath = AppDomain.CurrentDomain.BaseDirectory + "features.json";
-    private MonsterFeature[] _features;
-    
-    public IReadOnlyCollection<MonsterFeature> Features => _features;
+    private readonly string _defaultFeatureFilePath;
 
-    public FeatureService()
+    protected T Value { get; private set; }
+
+    protected BaseFileStorage(string fileName)
     {
+        _defaultFeatureFilePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
         Reload();
     }
     
@@ -25,7 +23,7 @@ public class FeatureService : IFeatureService
             CreateFeatureFile();
 
         using var stream = File.OpenRead(_defaultFeatureFilePath);
-        _features = JsonSerializer.Deserialize<MonsterFeature[]>(stream);
+        Value = JsonSerializer.Deserialize<T>(stream);
     }
     
     private void CreateFeatureFile()
@@ -34,5 +32,14 @@ public class FeatureService : IFeatureService
 
         using var inputStream = File.Create(_defaultFeatureFilePath);
         inputStream.Write(Encoding.UTF8.GetBytes(defaultData));
+    }
+    
+    public void ResetToDefault()
+    {
+        if (File.Exists(_defaultFeatureFilePath))
+        {
+            File.Delete(_defaultFeatureFilePath);
+        }
+        CreateFeatureFile();
     }
 }
