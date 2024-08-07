@@ -2,7 +2,7 @@
   {
     "Key": "Vigilant",
     "DisplayName": "Бдительный",
-    "LevelModifier" : 1.5
+    "LevelModifier" : 1
   },
   {
     "Key": "Big",
@@ -24,7 +24,7 @@
   {
     "Key": "HighTech",
     "DisplayName": "Высокотех.",
-    "LevelModifier" : 1.5
+    "LevelModifier" : 1
   },
   {
     "Key": "Giant",
@@ -44,17 +44,17 @@
   {
     "Key": "Longlived",
     "DisplayName": "Долгожитель",
-    "LevelModifier" : 1.5
+    "LevelModifier" : 1
   },
   {
     "Key": "Animal",
     "DisplayName": "Злой Хищник",
-    "LevelModifier" : 1.5
+    "LevelModifier" : 1
   },
   {
     "Key": "Sorcerer",
     "DisplayName": "Колдун",
-    "LevelModifier" : 1.5
+    "LevelModifier" : 1
   },
   {
     "Key": "Dexterous",
@@ -121,6 +121,6 @@
   {
     "Key": "Exotic",
     "DisplayName": "Экзотик",
-    "LevelModifier" : 1.5
+    "LevelModifier" : 1
   }
 ]
