@@ -2,7 +2,7 @@
 
 namespace Monstromatic.Data.Services;
 
-public class SettingsService() : BaseFileStorage<MonstromaticSettings>("settings.json")
+public class SettingsService() : BaseFileStorage<MonstromaticSettings>(Resources.SettingsFileName)
 {
     public MonstromaticSettings Settings => Value;
 }

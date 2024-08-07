@@ -47,8 +47,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\Resources\DefaultSettings.json" />
-    <EmbeddedResource Include="Data\Resources\DefaultFeatures.json" />
+    <EmbeddedResource Include="Data\Resources\settings.json" />
+    <EmbeddedResource Include="Data\Resources\features.json" />
     <None Remove="Data\DefaultSettings.json" />
   </ItemGroup>
 </Project>

@@ -7,38 +7,41 @@ namespace Monstromatic.Data.Services;
 
 public class BaseFileStorage<T>
 {
-    private readonly string _defaultFeatureFilePath;
+    private readonly string _defaultFilePath;
+    private readonly string _filename;
+    private const string Template = "{0}{1}.json";
 
     protected T Value { get; private set; }
 
     protected BaseFileStorage(string fileName)
     {
-        _defaultFeatureFilePath = AppDomain.CurrentDomain.BaseDirectory + fileName;
+        _defaultFilePath = string.Format(Template, AppDomain.CurrentDomain.BaseDirectory, fileName);
+        _filename = fileName;
         Reload();
     }
     
     public void Reload()
     {
-        if (!File.Exists(_defaultFeatureFilePath)) 
+        if (!File.Exists(_defaultFilePath)) 
             CreateFeatureFile();
 
-        using var stream = File.OpenRead(_defaultFeatureFilePath);
+        using var stream = File.OpenRead(_defaultFilePath);
         Value = JsonSerializer.Deserialize<T>(stream);
     }
     
     private void CreateFeatureFile()
     {
-        var defaultData = Resources.Resources.DefaultFeaturesData;
+        var defaultData = Resources.GetData(_filename);
 
-        using var inputStream = File.Create(_defaultFeatureFilePath);
+        using var inputStream = File.Create(_defaultFilePath);
         inputStream.Write(Encoding.UTF8.GetBytes(defaultData));
     }
     
     public void ResetToDefault()
     {
-        if (File.Exists(_defaultFeatureFilePath))
+        if (File.Exists(_defaultFilePath))
         {
-            File.Delete(_defaultFeatureFilePath);
+            File.Delete(_defaultFilePath);
         }
         CreateFeatureFile();
     }

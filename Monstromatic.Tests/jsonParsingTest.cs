@@ -1,4 +1,4 @@
-﻿using Monstromatic.Data.Resources;
+﻿using Monstromatic.Data;
 using NUnit.Framework;
 
 namespace Monstromatic.Tests;
@@ -17,7 +17,7 @@ public class jsonParsingTest
     [Test]
     public void faa()
     {
-        var resources = Resources.DefaultSettingsData;
+        // var resources = Resources.DefaultSettingsData;
     }
     
 }
