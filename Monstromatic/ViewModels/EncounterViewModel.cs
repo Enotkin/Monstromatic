@@ -49,10 +49,6 @@ public class EncounterViewModel : ViewModelBase
         {
             _encounter.Level = value;
             this.RaisePropertyChanged();
-            foreach (var monsterVm in Monsters)
-            {
-                monsterVm.UpdateLevel();
-            }
         }
     }
     
