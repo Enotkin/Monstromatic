@@ -55,7 +55,7 @@
                 
                             <ItemsControl.Styles>
                                 <Style Selector="TextBlock:pointerover">
-                                    <Setter Property="Background" Value="{StaticResource ThemeControlHighlightLowBrush}"/>
+                                    <Setter Property="Background" Value="{StaticResource ThemeControlLowBrush}"/>
                                 </Style>
                             </ItemsControl.Styles>
                 
