@@ -5,5 +5,13 @@
     "Элита/Спец": 8,
     "Сюжетный/Mary Sue": 10,
     "Каноничный": 12
+  },
+  "DefaultModifiers": {
+    "AttackModifier" : 1.0,
+    "DefenceModifier" : 1.5,
+    "HealthModifier" : 2.0,
+    "KnowledgeModifier" : 1.0,
+    "TemperModifier" : 1.0,
+    "TrickeryModifier" : 1.0
   }
 }
