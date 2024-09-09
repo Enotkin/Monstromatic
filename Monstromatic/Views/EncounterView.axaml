@@ -67,7 +67,7 @@
                 
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                        <TextBlock Margin="10,3,10,3" Height="25" FontSize="14" TextWrapping="Wrap"
+                                        <TextBlock Margin="10,3,10,3" Height="40" FontSize="14" TextWrapping="Wrap" TextAlignment="Center"
                                                    Text="{Binding Description}" ToolTip.Tip="{Binding Description}" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
