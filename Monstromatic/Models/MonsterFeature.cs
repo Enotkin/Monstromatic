@@ -24,37 +24,37 @@ public class MonsterFeature
     /// <summary>
     /// Модификатор уровня
     /// </summary>
-    public double LevelModifier { get; set; }
+    public int LevelModifier { get; set; }
         
     /// <summary>
     /// Модификатор атаки
     /// </summary>
-    public double AttackModifier { get; set; }
+    public int AttackModifier { get; set; }
         
     /// <summary>
     /// Модификатор защиты
     /// </summary>
-    public double DefenceModifier { get; set; }
+    public int DefenceModifier { get; set; }
         
     /// <summary>
     /// Модификатор здоровья
     /// </summary>
-    public double HealthModifier { get; set; }
+    public int HealthModifier { get; set; }
         
     /// <summary>
     /// Модификатор восприятия
     /// </summary>
-    public double KnowledgeModifier { get; set; }
+    public int KnowledgeModifier { get; set; }
         
     /// <summary>
     /// Модификатор воли
     /// </summary>
-    public double TemperModifier { get; set; }
+    public int TemperModifier { get; set; }
         
     /// <summary>
     /// Модификатор хитрости
     /// </summary>
-    public double TrickeryModifier { get; set; }
+    public int TrickeryModifier { get; set; }
         
     /// <summary>
     /// Описание эффекта особенности

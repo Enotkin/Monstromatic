@@ -7,11 +7,11 @@
     "Каноничный": 12
   },
   "DefaultModifiers": {
-    "AttackModifier" : 1.0,
-    "DefenceModifier" : 1.5,
-    "HealthModifier" : 2.0,
-    "KnowledgeModifier" : 1.0,
-    "TemperModifier" : 1.0,
-    "TrickeryModifier" : 1.0
+    "AttackModifier" : 0,
+    "DefenceModifier" : 0,
+    "HealthModifier" : 2,
+    "KnowledgeModifier" : 1,
+    "TemperModifier" : 1,
+    "TrickeryModifier" : 1
   }
 }

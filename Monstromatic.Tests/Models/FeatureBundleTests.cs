@@ -17,10 +17,10 @@ public class FeatureBundleTests
             {
                 Key = "TestKey",
                 DisplayName = "TestName",
-                AttackModifier = 1.5
+                AttackModifier = 1
             }
         };
-        var expectedValue = 1.5;
+        var expectedValue = 1;
         
         var bundle = new FeaturesBundle(features);
         //Act
@@ -39,16 +39,16 @@ public class FeatureBundleTests
             {
                 Key = "TestKey",
                 DisplayName = "TestName",
-                AttackModifier = 1.5
+                AttackModifier = 1
             },
             new()
             {
                 Key = "TestKey2",
                 DisplayName = "TestName2",
-                AttackModifier = 1.5
+                AttackModifier = 1
             }
         };
-        const double expectedValue = 2.0;
+        const int expectedValue = 2;
         
         var bundle = new FeaturesBundle(features);
         //Act

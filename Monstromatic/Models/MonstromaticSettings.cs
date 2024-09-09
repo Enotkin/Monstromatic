@@ -11,11 +11,11 @@ namespace Monstromatic.Models
 
     public class DefaultModifiers
     {
-        public double AttackModifier { get; set; }
-        public double DefenceModifier { get; set; }
-        public double HealthModifier { get; set; }
-        public double KnowledgeModifier { get; set; }
-        public double TemperModifier { get; set; }
-        public double TrickeryModifier { get; set; }
+        public int AttackModifier { get; set; }
+        public int DefenceModifier { get; set; }
+        public int HealthModifier { get; set; }
+        public int KnowledgeModifier { get; set; }
+        public int TemperModifier { get; set; }
+        public int TrickeryModifier { get; set; }
     }
 }

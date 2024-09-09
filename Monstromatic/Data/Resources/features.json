@@ -1,126 +1,86 @@
 ﻿[
   {
-    "Key": "Vigilant",
-    "DisplayName": "Бдительный",
-    "LevelModifier" : 1
+    "Key": "PlusLevel",
+    "Description": "Увеличивает Level на один уровень",
+    "DisplayName": "Плюс Level",
+    "LevelModifier": 1
   },
   {
-    "Key": "Big",
-    "DisplayName": "Большой",
-    "HealthModifier" : 1.5,
-    "SpeedModifier" : 1.5
+    "Key": "MinusLevel",
+    "Description": "Уменьшает Level на один уровень",
+    "DisplayName": "Минус Level",
+    "LevelModifier": -1
   },
   {
-    "Key": "Armored",
-    "DisplayName": "Броня/Панцирь",
-    "Description": "Броня - Уязвим к бронебойным атакам",
-    "DefenceModifier" : 1.5
+    "Key": "PlusAttack",
+    "Description": "Увеличивает Attack на один уровень",
+    "DisplayName": "Плюс Attack",
+    "AttackModifier": 1
   },
   {
-    "Key": "Fast",
-    "DisplayName": "Быстрый",
-    "SpeedModifier" : 1.5
+    "Key": "MinusAttack",
+    "Description": "Уменьшает Attack на один уровень",
+    "DisplayName": "Минус Attack",
+    "AttackModifier": -1
   },
   {
-    "Key": "HighTech",
-    "DisplayName": "Высокотех.",
-    "LevelModifier" : 1
+    "Key": "PlusDefence",
+    "Description": "Увеличивает Defence на один уровень",
+    "DisplayName": "Плюс Defence",
+    "DefenceModifier": 1
   },
   {
-    "Key": "Giant",
-    "DisplayName": "Гигант",
-    "Description": "Гигант - Уязвим к массовым атакам",
-    "KnowledgeModifier" : 0.5,
-    "DefenceModifier" : 1.5,
-    "AttackModifier" : 1.5,
-    "HealthModifier" : 1.5,
-    "SpeedModifier" : 1.5
+    "Key": "MinusDefence",
+    "Description": "Уменьшает Defence на один уровень",
+    "DisplayName": "Минус Defence",
+    "DefenceModifier": -1
   },
   {
-    "Key": "RangeAttack",
-    "DisplayName": "Дальний Бой",
-    "Description": "Стрелок - атакует на расстоянии, уязвим к ближним атакам"
+    "Key": "PlusKnowledge",
+    "Description": "Увеличивает Knowledge на один уровень",
+    "DisplayName": "Плюс Knowledge",
+    "KnowledgeModifier": 1
   },
   {
-    "Key": "Longlived",
-    "DisplayName": "Долгожитель",
-    "LevelModifier" : 1
+    "Key": "MinusKnowledge",
+    "Description": "Уменьшает Knowledge на один уровень",
+    "DisplayName": "Минус Knowledge",
+    "KnowledgeModifier": -1
   },
   {
-    "Key": "Animal",
-    "DisplayName": "Злой Хищник",
-    "LevelModifier" : 1
+    "Key": "PlusHealth",
+    "Description": "Увеличивает Health на один уровень",
+    "DisplayName": "Плюс Health",
+    "HealthModifier": 1
   },
   {
-    "Key": "Sorcerer",
-    "DisplayName": "Колдун",
-    "LevelModifier" : 1
+    "Key": "MinusHealth",
+    "Description": "Уменьшает Health на один уровень",
+    "DisplayName": "Минус Health",
+    "HealthModifier": -1
   },
   {
-    "Key": "Dexterous",
-    "DisplayName": "Ловкий",
-    "DefenceModifier" : 1.5
+    "Key": "PlusTemper",
+    "Description": "Увеличивает Temper на один уровень",
+    "DisplayName": "Плюс Temper",
+    "TemperModifier": 1
   },
   {
-    "Key": "Small",
-    "DisplayName": "Маленький",
-    "Description": "Маленький - Уязвим к массовым атакам",
-    "DefenceModifier" : 1.5,
-    "AttackModifier" : 0.5,
-    "HealthModifier" : 0.5
+    "Key": "MinusTemper",
+    "Description": "Уменьшает Temper на один уровень",
+    "DisplayName": "Минус Temper",
+    "TemperModifier": -1
   },
   {
-    "Key": "MassDestruction",
-    "DisplayName": "Массовая Поражение",
-    "Description": "Атакует Несколько целей"
+    "Key": "PlusTrickery",
+    "Description": "Увеличивает Trickery на один уровень",
+    "DisplayName": "Плюс Trickery",
+    "TrickeryModifier": 1
   },
   {
-    "Key": "PowerfulAttack",
-    "DisplayName": "Мощная Атака",
-    "Description": "Большое или Бронебойное Оружие, либо Яд",
-    "AttackModifier" : 1.5
-  },
-  {
-    "Key": "Fly",
-    "DisplayName": "Полёт",
-    "Description": "Летает - Уязвим к дальнобойным атакам",
-    "DefenceModifier" : 1.5,
-    "SpeedModifier" : 1.5
-  },
-  {
-    "Key": "Unnatural",
-    "DisplayName": "Потусторонний или Конструкт",
-    "Description": "Уязвим к определенным видам атака",
-    "DefenceModifier" : 1.5
-  },
-  {
-    "Key": "Intelligent",
-    "DisplayName": "Разумный",
-    "TrickeryModifier" : 1.5
-  },
-  {
-    "Key": "Regeneration",
-    "DisplayName": "Регенерация",
-    "HealthModifier" : 1.5
-  },
-  {
-    "Key": "Coward",
-    "DisplayName": "Трус",
-    "Description": "Бежит после первой раны"
-  },
-  {
-    "Key": "Berserker",
-    "DisplayName": "Берсерк",
-    "Description": "Не бежит"
-  },
-  {
-    "Key": "Sharyony",
-    "DisplayName": "Шарёный",
-    "TrickeryModifier" : 1.5
-  },
-  {
-    "Key": "Exotic",
-    "DisplayName": "Экзотик",
-    "LevelModifier" : 1
+    "Key": "MinusTrickery",
+    "Description": "Уменьшает Trickery на один уровень",
+    "DisplayName": "Минус Trickery",
+    "TrickeryModifier": -1
   }
 ]
