@@ -27,6 +27,7 @@ public partial class EncounterView : ReactiveWindow<EncounterViewModel>
         CustomHeader.CloseSender += Close;
         CustomHeader.ExpandedStateSender += ChangeExpandState;
         CustomHeader.ChangeColorSender += ChangeBorderColor;
+        CustomHeader.HideButton.IsVisible = false;
         
         ExpandableGrid.PropertyChanged += (sender, args) =>
         {

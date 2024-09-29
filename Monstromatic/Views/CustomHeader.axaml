@@ -35,7 +35,7 @@
             </Grid.Styles>
             
             <!-- <Кнопка раскрытия окна> -->
-            <Button Grid.Column="0" Classes="round" Click="ExpandButton_Click" Background="{StaticResource MonstromaticAccent}">
+            <Button Name="HideButton" Grid.Column="0" Classes="round" Click="ExpandButton_Click" Background="{StaticResource MonstromaticAccent}">
                 <Button.RenderTransform>
                     <RotateTransform Angle="0">
                         <RotateTransform.Transitions>
