@@ -32,11 +32,11 @@
 
             <!-- Заголовок окна -->
             <Grid Grid.Row="0" Name="Header" Background="Transparent" PointerPressed="Header_PointerPressed">
-                <views:CustomHeader Name="CustomHeader" 
-                                    MonsterName="{Binding Name}" 
-                                    MonsterLevel="{Binding Level}"
-                                    IncreaseLevelCommand="{Binding AddLevelCommand}"
-                                    DecreaseLevelCommand="{Binding RemoveLevelCommand}"/>
+                <views:EncounterCustomHeader Name="CustomHeader" 
+                                             MonsterName="{Binding Name}" 
+                                             MonsterLevel="{Binding Level}"
+                                             IncreaseLevelCommand="{Binding AddLevelCommand}"
+                                             DecreaseLevelCommand="{Binding RemoveLevelCommand}"/>
             </Grid>
 
             <!-- Панель отобраджения особенностей -->

@@ -28,6 +28,10 @@
     <AvaloniaResource Include="Assets\**" />
     <Compile Remove="ViewModels\FeatureController.cs" />
     <Compile Remove="Models\IFeatureController.cs" />
+    <Compile Update="Views\EncounterCustomHeader.axaml.cs">
+      <DependentUpon>EncounterCustomHeader.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0-rc1.1" />
