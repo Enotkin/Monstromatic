@@ -8,38 +8,19 @@ namespace Monstromatic.Views
 {
     public partial class MonsterView : UserControl
     {
+        private bool _isExpanded = true;
+        
         public MonsterView()
         {
             AvaloniaXamlLoader.Load(this);
-            var header = this.GetControl<CustomHeader>("Header");
-            header.ExpandedStateSender += ChangeExpandState;
-        }
-
-        public static readonly StyledProperty<IBrush> BorderColorProperty =
-            AvaloniaProperty.Register<MonsterView, IBrush>(nameof(CustomBorderBrush));
-        
-        public IBrush CustomBorderBrush
-        {
-            get => GetValue(BorderColorProperty);
-            set => SetValue(BorderColorProperty, value);
         }
         
-        private void ChangeExpandState(bool state)
+        private void ChangeExpandState(object sender, RoutedEventArgs routedEventArgs)
         {
+            _isExpanded = !_isExpanded;
             var grid = this.GetControl<Grid>("ExpanderGrid");
-            grid.Height = state ? 200 : 0;
-        }
-
-        public void ChangeColor(IBrush brush)
-        {
-            var border = this.GetControl<Border>("Border");
-            border.BorderBrush = brush;
-        }
-
-        public void HeaderCloseEventHandler()
-        {
-            var radioButton = this.GetControl<RadioButton>("LifeStatus");
-            radioButton.IsChecked = false;
+            grid.Height = _isExpanded ? 200 : 0;
+     
         }
     }
 }

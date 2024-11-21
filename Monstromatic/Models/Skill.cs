@@ -10,7 +10,7 @@ public class Skill(string name, int level, int defaultModificator, int featuresM
     /// <summary>
     /// Минимальное значение навыка 
     /// </summary>
-    private const int MinValue = 1;
+    private const int MinValue = 0;
     
     /// <summary>
     /// Модификатор навыка от особенностей

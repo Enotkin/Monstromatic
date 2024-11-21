@@ -37,13 +37,13 @@ public class MonsterViewModel : ViewModelBase
         AddLevel = ReactiveCommand.Create(() =>
         {        
             _monster.PersonalLevel++;
-            this.RaisePropertyChanged(nameof(Level));
+            UpdateLevel();
         });
         
         RemoveLevel = ReactiveCommand.Create(() =>
         {        
             _monster.PersonalLevel--;
-            this.RaisePropertyChanged(nameof(Level));
+            UpdateLevel();
         });
 
         CloseCommand = ReactiveCommand.Create(RemoveMonster);

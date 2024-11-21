@@ -26,7 +26,15 @@ public class BaseFileStorage<T>
             CreateFeatureFile();
 
         using var stream = File.OpenRead(_defaultFilePath);
-        Value = JsonSerializer.Deserialize<T>(stream);
+
+        try
+        {
+            Value = JsonSerializer.Deserialize<T>(stream);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
     
     private void CreateFeatureFile()
