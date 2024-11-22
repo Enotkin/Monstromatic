@@ -16,7 +16,7 @@
         <StackPanel>
 
             <Border Background="#FFA0A0A0" CornerRadius="3,3,0,0">
-                <Grid VerticalAlignment="Top">
+                <Grid VerticalAlignment="Top" RowDefinitions="Auto">
                     <!-- -->
                     <!-- <Grid.RowDefinitions> -->
                     <!--     <RowDefinition Height="55" /> -->
@@ -67,7 +67,9 @@
                         <StackPanel Grid.Column="1" Margin="5">
                             <TextBlock Classes="level" Text="{Binding Name}"
                                        VerticalAlignment="Center"
-                                       HorizontalAlignment="Center" />
+                                       HorizontalAlignment="Center" 
+                                       Margin="2, 2, 2, 5"
+                                       TextWrapping="Wrap"/>
 
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 

@@ -28,15 +28,16 @@
     </Window.Styles>
     
     <Border Name="Border" BorderThickness="2">
-        <Grid VerticalAlignment="Top" RowDefinitions="55,*">
+        <Grid VerticalAlignment="Top" RowDefinitions="Auto,*">
 
             <!-- Заголовок окна -->
-            <Grid Grid.Row="0" Name="Header" Background="Transparent" PointerPressed="Header_PointerPressed">
+            <Grid Grid.Row="0" Name="Header" Background="Transparent" PointerPressed="Header_PointerPressed" VerticalAlignment="Stretch" RowDefinitions="Auto">
                 <views:EncounterCustomHeader Name="CustomHeader" 
                                              MonsterName="{Binding Name}" 
                                              MonsterLevel="{Binding Level}"
                                              IncreaseLevelCommand="{Binding AddLevelCommand}"
-                                             DecreaseLevelCommand="{Binding RemoveLevelCommand}"/>
+                                             DecreaseLevelCommand="{Binding RemoveLevelCommand}"
+                                             VerticalAlignment="Stretch"/>
             </Grid>
 
             <!-- Панель отобраджения особенностей -->
