@@ -71,6 +71,15 @@ public class Monster
             skill.Level = Level;
         }
     }
+
+    public void ResetModifications()
+    {
+        PersonalLevel = 0;
+        foreach (var skill in Skills)
+        {
+            skill.Reset();
+        }
+    }
     
     public string Name { get; }
     

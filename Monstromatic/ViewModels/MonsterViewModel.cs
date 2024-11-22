@@ -11,6 +11,7 @@ public class MonsterViewModel : ViewModelBase
     public delegate void RemovingMonsterEvent(Guid monsterId);
 
     private readonly Monster _monster;
+    
     private readonly List<SkillCounterViewModel> _skillsVm;
     
     public event RemovingMonsterEvent RemovingMonsterEventInv;
@@ -18,15 +19,27 @@ public class MonsterViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> CloseCommand { get; }
     
     public Guid Id { get; }
+    
     public bool IsAlive { get; set; } = true;
+    
     public ReactiveCommand<Unit, Unit> AddLevel { get; }
+    
     public ReactiveCommand<Unit, Unit> RemoveLevel { get; }
+    
+    public ReactiveCommand<Unit, Unit> ResetModificationsCommand { get; } 
+    
     public string Name => _monster.Name;
+    
     public SkillCounterViewModel Attack { get; }
+    
     public SkillCounterViewModel Defence { get; }
+    
     public SkillCounterViewModel Health { get; }
+    
     public SkillCounterViewModel Knowledge { get; }
+    
     public SkillCounterViewModel Temper { get; }
+    
     public SkillCounterViewModel Trickery { get; }
     
     public MonsterViewModel(Monster monster)
@@ -46,6 +59,8 @@ public class MonsterViewModel : ViewModelBase
             UpdateLevel();
         });
 
+        ResetModificationsCommand = ReactiveCommand.Create(ResetModifications);
+
         CloseCommand = ReactiveCommand.Create(RemoveMonster);
 
         Attack = new SkillCounterViewModel(monster.Attack);
@@ -60,7 +75,14 @@ public class MonsterViewModel : ViewModelBase
         this.WhenAnyValue(x => x.IsAlive).Subscribe(x => RemoveMonster());
         this.WhenAnyValue(vm => vm._monster.Level).Subscribe(_ => UpdateSkills());
     }
-    
+
+    private void ResetModifications()
+    {
+        _monster.ResetModifications();
+        UpdateLevel();
+        UpdateSkills();
+    }
+
     public int Level => _monster.Level;
 
     private void UpdateSkills()
@@ -76,7 +98,7 @@ public class MonsterViewModel : ViewModelBase
         RemovingMonsterEventInv?.Invoke(_monster.Id);
     }
 
-    public void UpdateLevel()
+    private void UpdateLevel()
     {
         this.RaisePropertyChanged(nameof(Level));
         UpdateSkills();
