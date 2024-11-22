@@ -7,6 +7,7 @@ namespace Monstromatic.Models;
 public class Encounter
 {
     private readonly FeaturesBundle _featuresBundle;
+    private readonly int _baseLevel;
     private int _level;
     private readonly Dictionary<Guid, Monster> _monsters;
 
@@ -35,16 +36,17 @@ public class Encounter
     {
         Name = name;
         _level = baseLevel + featuresBundle.LevelModificator;
+        _baseLevel = baseLevel;
         _featuresBundle = featuresBundle;
         _monsters = new Dictionary<Guid, Monster>();
         
-        var initMonster = new Monster(baseLevel, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++),_featuresBundle);
+        var initMonster = new Monster(baseLevel, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++), _featuresBundle);
         _monsters.Add(initMonster.Id, initMonster);
     }
 
     public Monster AddMonster()
     {
-        var monster = new Monster(_level, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++), _featuresBundle);
+        var monster = new Monster(_baseLevel, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++), _featuresBundle);
         _monsters.Add(monster.Id, monster);
         return monster;
     }
