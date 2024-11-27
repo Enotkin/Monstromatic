@@ -3,10 +3,8 @@
 /// <summary>
 /// Навык существа
 /// </summary>
-public class Skill(string name, int level, int defaultModificator, int featuresModificator)
+public class Skill(string name, int level, double featuresModificator)
 {
-    public Skill(string name, int level, int featuresModificator) : this(name, level, 0, featuresModificator) {}
-    
     /// <summary>
     /// Минимальное значение навыка 
     /// </summary>
@@ -15,7 +13,7 @@ public class Skill(string name, int level, int defaultModificator, int featuresM
     /// <summary>
     /// Модификатор навыка от особенностей
     /// </summary>
-    private readonly int _featuresModificator = featuresModificator;
+    private readonly double _featuresModificator = featuresModificator;
 
     /// <summary>
     /// Суммароное значние модификатора
@@ -61,7 +59,7 @@ public class Skill(string name, int level, int defaultModificator, int featuresM
 
     private int GetValue()
     {
-        var value = (int)(Level + defaultModificator +_featuresModificator + _modificator);
+        var value = (int)(Level * _featuresModificator + _modificator);
         return value < MinValue ? MinValue : value;
     }
 }

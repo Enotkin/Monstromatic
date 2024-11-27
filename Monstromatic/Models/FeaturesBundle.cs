@@ -20,43 +20,43 @@ public class FeaturesBundle
         
         LevelModificator = _features.Sum(f => f.LevelModifier);
 
-        AttackModificator = (int)(defaultModifiers.AttackModifier + (_features.Any(f => f.AttackModifier != 0)
+        AttackModificator = defaultModifiers.AttackModifier + (_features.Any(f => f.AttackModifier != 0)
             ? _features.Where(f => f.AttackModifier != 0)
                 .Select(f => f.AttackModifier).Sum()
-            : 0));
+            : 0);
 
-        DefenceModificator = (int)(defaultModifiers.DefenceModifier + (_features.Any(f => f.DefenceModifier != 0)
+        DefenceModificator = defaultModifiers.DefenceModifier + (_features.Any(f => f.DefenceModifier != 0)
             ? _features.Where(f => f.DefenceModifier != 0)
                 .Select(f => f.DefenceModifier).Sum()
-            : 0));
+            : 0);
         
-        HealthModificator = (int)(defaultModifiers.HealthModifier + (_features.Any(f => f.HealthModifier != 0)
+        HealthModificator = defaultModifiers.HealthModifier + (_features.Any(f => f.HealthModifier != 0)
             ? _features.Where(f => f.HealthModifier != 0)
                 .Select(f => f.HealthModifier).Sum()
-            : 0));
+            : 0);
         
-        KnowledgeModificator = (int)(defaultModifiers.KnowledgeModifier + (_features.Any(f => f.KnowledgeModifier != 0)
+        KnowledgeModificator = defaultModifiers.KnowledgeModifier + (_features.Any(f => f.KnowledgeModifier != 0)
             ? _features.Where(f => f.KnowledgeModifier != 0)
                 .Select(f => f.KnowledgeModifier).Sum()
-            : 0));
+            : 0);
         
-        TemperModificator = (int)(defaultModifiers.TemperModifier + (_features.Any(f => f.TemperModifier != 0)
+        TemperModificator = defaultModifiers.TemperModifier + (_features.Any(f => f.TemperModifier != 0)
             ? _features.Where(f => f.TemperModifier != 0)
                 .Select(f => f.TemperModifier).Sum()
-            : 0));
+            : 0);
         
-        TrickeryModificator = (int)(defaultModifiers.TrickeryModifier + (_features.Any(f => f.TrickeryModifier != 0)
+        TrickeryModificator = defaultModifiers.TrickeryModifier + (_features.Any(f => f.TrickeryModifier != 0)
             ? _features.Where(f => f.TrickeryModifier != 0)
                 .Select(f => f.TrickeryModifier).Sum()
-            : 0));
+            : 0);
     }
 
     public int LevelModificator { get; }
-    public int AttackModificator { get; }
-    public int DefenceModificator { get; }
-    public int HealthModificator { get; }
-    public int KnowledgeModificator { get; }
-    public int TemperModificator { get; }
-    public int TrickeryModificator { get; }
+    public double AttackModificator { get; }
+    public double DefenceModificator { get; }
+    public double HealthModificator { get; }
+    public double KnowledgeModificator { get; }
+    public double TemperModificator { get; }
+    public double TrickeryModificator { get; }
     public IReadOnlyCollection<MonsterFeature> Features => _features;
 }
