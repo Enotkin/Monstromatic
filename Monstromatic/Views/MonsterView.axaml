@@ -15,16 +15,13 @@
     <Border Name="Border" BorderThickness="2" BorderBrush="#FFA0A0A0" CornerRadius="5">
         <StackPanel>
 
-            <RadioButton Name="LifeStatus" IsChecked="{Binding IsAlive}" IsVisible="False" />
-            <Button Command="{Binding CloseCommand}" IsVisible="False" />
-
             <Border Background="#FFA0A0A0" CornerRadius="3,3,0,0">
-                <Grid VerticalAlignment="Top">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="55" />
-                        <RowDefinition Height="{Binding}" />
-                    </Grid.RowDefinitions>
+                <Grid VerticalAlignment="Top" RowDefinitions="Auto">
+                    <!-- -->
+                    <!-- <Grid.RowDefinitions> -->
+                    <!--     <RowDefinition Height="55" /> -->
+                    <!--     <RowDefinition Height="{Binding}" /> -->
+                    <!-- </Grid.RowDefinitions> -->
 
                     <Border>
                         <Grid.RowSpan>2</Grid.RowSpan>
@@ -32,7 +29,7 @@
                         <Border.CornerRadius>10, 10, 0, 0</Border.CornerRadius>
                     </Border>
 
-                    <Grid Grid.Row="0" Name="Header" ColumnDefinitions="40,*,50,40">
+                    <Grid Grid.Row="0" Name="Header" ColumnDefinitions="Auto,*,Auto,Auto">
 
                         <!-- <Стили> -->
                         <Grid.Styles>
@@ -68,10 +65,11 @@
 
                         <!-- Кнопки изменения уровня -->
                         <StackPanel Grid.Column="1" Margin="5">
-
                             <TextBlock Classes="level" Text="{Binding Name}"
                                        VerticalAlignment="Center"
-                                       HorizontalAlignment="Center" />
+                                       HorizontalAlignment="Center" 
+                                       Margin="2, 2, 2, 5"
+                                       TextWrapping="Wrap"/>
 
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 
@@ -88,12 +86,14 @@
                                         Content="&gt;&gt;" />
 
                             </StackPanel>
-
                         </StackPanel>
 
+                        <Button Grid.Column="2" Command="{Binding ResetModificationsCommand}" Content="R" 
+                                Margin="3"/>
 
                         <!-- Закрыте окна -->
-                        <Button Grid.Column="3" Command="{Binding CloseCommand}" Background="#bb0000">
+                        <Button Grid.Column="3" Command="{Binding CloseCommand}" Background="#bb0000"
+                                Margin="3">
                             <Path Data="M 0 0 L 10 10 M 0 10 L 10 0"
                                   Stroke="{StaticResource ThemeControlHighlightLowBrush}" StrokeThickness="2">
                             </Path>
