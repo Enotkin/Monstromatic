@@ -18,7 +18,7 @@ public class EncounterViewModel : ViewModelBase
         _encounter = encounter;
         var monsterViewModel = new MonsterViewModel(_encounter.Monsters.First());
         monsterViewModel.RemovingMonsterEventInv += RemoveMonster;
-        Monsters = new ObservableCollection<MonsterViewModel> { monsterViewModel };
+        Monsters = [monsterViewModel];
         
         Monsters.CollectionChanged += MonstersOnCollectionChanged;
 
@@ -34,10 +34,8 @@ public class EncounterViewModel : ViewModelBase
         {
             Level--;
         });
-
-        // this.WhenValueChanged(vm => vm.Level).Subscribe(_ => UpdateLevels());
     }
-    
+
     public Interaction<Unit, Unit> MonsterCreated { get; } = new();
 
     public string Name => _encounter.Name;
