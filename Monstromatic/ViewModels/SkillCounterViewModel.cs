@@ -14,7 +14,6 @@ public class SkillCounterViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> Increase { get; }
     public ReactiveCommand<Unit, Unit> Decrease { get; }
-    
     public ReactiveCommand<Unit, Unit> Reset { get; }
 
     public SkillCounterViewModel(Skill skill)
@@ -25,7 +24,7 @@ public class SkillCounterViewModel : ViewModelBase
         Decrease = ReactiveCommand.Create(DecreaseValue);
         Reset = ReactiveCommand.Create(ResetValue);
     }
-
+    
     private void IncreaseValue()
     {
         _skill.Increment();

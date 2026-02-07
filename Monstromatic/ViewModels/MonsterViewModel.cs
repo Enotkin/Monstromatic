@@ -98,7 +98,7 @@ public class MonsterViewModel : ViewModelBase
         RemovingMonsterEventInv?.Invoke(_monster.Id);
     }
 
-    private void UpdateLevel()
+    public void UpdateLevel()
     {
         this.RaisePropertyChanged(nameof(Level));
         UpdateSkills();

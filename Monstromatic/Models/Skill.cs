@@ -38,10 +38,7 @@ public class Skill(string name, int level, double featuresModificator)
     /// <summary>
     /// Увеличить значение навыка
     /// </summary>
-    public void Increment()
-    {
-        _modificator++;
-    }
+    public void Increment() => _modificator++;
 
     /// <summary>
     /// Уменьшить значение навыка
@@ -52,10 +49,7 @@ public class Skill(string name, int level, double featuresModificator)
             _modificator--;
     }
 
-    public void Reset()
-    {
-        _modificator = 0;
-    }
+    public void Reset() => _modificator = 0;
 
     private int GetValue()
     {

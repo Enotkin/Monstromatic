@@ -6,10 +6,11 @@ using System.Linq;
 using System.Reactive;
 using Monstromatic.Models;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace Monstromatic.ViewModels;
 
-public class EncounterViewModel : ViewModelBase
+public partial class EncounterViewModel : ViewModelBase
 {
     private readonly Encounter _encounter;
     
@@ -21,19 +22,6 @@ public class EncounterViewModel : ViewModelBase
         Monsters = [monsterViewModel];
         
         Monsters.CollectionChanged += MonstersOnCollectionChanged;
-
-        AddMonsterCommand = ReactiveCommand.Create(AddMonster);
-        RemoveMonsterCommand = ReactiveCommand.Create<Guid>(RemoveMonster);
-
-        AddLevelCommand = ReactiveCommand.Create(() =>
-        {
-            Level++;
-        });
-        
-        RemoveLevelCommand = ReactiveCommand.Create(() =>
-        {
-            Level--;
-        });
     }
 
     public Interaction<Unit, Unit> MonsterCreated { get; } = new();
@@ -49,18 +37,7 @@ public class EncounterViewModel : ViewModelBase
             this.RaisePropertyChanged();
         }
     }
-    
-    public int MonsterCount => _encounter.Monsters.Count;
-
     public ObservableCollection<MonsterViewModel> Monsters { get; set; }
-
-    public ReactiveCommand<Unit, Unit> AddMonsterCommand { get; }
-    
-    public ReactiveCommand<Guid, Unit> RemoveMonsterCommand { get; set; }
-    
-    public ReactiveCommand<Unit, Unit> AddLevelCommand { get; set; }
-    
-    public ReactiveCommand<Unit, Unit> RemoveLevelCommand { get; set; }
     
     public IEnumerable<MonsterFeature> DescriptiveFeatures =>
         _encounter.Features.Where(f => !string.IsNullOrEmpty(f.Description));
@@ -70,6 +47,7 @@ public class EncounterViewModel : ViewModelBase
         MonsterCreated.Handle(Unit.Default);
     }
     
+    [ReactiveCommand]
     private void AddMonster()
     {
         var monster = _encounter.AddMonster();
@@ -78,6 +56,7 @@ public class EncounterViewModel : ViewModelBase
         Monsters.Add(monsterViewModel);
     }
 
+    [ReactiveCommand]
     private void RemoveMonster(Guid monsterId = default)
     {
         if (Monsters.Count == 0)
@@ -87,6 +66,28 @@ public class EncounterViewModel : ViewModelBase
         var removingMonsterViewModel = GetMonsterViewModelForRemoving(monsterId);
         Monsters.Remove(removingMonsterViewModel);
         _encounter.RemoveMonster(monsterId);
+    }
+
+    [ReactiveCommand]
+    private void AddLevel()
+    {
+        Level++;
+        foreach (var monsterViewModel in Monsters)      
+        {
+            monsterViewModel.UpdateLevel();
+        }
+        this.RaisePropertyChanged(nameof(Monsters));
+    }
+
+    [ReactiveCommand]
+    private void RemoveLevel()
+    {
+        Level--;
+        foreach (var monsterViewModel in Monsters)      
+        {
+            monsterViewModel.UpdateLevel();
+        }
+        this.RaisePropertyChanged(nameof(Monsters));
     }
 
     private MonsterViewModel GetMonsterViewModelForRemoving(Guid monsterId)
