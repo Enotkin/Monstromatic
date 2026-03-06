@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reactive;
 using Monstromatic.Models;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace Monstromatic.ViewModels
 {
-    public class MonsterDetailsViewModel : ViewModelBase
+    public partial class MonsterDetailsViewModel : ViewModelBase
     {
         private int _level;
 
@@ -25,21 +25,14 @@ namespace Monstromatic.ViewModels
             set => this.RaiseAndSetIfChanged(ref _level, value);
         }
 
-        [Reactive] public string Name { get; set; }
-
-        [Reactive] public int Attack { get; set; }
-
-        [Reactive] public int Defence { get; set; }
-
-        [Reactive] public int Stamina { get; set; }
-
-        [Reactive] public bool HasAdvantage { get; set; }
-
-        [Reactive] public bool HasDisadvantage { get; set; }
-
-        [Reactive] public int HitCounter { get; set; }
-
-        [Reactive] public bool IsGroup { get; set; }
+        [Reactive] private string _name;
+        [Reactive] private int _attack;
+        [Reactive] private int _defence;
+        [Reactive] private int _stamina;
+        [Reactive] private bool _hasAdvantage;
+        [Reactive] private bool _hasDisadvantage;
+        [Reactive] private int _hitCounter;
+        [Reactive] private bool _isGroup;
         
         public IEnumerable<MonsterFeature> DescriptiveFeatures =>
             Features.Where(f => !string.IsNullOrEmpty(f.Description)).DistinctBy(f => f.DetailsDisplayName);

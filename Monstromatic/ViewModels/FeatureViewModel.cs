@@ -3,15 +3,14 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using DynamicData;
-using JetBrains.Annotations;
 using Monstromatic.Data.FeatureService;
 using Monstromatic.Models;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace Monstromatic.ViewModels;
 
-public class FeatureViewModel : ViewModelBase
+public partial class FeatureViewModel : ViewModelBase
 {
     private readonly MonsterFeature _feature;
     private readonly IFeatureController _featureController;
@@ -19,9 +18,9 @@ public class FeatureViewModel : ViewModelBase
     public string Key => _feature.Key;
 
     public string DisplayName => _feature.DisplayName;
-
-    [UsedImplicitly] 
-    public bool IsFeatureSelected { [ObservableAsProperty] get; }
+    
+    [ObservableAsProperty]
+    private bool _isFeatureSelected;
 
     public FeatureViewModel(MonsterFeature feature, IFeatureController featureController)
     {
@@ -39,7 +38,7 @@ public class FeatureViewModel : ViewModelBase
         _featureController.SelectedFeatures
             .Connect()
             .QueryWhenChanged(x => x.Contains(_feature))
-            .ToPropertyEx(this, x => x.IsFeatureSelected);
+            .ToProperty(this, x => x.IsFeatureSelected);
     }
 
     private bool CanAddFeature(IReadOnlyCollection<MonsterFeature> selectedFeatures)

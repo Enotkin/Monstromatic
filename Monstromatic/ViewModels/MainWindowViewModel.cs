@@ -9,22 +9,21 @@ using Monstromatic.Data.Services;
 using Monstromatic.Models;
 using Monstromatic.Utils;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
+
 
 namespace Monstromatic.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel : ViewModelBase
 {
     public IProcessHelper ProcessHelper { get; }
     private readonly FeatureController _featureController = new();
     private readonly IAppSettingsProvider _settingsProvider;
     private readonly FeatureService _featureService;
-        
-    [Reactive]
-    public string Name { get; set; }
 
-    [Reactive]
-    public string SelectedQuality { get; set; }
+    [Reactive] public string _name;
+
+    [Reactive] public string _selectedQuality;
 
     public IEnumerable<FeatureViewModel> Features => GetFeatureViewModels();
     public IEnumerable<string> Qualities => _settingsProvider.Settings.MonsterQualities.Select(x => x.Key);

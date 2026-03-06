@@ -2,18 +2,17 @@
 using Monstromatic.Data.AppSettingsProvider;
 using Monstromatic.Models;
 using Monstromatic.Utils;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace Monstromatic.ViewModels;
 
-public class TestWindowViewModel : ViewModelBase
+public partial class TestWindowViewModel : ViewModelBase
 {
     private readonly IAppSettingsProvider _settingsProvider;
     public IProcessHelper ProcessHelper { get; }
     public MonsterViewModel MonsterViewModel { get; }
-        
-    [Reactive]
-    public string Pidor { get; set; }
+
+    [Reactive] public string _pidor;
 
     public TestWindowViewModel(IAppSettingsProvider settingsProvider, IProcessHelper processHelper) : this()
     {
