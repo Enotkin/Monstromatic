@@ -13,11 +13,14 @@
         TransparencyLevelHint="AcrylicBlur"
         WindowStartupLocation="CenterScreen"
         Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=MainWindowVM}">
+    
     <Window.Resources>
         <conv:BoolInverseConverter x:Key="BoolInverseConverter" />
         <resources:Resources x:Key="Resources" />
     </Window.Resources>
+    
     <ExperimentalAcrylicBorder>
+        
         <ExperimentalAcrylicBorder.Material>
             <ExperimentalAcrylicMaterial
                 TintColor="Black"
@@ -25,7 +28,9 @@
                 MaterialOpacity="0.8"
                 BackgroundSource="Digger" />
         </ExperimentalAcrylicBorder.Material>
+        
         <DockPanel>
+            
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Настройки">
                     <MenuItem Header="Общие"
@@ -39,7 +44,9 @@
                 </MenuItem>
                 <MenuItem Header="О программе" Command="{Binding ShowAboutCommand}" />
             </Menu>
+            
             <Border DockPanel.Dock="Top" Background="{StaticResource ThemeControlHighBrush}" BorderThickness="1"></Border>
+            
             <Grid ColumnDefinitions="150,*">
                 <Grid.Styles>
                     <Style Selector="HeaderedContentControl">
@@ -61,6 +68,7 @@
                         </Setter>
                     </Style>
                 </Grid.Styles>
+                
                 <Grid Grid.Column="0">
                     <ListBox ItemsSource="{Binding Qualities}"
                              SelectedItem="{Binding SelectedQuality}"
@@ -95,6 +103,7 @@
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
                 </HeaderedContentControl>
+                
             </Grid>
         </DockPanel>
     </ExperimentalAcrylicBorder>

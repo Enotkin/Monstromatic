@@ -18,9 +18,16 @@ namespace Monstromatic.Views
         private void ChangeExpandState(object sender, RoutedEventArgs routedEventArgs)
         {
             _isExpanded = !_isExpanded;
-            var grid = this.GetControl<Grid>("ExpanderGrid");
-            grid.Height = _isExpanded ? 200 : 0;
-     
+            var grid = this.GetControl<ItemsControl>("ExpanderGrid");
+            grid.Height = _isExpanded ? 100 : 0;
+            
+            AnimateButton(sender as Visual, _isExpanded);
+        }
+        
+        private void AnimateButton(Visual button, in bool isExpanded)
+        {
+            if (button?.RenderTransform is RotateTransform transform) 
+                transform.Angle = isExpanded? 0 : 180;
         }
     }
 }

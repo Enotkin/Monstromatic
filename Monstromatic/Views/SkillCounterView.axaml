@@ -7,28 +7,30 @@
              x:Class="Monstromatic.Views.SkillCounterView"
              x:DataType="viewModels:SkillCounterViewModel"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=SkillCounterViewModel}">
-    <StackPanel>
+    <StackPanel >
         <Label Content="{Binding  SkillName}" HorizontalAlignment="Center" Height="25" FontSize="12"/>
-        <Grid RowDefinitions="*, *" ColumnDefinitions="*, *">
+        <UniformGrid Rows="2" Columns="2">
             
-            <Grid.Styles>
-                <Style Selector="Button, TextBlock">
+            <UniformGrid.Styles>
+                <Style Selector="TextBox">
                     <Setter Property="Margin" Value="2"></Setter>
                 </Style>
-            </Grid.Styles>
+                
+                <Style Selector="Button">
+                    <Setter Property="Margin" Value="2"></Setter>
+
+                    <Setter Property="FontWeight" Value="Bold"></Setter>
+                </Style>
+                
+            </UniformGrid.Styles>
             
-            <Button Grid.Row="0" Grid.Column="0" 
-                    Content="+" Command="{Binding Increase}" FontWeight="Bold"/>
+            <Button Content="+" Command="{Binding Increase}"/>
             
-            <TextBox Grid.Row="0" Grid.Column="1" 
-                     Text="{Binding SkillValue}"
+            <TextBox Text="{Binding SkillValue}"
                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
             
-            <Button Grid.Row="1" Grid.Column="0" 
-                    Content="-" Command="{Binding Decrease}" FontWeight="Bold"/>
-            
-            <Button Grid.Row="1" Grid.Column="1" 
-                    Content="R" Command="{Binding Reset}" FontWeight="Bold"/>
-        </Grid>
+            <Button Content="-" Command="{Binding Decrease}"/>
+            <Button Content="R" Command="{Binding Reset}"/>
+        </UniformGrid>
     </StackPanel>
 </UserControl>

@@ -11,7 +11,6 @@ using Monstromatic.Utils;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
-
 namespace Monstromatic.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
@@ -21,9 +20,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IAppSettingsProvider _settingsProvider;
     private readonly FeatureService _featureService;
 
-    [Reactive] public string _name;
+    [Reactive] private string _name;
 
-    [Reactive] public string _selectedQuality;
+    [Reactive] private string _selectedQuality;
 
     public IEnumerable<FeatureViewModel> Features => GetFeatureViewModels();
     public IEnumerable<string> Qualities => _settingsProvider.Settings.MonsterQualities.Select(x => x.Key);

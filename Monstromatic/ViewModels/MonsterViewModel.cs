@@ -12,8 +12,8 @@ public class MonsterViewModel : ViewModelBase
 
     private readonly Monster _monster;
     
-    private readonly List<SkillCounterViewModel> _skillsVm;
-    
+    public List<SkillCounterViewModel> SkillsVm { get; }
+
     public event RemovingMonsterEvent RemovingMonsterEventInv;
     
     public ReactiveCommand<Unit, Unit> CloseCommand { get; }
@@ -70,7 +70,7 @@ public class MonsterViewModel : ViewModelBase
         Temper = new SkillCounterViewModel(monster.Temper);
         Trickery = new SkillCounterViewModel(monster.Trickery);
 
-        _skillsVm = [Attack, Defence, Health, Knowledge, Temper, Trickery];
+        SkillsVm = [Attack, Defence, Health, Knowledge];
 
         this.WhenAnyValue(x => x.IsAlive).Subscribe(x => RemoveMonster());
         this.WhenAnyValue(vm => vm._monster.Level).Subscribe(_ => UpdateSkills());
@@ -79,24 +79,16 @@ public class MonsterViewModel : ViewModelBase
     private void ResetModifications()
     {
         _monster.ResetModifications();
-        UpdateLevel();
+        this.RaisePropertyChanged(nameof(Level));
         UpdateSkills();
     }
 
     public int Level => _monster.Level;
 
-    private void UpdateSkills()
-    {
-        foreach (var skillVm in _skillsVm)
-        {
-            skillVm.RaisePropertyChanged(nameof(skillVm.SkillValue));
-        }
-    }
+    private void UpdateSkills() =>
+        SkillsVm.ForEach(skillVm => skillVm.RaisePropertyChanged(nameof(skillVm.SkillValue)));
 
-    private void RemoveMonster()
-    {
-        RemovingMonsterEventInv?.Invoke(_monster.Id);
-    }
+    private void RemoveMonster() => RemovingMonsterEventInv?.Invoke(_monster.Id);
 
     public void UpdateLevel()
     {

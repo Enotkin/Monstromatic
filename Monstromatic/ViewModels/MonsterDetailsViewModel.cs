@@ -40,7 +40,6 @@ namespace Monstromatic.ViewModels
         public ReactiveCommand<Unit, Unit> ResetDefenceCounterCommand { get; }
         public ReactiveCommand<Unit, Unit> ResetAttackCounterCommand { get; }
         public ReactiveCommand<Unit, Unit> ResetStaminaCounterCommand { get; }
-
         public ReactiveCommand<Unit,Unit> IncreaseLevelCommand { get; }
         public ReactiveCommand<Unit, Unit> DecreaseLevelCommand { get; }
         

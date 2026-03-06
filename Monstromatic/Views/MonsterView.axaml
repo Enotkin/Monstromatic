@@ -4,131 +4,100 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:Monstromatic.Views;assembly=Monstromatic"
              xmlns:viewModels="clr-namespace:Monstromatic.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="300"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="150"
              x:Class="Monstromatic.Views.MonsterView"
              x:DataType="viewModels:MonsterViewModel"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=MonsterViewModel}">
+    
     <UserControl.Styles>
         <StyleInclude Source="/Styles/HeaderStyles.axaml"></StyleInclude>
     </UserControl.Styles>
 
     <Border Name="Border" BorderThickness="2" BorderBrush="#FFA0A0A0" CornerRadius="5">
-        <StackPanel>
+        <DockPanel LastChildFill="True">
 
-            <Border Background="#FFA0A0A0" CornerRadius="3,3,0,0">
-                <Grid VerticalAlignment="Top" RowDefinitions="Auto">
-                    <!-- -->
-                    <!-- <Grid.RowDefinitions> -->
-                    <!--     <RowDefinition Height="55" /> -->
-                    <!--     <RowDefinition Height="{Binding}" /> -->
-                    <!-- </Grid.RowDefinitions> -->
+            <Border DockPanel.Dock="Top" Background="#FFA0A0A0" CornerRadius="3,3,0,0" >
+                <Grid VerticalAlignment="Top" RowDefinitions="*" ColumnDefinitions="*" Margin="0, 5">
 
                     <Border>
-                        <Grid.RowSpan>2</Grid.RowSpan>
                         <Border.BorderThickness>2</Border.BorderThickness>
                         <Border.CornerRadius>10, 10, 0, 0</Border.CornerRadius>
                     </Border>
 
-                    <Grid Grid.Row="0" Name="Header" ColumnDefinitions="Auto,*,Auto,Auto">
-
-                        <!-- <Стили> -->
+                    <Grid Grid.Row="0" Name="Header" ColumnDefinitions="Auto,*,Auto">
+                        
                         <Grid.Styles>
-                            <Style Selector="Grid > Button">
-                                <Setter Property="Width" Value="20"></Setter>
-                                <Setter Property="Height" Value="20"></Setter>
-                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
-                                <Setter Property="HorizontalAlignment" Value="Center"></Setter>
-                                <Setter Property="FontSize" Value="9"></Setter>
-                            </Style>
-                            <Style Selector="Button.round /template/ ContentPresenter">
-                                <Setter Property="CornerRadius" Value="10" />
+                            <Style Selector="Button">
+                                <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                                <Setter Property="Margin" Value="3, 0"></Setter>
                             </Style>
                         </Grid.Styles>
-
+                        
                         <!-- <Кнопка раскрытия окна> -->
                         <Button Name="HideButton" Grid.Column="0" Classes="round" Click="ChangeExpandState"
+                                Margin="5, 0, 0, 0 "
                                 Background="{StaticResource MonstromaticAccent}">
                             <Button.RenderTransform>
                                 <RotateTransform Angle="0">
                                     <RotateTransform.Transitions>
                                         <Transitions>
-                                            <DoubleTransition Property="Angle" Duration="0:0:0.1" Easing="SplineEasing" />
+                                            <DoubleTransition Property="Angle" Duration="0:0:0.1" Easing="SplineEasing"/>
                                         </Transitions>
                                     </RotateTransform.Transitions>
                                 </RotateTransform>
                             </Button.RenderTransform>
-
+                        
                             <Path Data="M 0 5 L 5 0 L 10 5" Stroke="{StaticResource ThemeControlHighlightLowBrush}"
                                   StrokeThickness="2">
                             </Path>
                         </Button>
 
-                        <!-- Кнопки изменения уровня -->
-                        <StackPanel Grid.Column="1" Margin="5">
-                            <TextBlock Classes="level" Text="{Binding Name}"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Center" 
-                                       Margin="2, 2, 2, 5"
-                                       TextWrapping="Wrap"/>
+                        <!-- Название монстра -->
+                        <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                   Classes="main"
+                                   HorizontalAlignment="Center"
+                                   Margin="2, 2, 2, 5"
+                                   TextWrapping="Wrap"/>
+                        
+                        
+                        <!-- Кнопки управления -->
+                        <Grid Grid.Column="2" Margin="0, 0, 0, 0 " ColumnDefinitions="*, *, *, *, *" HorizontalAlignment="Center" >
+                            
+                            <Button Grid.Column="0"  Command="{Binding RemoveLevel}" Content="&lt;&lt;" />
+                            <TextBlock Grid.Column="1" Classes="main" Text="{Binding Level, StringFormat=Ур. \{0\}}" VerticalAlignment="Center"/>
+                            <Button Grid.Column="2"  Command="{Binding AddLevel}" Content="&gt;&gt;" />
+                            
+                            <Button Grid.Column="3"  Command="{Binding ResetModificationsCommand}" Content="R" />
 
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-
-                                <Button Command="{Binding RemoveLevel}"
-                                        Classes="level"
-                                        Content="&lt;&lt;" />
-
-                                <TextBlock
-                                    Classes="level"
-                                    Text="{Binding Level, StringFormat=Ур. \{0\}}" />
-
-                                <Button Command="{Binding AddLevel}"
-                                        Classes="level"
-                                        Content="&gt;&gt;" />
-
-                            </StackPanel>
-                        </StackPanel>
-
-                        <Button Grid.Column="2" Command="{Binding ResetModificationsCommand}" Content="R" 
-                                Margin="3"/>
-
-                        <!-- Закрыте окна -->
-                        <Button Grid.Column="3" Command="{Binding CloseCommand}" Background="#bb0000"
-                                Margin="3">
-                            <Path Data="M 0 0 L 10 10 M 0 10 L 10 0"
-                                  Stroke="{StaticResource ThemeControlHighlightLowBrush}" StrokeThickness="2">
-                            </Path>
-                        </Button>
-
+                            <!-- Закрыте окна -->
+                            <Button Grid.Column="4"  Command="{Binding CloseCommand}" Background="#bb0000">
+                                <Path Data="M 0 0 L 10 10 M 0 10 L 10 0"
+                                      Stroke="{StaticResource ThemeControlHighlightLowBrush}" StrokeThickness="2">
+                                </Path>
+                            </Button>
+                        </Grid>
+                    
                     </Grid>
                 </Grid>
             </Border>
 
-
-            <Grid VerticalAlignment="Top" Name="ExpanderGrid" ColumnDefinitions="*,*,*" RowDefinitions="*, *">
-                <Grid.Styles>
-                    <Style Selector="views|SkillCounterView">
-                        <Setter Property="Margin" Value="5" />
-                    </Style>
-                </Grid.Styles>
-
-                <views:SkillCounterView Grid.Column="0" Grid.Row="0"
-                                        DataContext="{Binding Attack}" />
-
-                <views:SkillCounterView Grid.Column="1" Grid.Row="0"
-                                        DataContext="{Binding Defence}" />
-
-                <views:SkillCounterView Grid.Column="2" Grid.Row="0"
-                                        DataContext="{Binding Health}" />
-
-                <views:SkillCounterView Grid.Column="0" Grid.Row="1"
-                                        DataContext="{Binding Knowledge}" />
-
-                <views:SkillCounterView Grid.Column="1" Grid.Row="1"
-                                        DataContext="{Binding Temper}" />
-
-                <views:SkillCounterView Grid.Column="2" Grid.Row="1"
-                                        DataContext="{Binding Trickery}" />
-            </Grid>
-        </StackPanel>
+            <ItemsControl Name="ExpanderGrid" ItemsSource="{Binding SkillsVm}">
+                
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="{Binding SkillsVm.Count}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <views:SkillCounterView Margin="5, 0, 5, 5"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                
+            </ItemsControl>
+            
+        </DockPanel>
     </Border>
 </UserControl>

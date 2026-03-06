@@ -9,13 +9,11 @@
         x:Class="Monstromatic.Views.EncounterView"
         Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=EncounterViewModel}"
         SystemDecorations="BorderOnly"
-        SizeToContent="Height"
+        SizeToContent="WidthAndHeight"
         CanResize="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaToDecorationsHint="True"
-        Width="250"
-        MaxWidth="250"
-        MinWidth="250">
+        Width="500">
     <Window.Resources>
         <conv:DoubleToGridLengthConverter x:Key="GridLengthConverter"/>
         <conv:GridHeightFeatureCountConverter x:Key="FeatureCountConverter" />
@@ -45,53 +43,62 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" MinHeight="50"/>
-                    <RowDefinition Height="22"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 
-                <Grid Row="0" Margin="5" ColumnDefinitions="*">
-                    <Border BorderBrush="{StaticResource ThemeControlHighlightLowBrush}" BorderThickness="2"
-                            CornerRadius="5">
-                        <ItemsControl VerticalAlignment="Stretch" ItemsSource="{Binding DescriptiveFeatures}">
+                <Grid Row="0" Margin="5, 5,5,0 " ColumnDefinitions="*">
+                    
+                    <Grid ColumnDefinitions="*, Auto" >
+                                            
+                        <Border BorderBrush="{StaticResource ThemeControlHighlightLowBrush}" 
+                                BorderThickness="2" CornerRadius="5" Margin="0, 0, 5, 0">
+                            <ItemsControl VerticalAlignment="Stretch" ItemsSource="{Binding DescriptiveFeatures}">
                 
-                            <ItemsControl.Styles>
-                                <Style Selector="TextBlock:pointerover">
-                                    <Setter Property="Background" Value="{StaticResource ThemeControlLowBrush}"/>
-                                </Style>
-                            </ItemsControl.Styles>
+                                <ItemsControl.Styles>
+                                    <Style Selector="TextBlock:pointerover">
+                                        <Setter Property="Background" Value="{StaticResource ThemeControlLowBrush}"/>
+                                    </Style>
+                                </ItemsControl.Styles>
                 
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel MaxWidth="230" Margin="0,5,0,0"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Margin="5"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
                 
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                        <TextBlock Margin="10,3,10,3" Height="40" FontSize="14" TextWrapping="Wrap" TextAlignment="Center"
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="0,3,0,3" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"
                                                    Text="{Binding Description}" ToolTip.Tip="{Binding Description}" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
                 
-                        </ItemsControl>
-                    </Border>
+                            </ItemsControl>
+                        </Border>
+                        
+                        <!-- Кнопка добавления монстра -->
+                        <Border Grid.Column="1" BorderBrush="{StaticResource ThemeControlHighlightLowBrush}" 
+                                BorderThickness="2" CornerRadius="5" Padding="5">
+                            <Grid  ColumnDefinitions="*, *">
+                                <Label Grid.Column="0" Content="{Binding Monsters.Count}" VerticalAlignment="Center"/>
+                                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="5, 0, 5, 0" Orientation="Vertical" VerticalAlignment="Center" Spacing="5">
+                                    <Button Command="{Binding AddMonsterCommand}" Width="30" Height="19" Content="+" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="0"/>
+                                    <Button Command="{Binding RemoveMonsterCommand}" Width="30" Height="19" Content="-" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        
+                    </Grid>
                 </Grid>
                 
-                <!-- Кнопка добавления монстра -->
-                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="5, 0, 5, 0" Orientation="Horizontal" VerticalAlignment="Stretch" Spacing="5">
-                    <Button Command="{Binding RemoveMonsterCommand}" Width="30" Height="19" Content="-" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="0"/>
-                    <Label Content="{Binding Monsters.Count}" VerticalAlignment="Center"/>
-                    <Button Command="{Binding AddMonsterCommand}" Width="30" Height="19" Content="+" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="0"/>
-                </StackPanel>
-            
                 <!-- Панель отображения монстров-->
-                <Grid Grid.Row="2" Margin="5, 0, 5, 10">
+                <Grid Grid.Row="1" Margin="0, 15, 0, 10">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <ItemsControl Name="MonsterItemControl" ItemsSource="{Binding Monsters}">
                     
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Margin="5"></StackPanel>
+                                    <StackPanel Margin="5, 0"></StackPanel>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                     
