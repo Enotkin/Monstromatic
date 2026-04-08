@@ -93,7 +93,7 @@ public partial class EncounterViewModel : ViewModelBase
     private MonsterViewModel GetMonsterViewModelForRemoving(Guid monsterId)
     {
         return monsterId == Guid.Empty 
-            ? Monsters.OrderBy(m => m.Name.Last()).Last() 
+            ? Monsters.OrderBy(m => m.Name.Last()).Last()   
             : Monsters.First(m => m.Id == monsterId);
     }
 }

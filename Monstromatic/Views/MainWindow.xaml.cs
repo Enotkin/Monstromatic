@@ -1,8 +1,9 @@
-﻿using System.Reactive;
+﻿using System;
+using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 using Monstromatic.ViewModels;
 using ReactiveUI;
 
@@ -13,19 +14,19 @@ namespace Monstromatic.Views
         public MainWindow()
         {
             InitializeComponent();
-            this.WhenActivated(d => d(ViewModel?.ShowNewMonsterWindow.RegisterHandler(DoShowNewMonster)));
-            this.WhenActivated(d => d(ViewModel?.ShowAboutDialog.RegisterHandler(DoShowAboutDialog)));
-            this.WhenActivated(d => d(ViewModel?.ConfirmResetChanges.RegisterHandler(DoConfirmResetChanges)));
+            this.WhenActivated(d => d(ViewModel?.ShowNewMonsterWindow.RegisterHandler(DoShowNewMonster) ?? throw new InvalidOperationException()));
+            this.WhenActivated(d => d(ViewModel?.ShowAboutDialog.RegisterHandler(DoShowAboutDialog) ?? throw new InvalidOperationException()));
+            this.WhenActivated(d => d(ViewModel?.ConfirmResetChanges.RegisterHandler(DoConfirmResetChanges) ?? throw new InvalidOperationException()));
 #if DEBUG
             this.AttachDevTools();
 #endif
         }
 
-        private async Task DoConfirmResetChanges(InteractionContext<Unit, bool> interaction)
+        private async Task DoConfirmResetChanges(IInteractionContext<Unit, bool> interactionContext)
         {
             var dialog = new ConfirmationWindow("Вы уверены, что хотите сбросить все настройки?");
             var result = await dialog.ShowDialog<bool>(this);
-            interaction.SetOutput(result);
+            interactionContext.SetOutput(result);
         }
 
         private void InitializeComponent()
@@ -33,21 +34,22 @@ namespace Monstromatic.Views
             AvaloniaXamlLoader.Load(this);
         }
         
-        private static void DoShowNewMonster(InteractionContext<EncounterViewModel, Unit> interaction)
+        private static Task DoShowNewMonster(IInteractionContext<EncounterViewModel, Unit> interactionContext)
         {
             var dialog = new EncounterView
             {
-                DataContext = interaction.Input
+                DataContext = interactionContext.Input
             };
             dialog.Show();
-            interaction.SetOutput(Unit.Default);
+            interactionContext.SetOutput(Unit.Default);
+            return Task.CompletedTask;
         }
         
-        private async Task DoShowAboutDialog(InteractionContext<Unit, Unit> interaction)
+        private async Task DoShowAboutDialog(IInteractionContext<Unit, Unit> interactionContext)
         {
             var dialog = new AboutWindow(ViewModel.ProcessHelper);
             await dialog.ShowDialog(this);
-            interaction.SetOutput(Unit.Default);
+            interactionContext.SetOutput(Unit.Default);
         }
     }
 }

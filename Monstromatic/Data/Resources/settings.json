@@ -1,14 +1,13 @@
 ﻿{
   "MonsterQualities": {
-    "Слабый": 4,
-    "Обыватель": 6,
-    "Элита/Спец": 8,
-    "Сюжетный/Mary Sue": 10,
-    "Каноничный": 12
+    "Слабый": 2,
+    "Обычный": 4,
+    "Мини-Босс": 6,
+    "БОСС!!!": 8
   },
   "DefaultModifiers": {
-    "AttackModifier" : 0,
-    "DefenceModifier" : 0,
+    "AttackModifier" : 0.5,
+    "DefenceModifier" : 1,
     "HealthModifier" : 2,
     "KnowledgeModifier" : 1,
     "TemperModifier" : 1,

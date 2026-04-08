@@ -38,7 +38,12 @@ public partial class Encounter : ReactiveObject
         var initMonster = new Monster(baseLevel, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++), _featuresBundle);
         _monsters.Add(initMonster.Id, initMonster);
         
-        this.WhenAnyValue(x => x.Level).Subscribe(_ => UpdateMonstersLevel());
+        this.WhenAnyValue(x => x.Level)
+            .Subscribe(_ =>
+            {
+                foreach (var monster in Monsters) 
+                    monster.EncounterLevel = Level;
+            });
     }
 
     public Monster AddMonster()
@@ -51,11 +56,5 @@ public partial class Encounter : ReactiveObject
     public void RemoveMonster(Guid monsterId)
     {
         _monsters.Remove(monsterId);
-    }
-
-    private void UpdateMonstersLevel()
-    {
-        foreach (var monster in Monsters) 
-            monster.EncounterLevel = Level;
     }
 }

@@ -5,8 +5,8 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.ReactiveUI;
 using Monstromatic.ViewModels;
+using ReactiveUI.Avalonia;
 
 namespace Monstromatic.Views;
 
