@@ -59,6 +59,10 @@
     <None Remove="Data\DefaultSettings.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\NewDomain\" />
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
 </Project>

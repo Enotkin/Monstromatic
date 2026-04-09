@@ -26,7 +26,6 @@
     "DisplayName": "Экзотический Редкий",
     "LevelModifier" : 2
   },
-
   {
     "Key": "Sains",
     "DisplayName": "Мудрый",
@@ -128,5 +127,7 @@
     "Description": "Уязвим к Дальнобойным Атакам",
     "DefenceModifier" : 1.5,
     "HealthModifier" : 1.5
-  }
+  },
+
+  
 ]

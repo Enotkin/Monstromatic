@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using DAL.Services;
 using Monstromatic.Data.AppSettingsProvider;
 using Monstromatic.Data.FeatureService;
 using Monstromatic.Data.Services;
@@ -19,25 +20,29 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly FeatureController _featureController = new();
     private readonly IAppSettingsProvider _settingsProvider;
     private readonly FeatureService _featureService;
+    private readonly ISettingsService SettingsService;
 
-    [Reactive] private string _name;
+    [Reactive] 
+    private string _name;
 
-    [Reactive] private string _selectedQuality;
+    [Reactive] 
+    private string _selectedQuality;
+
+    [Reactive]
+    private IEnumerable<string> _qualities;
 
     public IEnumerable<FeatureViewModel> Features => GetFeatureViewModels();
-    public IEnumerable<string> Qualities => _settingsProvider.Settings.MonsterQualities.Select(x => x.Key);
+
     public ReactiveCommand<Unit, Unit> GenerateEncounterCommand { get; }
-    public ReactiveCommand<Unit, Unit> ShowAboutCommand { get; }
-    public ReactiveCommand<string, Unit> ShowSettingsCommand { get; }
-    public ReactiveCommand<Unit, Unit> ResetSettingsCommand { get; }
 
     public Interaction<EncounterViewModel, Unit> ShowNewMonsterWindow { get; } = new ();
     public Interaction<Unit, Unit> ShowAboutDialog { get; } = new ();
     public Interaction<Unit, bool> ConfirmResetChanges { get; } = new();
         
-    public MainWindowViewModel(IAppSettingsProvider settingsProvider, IProcessHelper processHelper)
+    public MainWindowViewModel(IAppSettingsProvider settingsProvider, IProcessHelper processHelper, ISettingsService settingsService)
     {
         ProcessHelper = processHelper;
+        SettingsService = settingsService;
         _settingsProvider = settingsProvider;
         _featureService = new FeatureService();
 
@@ -45,12 +50,12 @@ public partial class MainWindowViewModel : ViewModelBase
             .WhenAnyValue(x => x.Name, x => x.SelectedQuality,
                 (name, quality) => !string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(quality));
             
-        GenerateEncounterCommand = ReactiveCommand.CreateFromTask(GenerateNewEncounter, canGenerateEncounter);
-        ShowAboutCommand = ReactiveCommand.CreateFromTask(async () => await ShowAboutDialog.Handle(Unit.Default));
-        ShowSettingsCommand = ReactiveCommand.CreateFromTask<string>(ShowSettings);
-        ResetSettingsCommand = ReactiveCommand.CreateFromTask(ResetSettings);
+        GenerateEncounterCommand = ReactiveCommand.CreateFromTask(GenerateEncounter, canGenerateEncounter);
+        
+        Qualities = settingsService.Settings.MonsterQualities.Select(x => x.Key);
     }
 
+    [ReactiveCommand]
     private async Task ResetSettings()
     {
         var result = await ConfirmResetChanges.Handle(Unit.Default);
@@ -61,7 +66,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    private async Task GenerateNewEncounter()
+    private async Task GenerateEncounter()
     {
         var baseMonsterLevel = _settingsProvider.Settings.MonsterQualities[SelectedQuality];
         var encounter = new Encounter(Name, baseMonsterLevel, _featureController.CreateFeaturesBundle());
@@ -69,11 +74,11 @@ public partial class MainWindowViewModel : ViewModelBase
         await ShowNewMonsterWindow.Handle(encounterViewModel);
     }
 
-    private async Task ShowSettings(string path)
-    {
-        await ProcessHelper.StartNewAndWaitAsync(path);
-        RefreshControls();
-    }
+    [ReactiveCommand]
+    private async Task ShowSettings(string path) => await ProcessHelper.StartNewAndWaitAsync(path);
+
+    [ReactiveCommand]
+    private async Task ShowAbout() => await ShowAboutDialog.Handle(Unit.Default);
 
     private void RefreshControls()
     {

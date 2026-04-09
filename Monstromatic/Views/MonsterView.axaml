@@ -28,8 +28,8 @@
                         
                         <Grid.Styles>
                             <Style Selector="Button">
-                                <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
-                                <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                                <Setter Property="HorizontalAlignment" Value="Center"></Setter>
                                 <Setter Property="Margin" Value="3, 0"></Setter>
                             </Style>
                         </Grid.Styles>
