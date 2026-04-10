@@ -24,7 +24,7 @@ public partial class EncounterViewModel : ViewModelBase
         Monsters.CollectionChanged += MonstersOnCollectionChanged;
     }
 
-    public Interaction<Unit, Unit> MonsterCreated { get; } = new();
+    private Interaction<Unit, Unit> MonsterCreated { get; } = new();
 
     public string Name => _encounter.Name;
 
@@ -42,11 +42,8 @@ public partial class EncounterViewModel : ViewModelBase
     public IEnumerable<MonsterFeature> DescriptiveFeatures =>
         _encounter.Features.Where(f => !string.IsNullOrEmpty(f.Description));
     
-    private void MonstersOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-        MonsterCreated.Handle(Unit.Default);
-    }
-    
+    private void MonstersOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => MonsterCreated.Handle(Unit.Default);
+
     [ReactiveCommand]
     private void AddMonster()
     {
@@ -69,20 +66,14 @@ public partial class EncounterViewModel : ViewModelBase
     }
 
     [ReactiveCommand]
-    private void AddLevel()
-    {
-        Level++;
-        foreach (var monsterViewModel in Monsters)      
-        {
-            monsterViewModel.UpdateLevel();
-        }
-        this.RaisePropertyChanged(nameof(Monsters));
-    }
+    private void AddLevel() => Level++;
 
     [ReactiveCommand]
-    private void RemoveLevel()
+    private void RemoveLevel() => Level--;
+
+    [ReactiveCommand]
+    private void ResetModifications()
     {
-        Level--;
         foreach (var monsterViewModel in Monsters)      
         {
             monsterViewModel.UpdateLevel();

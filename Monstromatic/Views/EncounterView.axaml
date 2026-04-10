@@ -27,7 +27,7 @@
     <Border Name="Border" BorderThickness="2">
         <Grid VerticalAlignment="Top" RowDefinitions="Auto,*">
 
-            <!-- ��������� ���� -->
+            <!-- Headers -->
             <Grid Grid.Row="0" VerticalAlignment="Top" RowDefinitions="Auto">
                 <Border>
                     <Grid.RowSpan>2</Grid.RowSpan>
@@ -35,7 +35,7 @@
                     <Border.CornerRadius>10, 10, 0, 0</Border.CornerRadius>
                 </Border>
 
-                <Grid Grid.Row="0" Name="Header" Background="Transparent" PointerPressed="Header_PointerPressed" ColumnDefinitions="*,50,40">
+                <Grid Grid.Row="0" Name="Header" Background="Transparent" PointerPressed="Header_PointerPressed" ColumnDefinitions="*,50,50,50">
 
                     <!-- Styles -->
                     <Grid.Styles>
@@ -51,7 +51,7 @@
                         </Style>
                     </Grid.Styles>
 
-                    <!--  -->
+                    <!-- Name and Level  -->
                     <Grid Grid.Column="0" ColumnDefinitions="*, Auto" Margin="5">
                         <Grid.Styles>
                             <Style Selector="TextBlock">
@@ -75,9 +75,11 @@
                             <Button Command="{Binding AddLevelCommand}" Classes="LevelModifier">&gt;&gt;</Button>
                         </StackPanel>
                     </Grid>
+                    
+                    <Button Grid.Column="1"  Command="{Binding ResetModificationsCommand}" Content="R" />
 
                     <!-- Color Selecting -->
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="2">
                         <ComboBox Height="35" Name="ColorSelector" SelectionChanged="ColorSelectorOnSelectionChanged">
                             <ComboBox.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -94,13 +96,13 @@
                     </Grid>
 
                     <!-- Close button -->
-                    <Button Grid.Column="2" Click="CloseButton_Click" Background="#bb0000">
+                    <Button Grid.Column="3" Click="CloseButton_Click" Background="#bb0000">
                         <Path Data="M 0 0 L 10 10 M 0 10 L 10 0" Stroke="{StaticResource ThemeControlHighlightLowBrush}" StrokeThickness="2"></Path>
                     </Button>
                 </Grid>
             </Grid>
 
-            <!-- ������ ������������ ������������ -->
+            <!-- Monsters-->
             <Grid Grid.Row="1" Name="ExpandableGrid" VerticalAlignment="Stretch">
 
                 <Grid.RowDefinitions>
