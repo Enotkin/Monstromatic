@@ -101,7 +101,7 @@
                             <ItemsControl ItemsSource="{Binding Features}" >
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" />
+                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
@@ -113,7 +113,7 @@
                             <ItemsControl ItemsSource="{Binding LevelFeatures}" >
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" />
+                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
@@ -125,7 +125,7 @@
                             <ItemsControl ItemsSource="{Binding AttackFeatures}" >
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" RowSpacing="5"/>
+                                        <UniformGrid Columns="4" RowSpacing="5" VerticalAlignment="Top"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
@@ -137,7 +137,7 @@
                             <ItemsControl ItemsSource="{Binding DefenceFeatures}" >
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" />
+                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
@@ -149,7 +149,7 @@
                             <ItemsControl ItemsSource="{Binding BraveryFeatures}" >
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" />
+                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
@@ -161,7 +161,7 @@
                             <ItemsControl ItemsSource="{Binding TrickeryFeatures}" >
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" />
+                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
