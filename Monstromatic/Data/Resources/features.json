@@ -115,16 +115,139 @@
     "DefenceModifier" : 1.5,
     "HealthModifier" : 1.5
   },
+
   {
-    "Key": "Armor",
-    "DisplayName": "Броня, Панцирь, Щит",
+    "Key": "Flay",
+    "DisplayName": "Полёт",
+    "Description": "Уязвим к Дальнобойным Атакам",
+    "DefenceModifier" : 1.5,
+    "HealthModifier" : 1.5
+  },
+  {
+    "Key": "Sawage2",
+    "DisplayName": "Sawage2",
+    "LevelModifier" : 2,
+    "TemperModifier" : 0.5
+  },
+  {
+    "Key": "Old2",
+    "DisplayName": "Old2",
+    "LevelModifier" : 2
+  },
+  {
+    "Key": "Evil2",
+    "DisplayName": "Evil2",
+    "Description": "Уязвим к Свету",
+    "LevelModifier" : 2
+  },
+  {
+    "Key": "Tehc2",
+    "DisplayName": "Tehc2",
+    "LevelModifier" : 2
+  },
+  {
+    "Key": "Exotic2",
+    "DisplayName": "Exotic2",
+    "LevelModifier" : 2
+  },
+  {
+    "Key": "Sains2",
+    "DisplayName": "Sains2",
+    "KnowledgeModifier" : 1.5,
+    "TrickeryModifier" : 1.5
+  },
+  {
+    "Key": "PowerArnmor2",
+    "DisplayName": "PowerArnmor2",
+    "Description": "Уязвим к ОСОБЫМ атакам",
+    "DefenceModifier" : 1.5,
+    "HealthModifier" : 1.5
+  },
+  {
+    "Key": "Coward2",
+    "DisplayName": "Coward2",
+    "Description": "Уязвим к Страху",
+    "AttackModifier" : 0,
+    "DefenceModifier" : 0.5,
+    "HealthModifier" : 2,
+    "TemperModifier" : 0.5,
+    "TrickeryModifier" : 1.5
+  },
+  {
+    "Key": "Litl2",
+    "DisplayName": "Litl2",
+    "Description": "Уязвим к Страху",
+    "AttackModifier" : 0,
+    "DefenceModifier" : 1.5,
+    "TemperModifier" : 0.5,
+    "TrickeryModifier" : 1.5
+  },
+  {
+    "Key": "Big2",
+    "DisplayName": "Big2",
+    "AttackModifier" : 1.5,
+    "DefenceModifier" : 1.5,
+    "HealthModifier" : 1.5
+  },
+  {
+    "Key": "WilPowwer2",
+    "DisplayName": "WilPowwer2",
+    "TemperModifier" : 1.5
+  },
+  {
+    "Key": "Regen2",
+    "DisplayName": "Regen2",
+    "Description": "Уязвим к Огню",
+    "DefenceModifier" : 1.5,
+    "HealthModifier" : 1.5
+  },
+  {
+    "Key": "Berserc2",
+    "DisplayName": "Berserc2",
+    "Description": "Пораж. Увелич. Урон. Гибнет после раунда равного характеру",
+    "DefenceModifier" : 0.5,
+    "HealthModifier" : 1.5
+  },
+  {
+    "Key": "PowerAttak2",
+    "DisplayName": "PowerAttak2",
+    "AttackModifier" : 1.5
+  },
+  {
+    "Key": "ArmorPirsic2",
+    "Description": "Безсилен если НЕТ Брони и Щита",
+    "DisplayName": "ArmorPirsic2",
+    "AttackModifier" : 1.5
+  },
+  {
+    "Key": "Toxic2",
+    "Description": "Безсилен к Броне",
+    "DisplayName": "Toxic2"
+  },
+  {
+    "Key": "Invisible2",
+    "DisplayName": "Invisible2",
+    "Description": "Уязвим к Массовым Атакам",
+    "DefenceModifier" : 1.5,
+    "HealthModifier" : 1.5
+  },
+  {
+    "Key": "Dexteri2",
+    "DisplayName": "Dexteri2",
+    "Description": "Уязвим к Массовым Атакам",
+    "DefenceModifier" : 1.5,
+    "HealthModifier" : 1.5
+  },
+  {
+    "Key": "Armor2",
+    "DisplayName": "Armor2",
     "Description": "Уязвим к Бронебойному",
     "DefenceModifier" : 1.5,
     "HealthModifier" : 1.5
   },
   {
-    "Key": "Flay",
-    "DisplayName": "Полёт",
+    "Key": "Flay2",
+    "DisplayName": "Flay2",
     "Description": "Уязвим к Дальнобойным Атакам",
     "DefenceModifier" : 1.5,
     "HealthModifier" : 1.5
