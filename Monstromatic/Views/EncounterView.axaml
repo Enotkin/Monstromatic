@@ -9,11 +9,10 @@
         x:Class="Monstromatic.Views.EncounterView"
         Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=EncounterViewModel}"
         SystemDecorations="BorderOnly"
-
         CanResize="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaToDecorationsHint="True"
-        Width="300">
+        Width="350" MaxWidth="350" MinWidth="350">
     <Window.Resources>
         <conv:DoubleToGridLengthConverter x:Key="GridLengthConverter"/>
         <conv:GridHeightFeatureCountConverter x:Key="FeatureCountConverter" />
