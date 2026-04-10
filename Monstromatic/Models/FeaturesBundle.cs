@@ -30,19 +30,9 @@ public class FeaturesBundle
                 .Select(f => f.DefenceModifier).Sum()
             : 0);
         
-        HealthModificator = defaultModifiers.HealthModifier + (_features.Any(f => f.HealthModifier != 0)
-            ? _features.Where(f => f.HealthModifier != 0)
-                .Select(f => f.HealthModifier).Sum()
-            : 0);
-        
-        KnowledgeModificator = defaultModifiers.KnowledgeModifier + (_features.Any(f => f.KnowledgeModifier != 0)
-            ? _features.Where(f => f.KnowledgeModifier != 0)
-                .Select(f => f.KnowledgeModifier).Sum()
-            : 0);
-        
-        TemperModificator = defaultModifiers.TemperModifier + (_features.Any(f => f.TemperModifier != 0)
-            ? _features.Where(f => f.TemperModifier != 0)
-                .Select(f => f.TemperModifier).Sum()
+        BraveryModificator = defaultModifiers.BraveryModifier + (_features.Any(f => f.BraveryModifier != 0)
+            ? _features.Where(f => f.BraveryModifier != 0)
+                .Select(f => f.BraveryModifier).Sum()
             : 0);
         
         TrickeryModificator = defaultModifiers.TrickeryModifier + (_features.Any(f => f.TrickeryModifier != 0)
@@ -54,9 +44,7 @@ public class FeaturesBundle
     public int LevelModificator { get; }
     public double AttackModificator { get; }
     public double DefenceModificator { get; }
-    public double HealthModificator { get; }
-    public double KnowledgeModificator { get; }
-    public double TemperModificator { get; }
+    public double BraveryModificator { get; }
     public double TrickeryModificator { get; }
     public IReadOnlyCollection<MonsterFeature> Features => _features;
 }

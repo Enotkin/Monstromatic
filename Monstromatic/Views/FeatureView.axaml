@@ -5,7 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Monstromatic.Views.FeatureView"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=FeatureVm}">
-    <ToggleButton CommandParameter="{Binding $self.IsChecked}" MinWidth="100" MinHeight="50" Margin="5" 
+    <ToggleButton CommandParameter="{Binding $self.IsChecked}" Width="150" Height="50" Margin="5" 
                   Command="{Binding AddFeatureCommand}" IsChecked="{Binding IsFeatureSelected}"
                   CornerRadius="3">
         <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" TextAlignment="Center"/>

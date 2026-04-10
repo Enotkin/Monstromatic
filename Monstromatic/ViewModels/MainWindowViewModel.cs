@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using DynamicData;
 using Monstromatic.Data.AppSettingsProvider;
 using Monstromatic.Data.FeatureService;
 using Monstromatic.Data.Services;
@@ -24,6 +27,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [Reactive] private string _selectedQuality;
 
+    private SourceList<FeatureViewModel> _features;
+
+    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _levelFeatures;
+    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _attackFeatures;
+    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _defenceFeatures;
+    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _braveryFeatures;
+    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _trickeryFeatures;
+    
     public IEnumerable<FeatureViewModel> Features => GetFeatureViewModels();
     public IEnumerable<string> Qualities => _settingsProvider.Settings.MonsterQualities.Select(x => x.Key);
     public ReactiveCommand<Unit, Unit> GenerateEncounterCommand { get; }
@@ -49,6 +60,15 @@ public partial class MainWindowViewModel : ViewModelBase
         ShowAboutCommand = ReactiveCommand.CreateFromTask(async () => await ShowAboutDialog.Handle(Unit.Default));
         ShowSettingsCommand = ReactiveCommand.CreateFromTask<string>(ShowSettings);
         ResetSettingsCommand = ReactiveCommand.CreateFromTask(ResetSettings);
+        
+        _features = new SourceList<FeatureViewModel>();
+
+        _features.Connect().Filter(s => s.Feature.LevelModifier != 0).Bind(out _levelFeatures).Subscribe();
+        _features.Connect().Filter(s => s.Feature.AttackModifier != 0).Bind(out _attackFeatures).Subscribe();
+        _features.Connect().Filter(s => s.Feature.DefenceModifier != 0).Bind(out _defenceFeatures).Subscribe();
+        _features.Connect().Filter(s => s.Feature.BraveryModifier != 0).Bind(out _braveryFeatures).Subscribe();
+        _features.Connect().Filter(s => s.Feature.TrickeryModifier != 0).Bind(out _trickeryFeatures).Subscribe();
+        _features.AddRange(GetFeatureViewModels());
     }
 
     private async Task ResetSettings()

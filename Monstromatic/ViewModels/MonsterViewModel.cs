@@ -34,11 +34,7 @@ public class MonsterViewModel : ViewModelBase
     
     public SkillCounterViewModel Defence { get; }
     
-    public SkillCounterViewModel Health { get; }
-    
-    public SkillCounterViewModel Knowledge { get; }
-    
-    public SkillCounterViewModel Temper { get; }
+    public SkillCounterViewModel Bravery { get; }
     
     public SkillCounterViewModel Trickery { get; }
     
@@ -65,12 +61,10 @@ public class MonsterViewModel : ViewModelBase
 
         Attack = new SkillCounterViewModel(monster.Attack);
         Defence = new SkillCounterViewModel(monster.Defence);
-        Health = new SkillCounterViewModel(monster.Health);
-        Knowledge = new SkillCounterViewModel(monster.Knowledge);
-        Temper = new SkillCounterViewModel(monster.Temper);
+        Bravery = new SkillCounterViewModel(monster.Bravery);
         Trickery = new SkillCounterViewModel(monster.Trickery);
 
-        SkillsVm = [Attack, Defence, Health, Knowledge];
+        SkillsVm = [Attack, Defence, Bravery, Trickery];
 
         this.WhenAnyValue(x => x.IsAlive).Subscribe(x => RemoveMonster());
         this.WhenAnyValue(vm => vm._monster.Level).Subscribe(_ => UpdateSkills());

@@ -93,18 +93,95 @@
                         <Button Content="Генерировать" Height="50" Command="{Binding GenerateEncounterCommand}" CornerRadius="3" />
                     </StackPanel>
                 </Grid>
-                <HeaderedContentControl Grid.Column="1" Margin="3" Header="Особенности"
-                                        Background="{StaticResource ThemeControlHighlightLowBrush}" >
-                    <ScrollViewer AllowAutoHide="True">
-                        <ItemsControl ItemsSource="{Binding Features}" >
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <UniformGrid Columns="4" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </HeaderedContentControl>
+                
+                <TabControl Grid.Column="1" Margin="3">
+                    
+                    <TabItem Header="Все осообености">
+                        <ScrollViewer AllowAutoHide="True">
+                            <ItemsControl ItemsSource="{Binding Features}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </TabItem>
+                    
+                    <TabItem Header="Уровень">
+                        <ScrollViewer AllowAutoHide="True">
+                            <ItemsControl ItemsSource="{Binding LevelFeatures}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </TabItem>
+                    
+                    <TabItem Header="Атака">
+                        <ScrollViewer AllowAutoHide="True">
+                            <ItemsControl ItemsSource="{Binding AttackFeatures}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="4" RowSpacing="5"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </TabItem>
+                    
+                    <TabItem Header="Защита">
+                        <ScrollViewer AllowAutoHide="True">
+                            <ItemsControl ItemsSource="{Binding DefenceFeatures}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </TabItem>
+                    
+                    <TabItem Header="Храбрость">
+                        <ScrollViewer AllowAutoHide="True">
+                            <ItemsControl ItemsSource="{Binding BraveryFeatures}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </TabItem>
+                    
+                    <TabItem Header="Хитрость">
+                        <ScrollViewer AllowAutoHide="True">
+                            <ItemsControl ItemsSource="{Binding TrickeryFeatures}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </TabItem>
+                    
+                </TabControl>
+                
+                <!-- <HeaderedContentControl Grid.Column="1" Margin="3" Header="Особенности" -->
+                <!--                         Background="{StaticResource ThemeControlHighlightLowBrush}" > -->
+                <!--     <ScrollViewer AllowAutoHide="True"> -->
+                <!--         <ItemsControl ItemsSource="{Binding Features}" > -->
+                <!--             <ItemsControl.ItemsPanel> -->
+                <!--                 <ItemsPanelTemplate> -->
+                <!--                     <UniformGrid Columns="4" /> -->
+                <!--                 </ItemsPanelTemplate> -->
+                <!--             </ItemsControl.ItemsPanel> -->
+                <!--         </ItemsControl> -->
+                <!--     </ScrollViewer> -->
+                <!-- </HeaderedContentControl> -->
             </Grid>
         </DockPanel>
     </ExperimentalAcrylicBorder>

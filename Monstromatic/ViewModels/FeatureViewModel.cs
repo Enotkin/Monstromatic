@@ -12,19 +12,19 @@ namespace Monstromatic.ViewModels;
 
 public partial class FeatureViewModel : ViewModelBase
 {
-    private readonly MonsterFeature _feature;
+    public readonly MonsterFeature Feature;
     private readonly IFeatureController _featureController;
 
-    public string Key => _feature.Key;
+    public string Key => Feature.Key;
 
-    public string DisplayName => _feature.DisplayName;
+    public string DisplayName => Feature.DisplayName;
     
     [ObservableAsProperty]
     private bool _isFeatureSelected;
 
     public FeatureViewModel(MonsterFeature feature, IFeatureController featureController)
     {
-        _feature = feature;
+        Feature = feature;
         _featureController = featureController;
 
         var canAddFeature = _featureController.SelectedFeatures
@@ -37,14 +37,14 @@ public partial class FeatureViewModel : ViewModelBase
 
         _featureController.SelectedFeatures
             .Connect()
-            .QueryWhenChanged(x => x.Contains(_feature))
+            .QueryWhenChanged(x => x.Contains(Feature))
             .ToProperty(this, x => x.IsFeatureSelected);
     }
 
     private bool CanAddFeature(IReadOnlyCollection<MonsterFeature> selectedFeatures)
     {
         var containsIncompatibleFeatures = selectedFeatures.Any(
-            f => _feature.IncompatibleFeatures.Contains(f));
+            f => Feature.IncompatibleFeatures.Contains(f));
 
         return !containsIncompatibleFeatures;
     }
@@ -53,10 +53,10 @@ public partial class FeatureViewModel : ViewModelBase
     {
         if (isChecked)
         {
-            _featureController.AddFeature(_feature);
+            _featureController.AddFeature(Feature);
         }
         else
-            _featureController.RemoveFeature(_feature);
+            _featureController.RemoveFeature(Feature);
     }
 
     public ReactiveCommand<bool, Unit> AddFeatureCommand { get; }

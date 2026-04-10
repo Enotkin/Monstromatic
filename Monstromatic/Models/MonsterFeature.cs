@@ -37,20 +37,10 @@ public class MonsterFeature
     public double DefenceModifier { get; set; }
         
     /// <summary>
-    /// Модификатор здоровья
+    /// Модификатор Храбрости
     /// </summary>
-    public double HealthModifier { get; set; }
-        
-    /// <summary>
-    /// Модификатор восприятия
-    /// </summary>
-    public double KnowledgeModifier { get; set; }
-        
-    /// <summary>
-    /// Модификатор воли
-    /// </summary>
-    public double TemperModifier { get; set; }
-        
+    public double BraveryModifier { get; set; }
+    
     /// <summary>
     /// Модификатор хитрости
     /// </summary>
