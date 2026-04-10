@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Reactive;
 using Monstromatic.Models;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace Monstromatic.ViewModels;
 
-public class MonsterViewModel : ViewModelBase
+public partial class MonsterViewModel : ViewModelBase
 {
     public delegate void RemovingMonsterEvent(Guid monsterId);
 
@@ -21,12 +22,6 @@ public class MonsterViewModel : ViewModelBase
     public Guid Id { get; }
     
     public bool IsAlive { get; set; } = true;
-    
-    public ReactiveCommand<Unit, Unit> AddLevel { get; }
-    
-    public ReactiveCommand<Unit, Unit> RemoveLevel { get; }
-    
-    public ReactiveCommand<Unit, Unit> ResetModificationsCommand { get; } 
     
     public string Name => _monster.Name;
     
@@ -43,19 +38,6 @@ public class MonsterViewModel : ViewModelBase
         _monster = monster;
 
         Id = _monster.Id;
-        AddLevel = ReactiveCommand.Create(() =>
-        {        
-            _monster.PersonalLevel++;
-            UpdateLevel();
-        });
-        
-        RemoveLevel = ReactiveCommand.Create(() =>
-        {        
-            _monster.PersonalLevel--;
-            UpdateLevel();
-        });
-
-        ResetModificationsCommand = ReactiveCommand.Create(ResetModifications);
 
         CloseCommand = ReactiveCommand.Create(RemoveMonster);
 
@@ -70,11 +52,24 @@ public class MonsterViewModel : ViewModelBase
         this.WhenAnyValue(vm => vm._monster.Level).Subscribe(_ => UpdateSkills());
     }
 
+    [ReactiveCommand]
     private void ResetModifications()
     {
-        _monster.ResetModifications();
-        this.RaisePropertyChanged(nameof(Level));
         UpdateSkills();
+    }
+    
+    [ReactiveCommand]
+    private void AddLevel()
+    {
+        _monster.PersonalLevel++;
+        this.RaisePropertyChanged(nameof(Level));
+    }
+
+    [ReactiveCommand]
+    private void RemoveLevel()
+    {
+        _monster.PersonalLevel--;
+        this.RaisePropertyChanged(nameof(Level));
     }
 
     public int Level => _monster.Level;

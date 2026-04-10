@@ -64,9 +64,9 @@
                         <!-- Кнопки управления -->
                         <Grid Grid.Column="2" Margin="0, 0, 0, 0 " ColumnDefinitions="*, *, *, *, *" HorizontalAlignment="Center" >
                             
-                            <Button Grid.Column="0"  Command="{Binding RemoveLevel}" Content="&lt;&lt;" />
+                            <Button Grid.Column="0"  Command="{Binding RemoveLevelCommand}" Content="&lt;&lt;" />
                             <TextBlock Grid.Column="1" Classes="main" Text="{Binding Level, StringFormat=Ур. \{0\}}" VerticalAlignment="Center"/>
-                            <Button Grid.Column="2"  Command="{Binding AddLevel}" Content="&gt;&gt;" />
+                            <Button Grid.Column="2"  Command="{Binding AddLevelCommand}" Content="&gt;&gt;" />
                             
                             <Button Grid.Column="3"  Command="{Binding ResetModificationsCommand}" Content="R" />
 

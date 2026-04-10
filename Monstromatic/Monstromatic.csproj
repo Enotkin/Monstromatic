@@ -45,11 +45,6 @@
     <PackageReference Include="Splat" Version="19.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Views\MonsterDetailsView.xaml.cs">
-      <DependentUpon>MonsterDetailsView.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Data\Resources\settings.json" />
     <EmbeddedResource Include="Data\Resources\features.json" />
     <None Remove="Data\DefaultSettings.json" />
