@@ -1,44 +1,69 @@
-﻿namespace Monstromatic.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+
+namespace Monstromatic.Models;
 
 /// <summary>
 /// Навык существа
 /// </summary>
-public class Skill(string name, int level, double featuresModificator)
+public class Skill
 {
     /// <summary>
     /// Минимальное значение навыка 
     /// </summary>
     private const int MinValue = 0;
-    
-    /// <summary>
-    /// Модификатор навыка от особенностей
-    /// </summary>
-    private readonly double _featuresModificator = featuresModificator;
+
+    private readonly double _standardModifier;
 
     /// <summary>
-    /// Суммароное значние модификатора
+    /// Модификаторы навыка от особенностей
     /// </summary>
-    private int _modificator = 0;
+    private readonly IReadOnlyCollection<double> _featureModifiers;
+
+    /// <summary>
+    /// Ручная поправка навыка
+    /// </summary>
+    private int _manualDelta;
+
+    private int _level;
+
+    public Skill(string name, int level, double standardModifier, IEnumerable<double>? featureModifiers = null)
+    {
+        Name = name;
+        Level = level;
+        _standardModifier = standardModifier;
+        _featureModifiers = featureModifiers?.ToArray() ?? [];
+    }
 
     /// <summary>
     /// Название навыка
     /// </summary>
-    public string Name { get; } = name;
+    public string Name { get; }
 
     /// <summary>
     /// Значение навыка
     /// </summary>
     public int Value => GetValue();
-    
+
     /// <summary>
     /// Уровень существа владеющего навыком
     /// </summary>
-    public int Level { get; set; } = level;
-    
+    public int Level
+    {
+        get => _level;
+        set
+        {
+            MonsterLevelRules.ValidateEvenLevel(value);
+            _level = value;
+        }
+    }
+
     /// <summary>
     /// Увеличить значение навыка
     /// </summary>
-    public void Increment() => _modificator++;
+    public void Increment() => _manualDelta++;
 
     /// <summary>
     /// Уменьшить значение навыка
@@ -46,14 +71,29 @@ public class Skill(string name, int level, double featuresModificator)
     public void Decrement()
     {
         if (Value - 1 >= MinValue)
-            _modificator--;
+            _manualDelta--;
     }
 
-    public void Reset() => _modificator = 0;
+    public void Reset() => _manualDelta = 0;
 
     private int GetValue()
     {
-        var value = (int)(Level * _featuresModificator + _modificator);
+        var value = Level
+                    + CalculateDelta(Level, _standardModifier)
+                    + _featureModifiers.Sum(modifier => CalculateDelta(Level, modifier))
+                    + _manualDelta;
+
         return value < MinValue ? MinValue : value;
+    }
+
+    private static int CalculateDelta(int level, double modifier)
+    {
+        var delta = level * (Convert.ToDecimal(modifier) - 1m);
+
+        if (delta != decimal.Truncate(delta))
+            throw new ValidationException(
+                $"Skill modifier {modifier} produces non-integer delta {delta} for monster level {level}.");
+
+        return decimal.ToInt32(delta);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using DynamicData.Kernel;
 using Monstromatic.Data.AppSettingsProvider;
@@ -9,42 +10,43 @@ namespace Monstromatic.Models;
 public class FeaturesBundle
 {
     private readonly List<MonsterFeature> _features;
-    private const double BaseModificator = 1.0;
 
     public FeaturesBundle(IEnumerable<MonsterFeature> features)
     {
         var appSettingsProvider = ServiceHub.Default.ServiceProvider.Get<IAppSettingsProvider>();
         var defaultModifiers = appSettingsProvider.Settings.DefaultModifiers;
-        
+
         _features = features.AsList();
-        
+
         LevelModificator = _features.Sum(f => f.LevelModifier);
 
-        AttackModificator = defaultModifiers.AttackModifier + (_features.Any(f => f.AttackModifier != 0)
-            ? _features.Where(f => f.AttackModifier != 0)
-                .Select(f => f.AttackModifier).Sum()
-            : 0);
+        AttackStandardModifier = defaultModifiers.AttackModifier;
+        DefenceStandardModifier = defaultModifiers.DefenceModifier;
+        BraveryStandardModifier = defaultModifiers.BraveryModifier;
+        TrickeryStandardModifier = defaultModifiers.TrickeryModifier;
 
-        DefenceModificator = defaultModifiers.DefenceModifier + (_features.Any(f => f.DefenceModifier != 0)
-            ? _features.Where(f => f.DefenceModifier != 0)
-                .Select(f => f.DefenceModifier).Sum()
-            : 0);
-        
-        BraveryModificator = defaultModifiers.BraveryModifier + (_features.Any(f => f.BraveryModifier != 0)
-            ? _features.Where(f => f.BraveryModifier != 0)
-                .Select(f => f.BraveryModifier).Sum()
-            : 0);
-        
-        TrickeryModificator = defaultModifiers.TrickeryModifier + (_features.Any(f => f.TrickeryModifier != 0)
-            ? _features.Where(f => f.TrickeryModifier != 0)
-                .Select(f => f.TrickeryModifier).Sum()
-            : 0);
+        AttackFeatureModifiers = GetFeatureModifiers(f => f.AttackModifier);
+        DefenceFeatureModifiers = GetFeatureModifiers(f => f.DefenceModifier);
+        BraveryFeatureModifiers = GetFeatureModifiers(f => f.BraveryModifier);
+        TrickeryFeatureModifiers = GetFeatureModifiers(f => f.TrickeryModifier);
     }
 
     public int LevelModificator { get; }
-    public double AttackModificator { get; }
-    public double DefenceModificator { get; }
-    public double BraveryModificator { get; }
-    public double TrickeryModificator { get; }
+    public double AttackStandardModifier { get; }
+    public double DefenceStandardModifier { get; }
+    public double BraveryStandardModifier { get; }
+    public double TrickeryStandardModifier { get; }
+    public IReadOnlyCollection<double> AttackFeatureModifiers { get; }
+    public IReadOnlyCollection<double> DefenceFeatureModifiers { get; }
+    public IReadOnlyCollection<double> BraveryFeatureModifiers { get; }
+    public IReadOnlyCollection<double> TrickeryFeatureModifiers { get; }
     public IReadOnlyCollection<MonsterFeature> Features => _features;
+
+    private IReadOnlyCollection<double> GetFeatureModifiers(Func<MonsterFeature, double> selector)
+    {
+        return _features
+            .Select(selector)
+            .Where(modifier => modifier != 0)
+            .ToArray();
+    }
 }

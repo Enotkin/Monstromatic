@@ -33,6 +33,7 @@ public partial class EncounterViewModel : ViewModelBase
         get => _encounter.Level;
         set
         {
+            MonsterLevelRules.ValidateEvenLevel(value);
             _encounter.Level = value;
             this.RaisePropertyChanged();
         }
@@ -66,17 +67,19 @@ public partial class EncounterViewModel : ViewModelBase
     }
 
     [ReactiveCommand]
-    private void AddLevel() => Level++;
+    private void AddLevel() => Level += 2;
 
     [ReactiveCommand]
-    private void RemoveLevel() => Level--;
+    private void RemoveLevel() => Level -= 2;
 
     [ReactiveCommand]
     private void ResetModifications()
     {
+        _encounter.ApplyLevelToMonsters();
+
         foreach (var monsterViewModel in Monsters)      
         {
-            monsterViewModel.UpdateLevel();
+            monsterViewModel.UpdateLevelAndSkills();
         }
         this.RaisePropertyChanged(nameof(Monsters));
     }

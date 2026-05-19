@@ -29,5 +29,17 @@ namespace Monstromatic.Views
             if (button?.RenderTransform is RotateTransform transform) 
                 transform.Angle = isExpanded? 0 : 180;
         }
+
+        private void DeathToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            var toggleButton = sender as Avalonia.Controls.Primitives.ToggleButton;
+            SetDeathOverlayVisibility(toggleButton?.IsChecked == true);
+        }
+
+        private void SetDeathOverlayVisibility(bool isVisible)
+        {
+            var overlay = this.GetControl<Border>("DeathOverlay");
+            overlay.IsVisible = isVisible;
+        }
     }
 }

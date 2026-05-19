@@ -24,14 +24,15 @@ public class Monster
     {
         Id = Guid.NewGuid();
         
-        _encounterLevel = (int)(level + featuresBundle.LevelModificator);
+        MonsterLevelRules.ValidateEvenLevel(level);
+        _encounterLevel = level;
         _personalMonsterLevel = 0;
         Name = name;
         
-        Attack = new Skill("Атака", _encounterLevel, featuresBundle.AttackModificator) ;
-        Defence = new Skill("Защита", _encounterLevel, featuresBundle.DefenceModificator) ;
-        Bravery = new Skill("Храбрость", _encounterLevel, featuresBundle.BraveryModificator) ;
-        Trickery = new Skill("Хитрость", _encounterLevel, featuresBundle.TrickeryModificator);
+        Attack = new Skill("Атака", _encounterLevel, featuresBundle.AttackStandardModifier, featuresBundle.AttackFeatureModifiers);
+        Defence = new Skill("Защита", _encounterLevel, featuresBundle.DefenceStandardModifier, featuresBundle.DefenceFeatureModifiers);
+        Bravery = new Skill("Храбрость", _encounterLevel, featuresBundle.BraveryStandardModifier, featuresBundle.BraveryFeatureModifiers);
+        Trickery = new Skill("Хитрость", _encounterLevel, featuresBundle.TrickeryStandardModifier, featuresBundle.TrickeryFeatureModifiers);
 
         Skills = [Attack, Defence, Bravery, Trickery];
     }
@@ -41,6 +42,7 @@ public class Monster
         get => _encounterLevel;
         set
         {
+            MonsterLevelRules.ValidateEvenLevel(value);
             _encounterLevel = value;
             UpdateSkills();
         }
@@ -53,6 +55,7 @@ public class Monster
         get => _personalMonsterLevel;
         set
         {
+            MonsterLevelRules.ValidateEvenLevel(Level - _personalMonsterLevel + value);
             _personalMonsterLevel = value;
             UpdateSkills();
         }

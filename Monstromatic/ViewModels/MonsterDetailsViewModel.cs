@@ -14,15 +14,24 @@ namespace Monstromatic.ViewModels
 
         private readonly MonsterFeature GroupFeature = new ()
         {
-            LevelModifier = 1,
+            LevelModifier = 2,
             Description = "Раз, два, три, много...",
             DetailsDisplayName = "Массовая атака"
         };
 
         public int Level
         {
-            get => (int)(_level + GetResultLevelModifier());
-            set => this.RaiseAndSetIfChanged(ref _level, value);
+            get
+            {
+                var level = (int)(_level + GetResultLevelModifier());
+                MonsterLevelRules.ValidateEvenLevel(level);
+                return level;
+            }
+            set
+            {
+                MonsterLevelRules.ValidateEvenLevel(value);
+                this.RaiseAndSetIfChanged(ref _level, value);
+            }
         }
 
         [Reactive] private string _name;
@@ -83,8 +92,8 @@ namespace Monstromatic.ViewModels
             ResetDefenceCounterCommand = ReactiveCommand.Create(ResetDefence);
             ResetAttackCounterCommand = ReactiveCommand.Create(ResetAttack);
             ResetStaminaCounterCommand = ReactiveCommand.Create(ResetStamina);
-            IncreaseLevelCommand = ReactiveCommand.Create(() => UpdateLevel(1));
-            DecreaseLevelCommand = ReactiveCommand.Create(() => UpdateLevel(-1));
+            IncreaseLevelCommand = ReactiveCommand.Create(() => UpdateLevel(2));
+            DecreaseLevelCommand = ReactiveCommand.Create(() => UpdateLevel(-2));
         }
 
         public MonsterDetailsViewModel(string name, int baseLevel, IEnumerable<MonsterFeature> features) : this()
@@ -125,7 +134,7 @@ namespace Monstromatic.ViewModels
         
         private double GetResultLevelModifier()
         {
-            var advantageModifier = (HasAdvantage ? 1 : 0) - (HasDisadvantage ? 1 : 0);
+            var advantageModifier = (HasAdvantage ? 2 : 0) - (HasDisadvantage ? 2 : 0);
             var featuresModifier = Features.Sum(f => f.LevelModifier);
             return advantageModifier + featuresModifier;
         }

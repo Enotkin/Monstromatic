@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 
 namespace Monstromatic.Models;
 
@@ -11,7 +10,6 @@ public partial class Encounter : ReactiveObject
     private readonly FeaturesBundle _featuresBundle;
     private readonly int _baseLevel;
     
-    [Reactive]
     private int _level;
     
     private readonly Dictionary<Guid, Monster> _monsters;
@@ -24,6 +22,16 @@ public partial class Encounter : ReactiveObject
 
     public List<Monster> Monsters => _monsters.Values.ToList();
 
+    public int Level
+    {
+        get => _level;
+        set
+        {
+            MonsterLevelRules.ValidateEvenLevel(value);
+            this.RaiseAndSetIfChanged(ref _level, value);
+        }
+    }
+
     public Encounter(string name, int baseLevel, IEnumerable<MonsterFeature> monsterFeatures) 
         : this(name, baseLevel, new FeaturesBundle(monsterFeatures)) {}
     
@@ -31,19 +39,22 @@ public partial class Encounter : ReactiveObject
     {
         Name = name;
         Level = baseLevel + featuresBundle.LevelModificator;
+        MonsterLevelRules.ValidateEvenLevel(Level);
         _baseLevel = baseLevel;
         _featuresBundle = featuresBundle;
         _monsters = new Dictionary<Guid, Monster>();
         
-        var initMonster = new Monster(baseLevel, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++), _featuresBundle);
+        var initMonster = new Monster(Level, string.Format(MonsterNamePattern, Name, _lastMonsterIdentifierLetter++), _featuresBundle);
         _monsters.Add(initMonster.Id, initMonster);
         
-        this.WhenAnyValue(x => x.Level)
-            .Subscribe(_ =>
-            {
-                foreach (var monster in Monsters) 
-                    monster.EncounterLevel = Level;
-            });
+    }
+
+    public void ApplyLevelToMonsters()
+    {
+        foreach (var monster in Monsters)
+        {
+            monster.EncounterLevel = Level;
+        }
     }
 
     public Monster AddMonster()

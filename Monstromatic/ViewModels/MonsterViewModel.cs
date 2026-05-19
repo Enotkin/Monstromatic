@@ -49,7 +49,8 @@ public partial class MonsterViewModel : ViewModelBase
         SkillsVm = [Attack, Defence, Bravery, Trickery];
 
         this.WhenAnyValue(x => x.IsAlive).Subscribe(x => RemoveMonster());
-        this.WhenAnyValue(vm => vm._monster.Level).Subscribe(_ => UpdateSkills());
+        
+        _levell = _monster.Level;
     }
 
     [ReactiveCommand]
@@ -61,17 +62,47 @@ public partial class MonsterViewModel : ViewModelBase
     [ReactiveCommand]
     private void AddLevel()
     {
-        _monster.PersonalLevel++;
+        _monster.PersonalLevel += 2;
+        _levell = _monster.Level;
         this.RaisePropertyChanged(nameof(Level));
+        this.RaisePropertyChanged(nameof(Levell));
     }
 
     [ReactiveCommand]
     private void RemoveLevel()
     {
-        _monster.PersonalLevel--;
+        _monster.PersonalLevel -= 2;
+        _levell = _monster.Level;
         this.RaisePropertyChanged(nameof(Level));
+        this.RaisePropertyChanged(nameof(Levell));
     }
 
+    private decimal? _levell;
+
+    public decimal? Levell
+    {
+        get => _levell;
+        set
+        {
+            if (value is null)
+            {
+                return;
+            }
+
+            if (value.Value != decimal.Truncate(value.Value))
+            {
+                throw new System.ComponentModel.DataAnnotations.ValidationException("Monster level must be an integer.");
+            }
+
+            var level = decimal.ToInt32(value.Value);
+            MonsterLevelRules.ValidateEvenLevel(level);
+
+            _monster.PersonalLevel = level - _monster.EncounterLevel;
+            this.RaiseAndSetIfChanged(ref _levell, value);
+            this.RaisePropertyChanged(nameof(Level));
+        }
+    }
+    
     public int Level => _monster.Level;
 
     private void UpdateSkills() =>
@@ -81,7 +112,14 @@ public partial class MonsterViewModel : ViewModelBase
 
     public void UpdateLevel()
     {
+        _levell = _monster.Level;
         this.RaisePropertyChanged(nameof(Level));
+        this.RaisePropertyChanged(nameof(Levell));
+    }
+
+    public void UpdateLevelAndSkills()
+    {
+        UpdateLevel();
         UpdateSkills();
     }
 }

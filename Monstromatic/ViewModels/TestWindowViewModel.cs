@@ -23,7 +23,7 @@ public partial class TestWindowViewModel : ViewModelBase
     public TestWindowViewModel()
     {
         Pidor = "ТЫ ПИДОР";
-        var monster = new Monster(2, Pidor, new FeaturesBundle(new List<MonsterFeature>()));
+        var monster = new Monster(4, Pidor, new FeaturesBundle(new List<MonsterFeature>()));
         MonsterViewModel = new MonsterViewModel(monster);
     }
 }

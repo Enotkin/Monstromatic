@@ -9,20 +9,20 @@ namespace Monstromatic.ViewModels.Design
     {
         private readonly MonsterFeature _monsterFeature = new() { Key = "Test", DisplayName = "Test Display Name" };
         
-        public MonsterViewModel MonsterViewModel => new(new Monster(1, "Test", new FeaturesBundle(new List<MonsterFeature>()
+        public MonsterViewModel MonsterViewModel => new(new Monster(4, "Test", new FeaturesBundle(new List<MonsterFeature>()
         {
             _monsterFeature
         })));
-        public SkillCounterViewModel SkillCounterViewModel => new(new Skill("TestName", 1, 1));
+        public SkillCounterViewModel SkillCounterViewModel => new(new Skill("TestName", 4, 1));
         public MonsterDetailsViewModel DetailsVm => new(
             "TestName",
-            5,
+            4,
             new List<MonsterFeature>()
             {
                 _monsterFeature
             });
 
-        public EncounterViewModel EncounterViewModel => new(new Encounter("TestName", 1, new List<MonsterFeature>()
+        public EncounterViewModel EncounterViewModel => new(new Encounter("TestName", 4, new List<MonsterFeature>()
         {
             _monsterFeature
         }));
