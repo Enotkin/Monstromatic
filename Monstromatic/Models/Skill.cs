@@ -34,13 +34,20 @@ public class Skill
     {
     }
 
-    public Skill(string name, string tag, int level, double standardModifier, IEnumerable<double>? featureModifiers = null)
+    public Skill(
+        string name,
+        string tag,
+        int level,
+        double standardModifier,
+        IEnumerable<double>? featureModifiers = null,
+        IEnumerable<SkillComment>? comments = null)
     {
         Name = name;
         Tag = tag;
         Level = level;
         _standardModifier = standardModifier;
         _featureModifiers = featureModifiers?.ToArray() ?? [];
+        Comments = comments?.ToArray() ?? [];
     }
 
     /// <summary>
@@ -49,6 +56,8 @@ public class Skill
     public string Name { get; }
 
     public string Tag { get; }
+
+    public IReadOnlyCollection<SkillComment> Comments { get; }
 
     /// <summary>
     /// Значение навыка

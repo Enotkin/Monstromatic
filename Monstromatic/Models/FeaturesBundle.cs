@@ -41,6 +41,15 @@ public class FeaturesBundle
             .ToArray();
     }
 
+    public IReadOnlyCollection<SkillComment> GetSkillComments(string tag)
+    {
+        return _features
+            .Where(feature => feature.HasSkillModifier(tag))
+            .Where(feature => !string.IsNullOrWhiteSpace(feature.Description))
+            .Select(feature => new SkillComment(feature.DisplayName, feature.Description))
+            .ToArray();
+    }
+
     private void ValidateSkillDefinitions()
     {
         var emptyTags = SkillDefinitions.Where(skill => string.IsNullOrWhiteSpace(skill.Tag)).ToArray();

@@ -8,15 +8,18 @@
              x:DataType="viewModels:SkillCounterViewModel"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=SkillCounterViewModel}">
     <StackPanel>
-        <TextBlock Text="{Binding SkillName}"
-                   HorizontalAlignment="Stretch"
-                   Height="34"
-                   FontSize="12"
-                   Foreground="white"
-                   MaxLines="2"
-                   TextAlignment="Center"
-                   TextWrapping="Wrap"
-                   VerticalAlignment="Center" />
+        <Border Height="34"
+                Background="Transparent"
+                ToolTip.Tip="{Binding CommentsToolTipText}">
+            <TextBlock Text="{Binding SkillName}"
+                       HorizontalAlignment="Stretch"
+                       FontSize="12"
+                       Foreground="white"
+                       MaxLines="2"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center" />
+        </Border>
         <UniformGrid Rows="2" Columns="2">
             
             <UniformGrid.Styles>

@@ -27,7 +27,8 @@ public class Monster
                 skill.Tag,
                 _encounterLevel,
                 skill.BaseModifier,
-                featuresBundle.GetFeatureModifiers(skill.Tag)))
+                featuresBundle.GetFeatureModifiers(skill.Tag),
+                featuresBundle.GetSkillComments(skill.Tag)))
             .ToList();
     }
 

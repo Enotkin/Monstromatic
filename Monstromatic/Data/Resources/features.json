@@ -1,13 +1,13 @@
 [
   {
     "Key": "DemoLevelGolem",
-    "DisplayName": "Гранит-01: Уровень +2",
+    "DisplayName": "Гранит-01 [без комм] Ур +2",
     "LevelModifier": 2
   },
   {
     "Key": "DemoPenaltyMist",
-    "DisplayName": "Туман-02: Штраф",
-    "Description": "Демо-фича для штрафного показателя.",
+    "DisplayName": "Туман-02 [комм] Штраф x0.5",
+    "Description": "Штрафной показатель проседает из-за нестабильной формы.",
     "SkillModifiers": [
       {
         "Tag": "Penalty",
@@ -17,8 +17,8 @@
   },
   {
     "Key": "DemoStandardCore",
-    "DisplayName": "Ядро-03: Стандарт",
-    "Description": "Демо-фича для стандартного показателя.",
+    "DisplayName": "Ядро-03 [комм] Стандарт x1",
+    "Description": "Стандартный показатель отмечен без изменения значения.",
     "SkillModifiers": [
       {
         "Tag": "Standard",
@@ -28,8 +28,7 @@
   },
   {
     "Key": "DemoBonusSpark",
-    "DisplayName": "Искра-04: Бонус",
-    "Description": "Демо-фича для бонусного показателя.",
+    "DisplayName": "Искра-04 [без комм] Бонус x1.5",
     "SkillModifiers": [
       {
         "Tag": "Bonus",
@@ -39,21 +38,22 @@
   },
   {
     "Key": "DemoPenaltyStandard",
-    "DisplayName": "Сдвиг-05: Штраф + Стандарт",
+    "DisplayName": "Сдвиг-05 [комм] Штраф x1.5 + Стд x0.5",
+    "Description": "Показывает разные значения modifier у двух категорий сразу.",
     "SkillModifiers": [
       {
         "Tag": "Penalty",
-        "Modifier": 0.5
+        "Modifier": 1.5
       },
       {
         "Tag": "Standard",
-        "Modifier": 1
+        "Modifier": 0.5
       }
     ]
   },
   {
     "Key": "DemoPenaltyBonus",
-    "DisplayName": "Маятник-06: Штраф + Бонус",
+    "DisplayName": "Маятник-06 [без комм] Штраф x0.5 + Бонус x2",
     "SkillModifiers": [
       {
         "Tag": "Penalty",
@@ -61,28 +61,29 @@
       },
       {
         "Tag": "Bonus",
-        "Modifier": 1.5
+        "Modifier": 2
       }
     ]
   },
   {
     "Key": "DemoStandardBonus",
-    "DisplayName": "Резонанс-07: Стандарт + Бонус",
+    "DisplayName": "Резонанс-07 [комм] Стд x2 + Бонус x0.5",
+    "Description": "Стандартный показатель резко усилен, бонусный временно снижен.",
     "SkillModifiers": [
       {
         "Tag": "Standard",
-        "Modifier": 1
+        "Modifier": 2
       },
       {
         "Tag": "Bonus",
-        "Modifier": 1.5
+        "Modifier": 0.5
       }
     ]
   },
   {
     "Key": "DemoAllSkills",
-    "DisplayName": "Химерик-08: Все показатели",
-    "Description": "Показывает feature сразу во всех skill-категориях.",
+    "DisplayName": "Химерик-08 [комм] Штр x0.5 + Стд x1 + Бон x1.5",
+    "Description": "Feature одновременно отображается во всех skill-категориях.",
     "SkillModifiers": [
       {
         "Tag": "Penalty",
@@ -100,65 +101,67 @@
   },
   {
     "Key": "DemoLevelPenalty",
-    "DisplayName": "Обвал-09: Уровень + Штраф",
+    "DisplayName": "Обвал-09 [без комм] Ур +2 + Штраф x2",
     "LevelModifier": 2,
     "SkillModifiers": [
       {
         "Tag": "Penalty",
-        "Modifier": 0.5
+        "Modifier": 2
       }
     ]
   },
   {
     "Key": "DemoLevelStandard",
-    "DisplayName": "Основа-10: Уровень + Стандарт",
+    "DisplayName": "Основа-10 [комм] Ур +2 + Стд x1.5",
     "LevelModifier": 2,
+    "Description": "Уровень растет, а стандартный показатель получает дополнительный множитель.",
     "SkillModifiers": [
       {
         "Tag": "Standard",
-        "Modifier": 2.0
+        "Modifier": 1.5
       }
     ]
   },
   {
     "Key": "DemoLevelBonus",
-    "DisplayName": "Всплеск-11: Уровень + Бонус",
+    "DisplayName": "Всплеск-11 [без комм] Ур +2 + Бонус x0.5",
     "LevelModifier": 2,
     "SkillModifiers": [
       {
         "Tag": "Bonus",
-        "Modifier": 1.5
+        "Modifier": 0.5
       }
     ]
   },
   {
     "Key": "DemoLevelPenaltyBonus",
-    "DisplayName": "Разлом-12: Уровень + Штраф + Бонус",
+    "DisplayName": "Разлом-12 [комм] Ур +2 + Штр x1 + Бон x2",
     "LevelModifier": 2,
+    "Description": "Штрафный показатель остается ровным, бонусный получает сильный прирост.",
     "SkillModifiers": [
       {
         "Tag": "Penalty",
-        "Modifier": 0.5
+        "Modifier": 1
       },
       {
         "Tag": "Bonus",
-        "Modifier": 1.5
+        "Modifier": 2
       }
     ]
   },
   {
     "Key": "DemoLevelAllSkills",
-    "DisplayName": "Полигон-13: Уровень + Все",
+    "DisplayName": "Полигон-13 [комм] Ур +2 + Штр x2 + Стд x0.5 + Бон x1.5",
     "LevelModifier": 2,
-    "Description": "Демо-фича для проверки всех вкладок одновременно.",
+    "Description": "Максимально наглядная feature для проверки всех вкладок и tooltip-комментариев.",
     "SkillModifiers": [
       {
         "Tag": "Penalty",
-        "Modifier": 0.5
+        "Modifier": 2
       },
       {
         "Tag": "Standard",
-        "Modifier": 1
+        "Modifier": 0.5
       },
       {
         "Tag": "Bonus",
@@ -168,29 +171,29 @@
   },
   {
     "Key": "DemoStandardMirror",
-    "DisplayName": "Зеркало-14: Стандарт",
+    "DisplayName": "Зеркало-14 [без комм] Стд x0.5",
     "SkillModifiers": [
       {
         "Tag": "Standard",
-        "Modifier": 1
+        "Modifier": 0.5
       }
     ]
   },
   {
     "Key": "DemoStandardAnchor",
-    "DisplayName": "Якорь-15: Стандарт",
-    "Description": "Еще одна feature для демонстрации стандартной категории.",
+    "DisplayName": "Якорь-15 [комм] Стд x2",
+    "Description": "Еще одна feature для демонстрации комментария на стандартном показателе.",
     "SkillModifiers": [
       {
         "Tag": "Standard",
-        "Modifier": 1
+        "Modifier": 2
       }
     ]
   },
   {
     "Key": "DemoHiddenTemplate",
-    "DisplayName": "Шаблон-16: скрытая",
-    "Description": "Скрытая feature для проверки IsHidden.",
+    "DisplayName": "Шаблон-16 [комм] скрытая Бонус x1.5",
+    "Description": "Скрытая feature для проверки IsHidden и отсутствия на главном экране.",
     "IsHidden": true,
     "SkillModifiers": [
       {

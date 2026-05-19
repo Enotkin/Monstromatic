@@ -12,6 +12,7 @@ var tests = new (string Name, Action Run)[]
     ("settings deserialize dynamic skills", SettingsDeserializeDynamicSkills),
     ("feature deserialize skill modifiers", FeatureDeserializeSkillModifiers),
     ("feature exposes tag-based modifiers", FeatureSkillModifiers),
+    ("skill stores feature comments", SkillStoresFeatureComments),
     ("legacy feature modifiers are converted to tags", LegacyFeatureModifiersFallback),
     ("odd monster level is validation error", OddMonsterLevelFails),
     ("fractional modifier delta is validation error", FractionalDeltaFails)
@@ -106,6 +107,21 @@ static void FeatureSkillModifiers()
     AssertEqual(true, feature.HasSkillModifier("Attack"));
     AssertEqual(false, feature.HasSkillModifier("Health"));
     AssertEqual(1.5, feature.GetSkillModifiers().Single(modifier => modifier.Tag == "Attack").Modifier);
+}
+
+static void SkillStoresFeatureComments()
+{
+    var skill = new Skill(
+        "Attack",
+        "Attack",
+        4,
+        1,
+        comments: [new SkillComment("Feature", "Note")]);
+
+    var comment = skill.Comments.Single();
+
+    AssertEqual("Feature", comment.FeatureName);
+    AssertEqual("Note", comment.Text);
 }
 
 static void LegacyFeatureModifiersFallback()

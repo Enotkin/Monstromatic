@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="..\Models\MonsterLevelRules.cs" Link="Models\MonsterLevelRules.cs" />
     <Compile Include="..\Models\Skill.cs" Link="Models\Skill.cs" />
+    <Compile Include="..\Models\SkillComment.cs" Link="Models\SkillComment.cs" />
     <Compile Include="..\Models\MonsterFeature.cs" Link="Models\MonsterFeature.cs" />
     <Compile Include="..\Models\MonstromaticSettings.cs" Link="Models\MonstromaticSettings.cs" />
     <Compile Include="..\Models\SkillDefinition.cs" Link="Models\SkillDefinition.cs" />
