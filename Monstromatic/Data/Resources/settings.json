@@ -7,17 +7,17 @@
   },
   "Skills": [
     {
-      "Name": "Штрафной Показатель",
+      "Name": "Штрафной",
       "Tag": "Penalty",
       "BaseModifier": 0.5
     },
     {
-      "Name": "Стандартный Показатель",
+      "Name": "Стандартный",
       "Tag": "Standard",
       "BaseModifier": 1
     },
     {
-      "Name": "Бонусный Показатель",
+      "Name": "Бонусный",
       "Tag": "Bonus",
       "BaseModifier": 1.5
     }

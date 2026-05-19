@@ -1,7 +1,106 @@
 [
   {
-    "Key": "Sawage",
-    "DisplayName": "Примитив. Зверь",
+    "Key": "DemoLevelGolem",
+    "DisplayName": "Гранит-01: Уровень +2",
+    "LevelModifier": 2
+  },
+  {
+    "Key": "DemoPenaltyMist",
+    "DisplayName": "Туман-02: Штраф",
+    "Description": "Демо-фича для штрафного показателя.",
+    "SkillModifiers": [
+      {
+        "Tag": "Penalty",
+        "Modifier": 0.5
+      }
+    ]
+  },
+  {
+    "Key": "DemoStandardCore",
+    "DisplayName": "Ядро-03: Стандарт",
+    "Description": "Демо-фича для стандартного показателя.",
+    "SkillModifiers": [
+      {
+        "Tag": "Standard",
+        "Modifier": 1
+      }
+    ]
+  },
+  {
+    "Key": "DemoBonusSpark",
+    "DisplayName": "Искра-04: Бонус",
+    "Description": "Демо-фича для бонусного показателя.",
+    "SkillModifiers": [
+      {
+        "Tag": "Bonus",
+        "Modifier": 1.5
+      }
+    ]
+  },
+  {
+    "Key": "DemoPenaltyStandard",
+    "DisplayName": "Сдвиг-05: Штраф + Стандарт",
+    "SkillModifiers": [
+      {
+        "Tag": "Penalty",
+        "Modifier": 0.5
+      },
+      {
+        "Tag": "Standard",
+        "Modifier": 1
+      }
+    ]
+  },
+  {
+    "Key": "DemoPenaltyBonus",
+    "DisplayName": "Маятник-06: Штраф + Бонус",
+    "SkillModifiers": [
+      {
+        "Tag": "Penalty",
+        "Modifier": 0.5
+      },
+      {
+        "Tag": "Bonus",
+        "Modifier": 1.5
+      }
+    ]
+  },
+  {
+    "Key": "DemoStandardBonus",
+    "DisplayName": "Резонанс-07: Стандарт + Бонус",
+    "SkillModifiers": [
+      {
+        "Tag": "Standard",
+        "Modifier": 1
+      },
+      {
+        "Tag": "Bonus",
+        "Modifier": 1.5
+      }
+    ]
+  },
+  {
+    "Key": "DemoAllSkills",
+    "DisplayName": "Химерик-08: Все показатели",
+    "Description": "Показывает feature сразу во всех skill-категориях.",
+    "SkillModifiers": [
+      {
+        "Tag": "Penalty",
+        "Modifier": 0.5
+      },
+      {
+        "Tag": "Standard",
+        "Modifier": 1
+      },
+      {
+        "Tag": "Bonus",
+        "Modifier": 1.5
+      }
+    ]
+  },
+  {
+    "Key": "DemoLevelPenalty",
+    "DisplayName": "Обвал-09: Уровень + Штраф",
     "LevelModifier": 2,
     "SkillModifiers": [
       {
@@ -11,29 +110,20 @@
     ]
   },
   {
-    "Key": "Old",
-    "DisplayName": "Раса Долгожитель",
-    "LevelModifier": 2
+    "Key": "DemoLevelStandard",
+    "DisplayName": "Основа-10: Уровень + Стандарт",
+    "LevelModifier": 2,
+    "SkillModifiers": [
+      {
+        "Tag": "Standard",
+        "Modifier": 2.0
+      }
+    ]
   },
   {
-    "Key": "Evil",
-    "DisplayName": "Злой Хищник",
-    "Description": "Уязвим к Свету",
-    "LevelModifier": 2
-  },
-  {
-    "Key": "Tehc",
-    "DisplayName": "Волшебный Si-Fi",
-    "LevelModifier": 2
-  },
-  {
-    "Key": "Exotic",
-    "DisplayName": "Экзотический Редкий",
-    "LevelModifier": 2
-  },
-  {
-    "Key": "Sains",
-    "DisplayName": "Мудрый",
+    "Key": "DemoLevelBonus",
+    "DisplayName": "Всплеск-11: Уровень + Бонус",
+    "LevelModifier": 2,
     "SkillModifiers": [
       {
         "Tag": "Bonus",
@@ -42,212 +132,13 @@
     ]
   },
   {
-    "Key": "PowerArnmor",
-    "DisplayName": "Силовое Поле",
-    "Description": "Уязвим к ОСОБЫМ атакам",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Coward",
-    "DisplayName": "Трус",
-    "Description": "Уязвим к Страху",
-    "SkillModifiers": [
-      {
-        "Tag": "Penalty",
-        "Modifier": 0.5
-      },
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Litl",
-    "DisplayName": "Малый",
-    "Description": "Уязвим к Страху",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      },
-      {
-        "Tag": "Penalty",
-        "Modifier": 0.5
-      }
-    ]
-  },
-  {
-    "Key": "Big",
-    "DisplayName": "Большой",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "WilPowwer",
-    "DisplayName": "Упорный",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Regen",
-    "DisplayName": "Регенерация",
-    "Description": "Уязвим к Огню",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Berserc",
-    "DisplayName": "Берсерк",
-    "Description": "Пораж. Увелич. Урон. Гибнет после раунда равного характеру",
-    "SkillModifiers": [
-      {
-        "Tag": "Penalty",
-        "Modifier": 0.5
-      },
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "PowerAttak",
-    "DisplayName": " Мощная Атака",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "ArmorPirsic",
-    "Description": "Безсилен если НЕТ Брони и Щита",
-    "DisplayName": " Бронебойная Атака",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Toxic",
-    "Description": "Безсилен к Броне",
-    "DisplayName": " Ядовитая Атака"
-  },
-  {
-    "Key": "Invisible",
-    "DisplayName": "Невидимый",
-    "Description": "Уязвим к Массовым Атакам",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Dexteri",
-    "DisplayName": "Ловкий Шустрый",
-    "Description": "Уязвим к Массовым Атакам",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Flay",
-    "DisplayName": "Полёт",
-    "Description": "Уязвим к Дальнобойным Атакам",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Sawage2",
-    "DisplayName": "Sawage2",
+    "Key": "DemoLevelPenaltyBonus",
+    "DisplayName": "Разлом-12: Уровень + Штраф + Бонус",
     "LevelModifier": 2,
     "SkillModifiers": [
       {
         "Tag": "Penalty",
         "Modifier": 0.5
-      }
-    ]
-  },
-  {
-    "Key": "Old2",
-    "DisplayName": "Old2",
-    "LevelModifier": 2
-  },
-  {
-    "Key": "Evil2",
-    "DisplayName": "Evil2",
-    "Description": "Уязвим к Свету",
-    "LevelModifier": 2
-  },
-  {
-    "Key": "Tehc2",
-    "DisplayName": "Tehc2",
-    "LevelModifier": 2
-  },
-  {
-    "Key": "Exotic2",
-    "DisplayName": "Exotic2",
-    "LevelModifier": 2
-  },
-  {
-    "Key": "Sains2",
-    "DisplayName": "Sains2",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "PowerArnmor2",
-    "DisplayName": "PowerArnmor2",
-    "Description": "Уязвим к ОСОБЫМ атакам",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Coward2",
-    "DisplayName": "Coward2",
-    "Description": "Уязвим к Страху",
-    "SkillModifiers": [
-      {
-        "Tag": "Penalty",
-        "Modifier": 0.5
       },
       {
         "Tag": "Bonus",
@@ -256,59 +147,18 @@
     ]
   },
   {
-    "Key": "Litl2",
-    "DisplayName": "Litl2",
-    "Description": "Уязвим к Страху",
+    "Key": "DemoLevelAllSkills",
+    "DisplayName": "Полигон-13: Уровень + Все",
+    "LevelModifier": 2,
+    "Description": "Демо-фича для проверки всех вкладок одновременно.",
     "SkillModifiers": [
       {
-        "Tag": "Bonus",
-        "Modifier": 1.5
+        "Tag": "Penalty",
+        "Modifier": 0.5
       },
       {
-        "Tag": "Penalty",
-        "Modifier": 0.5
-      }
-    ]
-  },
-  {
-    "Key": "Big2",
-    "DisplayName": "Big2",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "WilPowwer2",
-    "DisplayName": "WilPowwer2",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Regen2",
-    "DisplayName": "Regen2",
-    "Description": "Уязвим к Огню",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Berserc2",
-    "DisplayName": "Berserc2",
-    "Description": "Пораж. Увелич. Урон. Гибнет после раунда равного характеру",
-    "SkillModifiers": [
-      {
-        "Tag": "Penalty",
-        "Modifier": 0.5
+        "Tag": "Standard",
+        "Modifier": 1
       },
       {
         "Tag": "Bonus",
@@ -317,68 +167,31 @@
     ]
   },
   {
-    "Key": "PowerAttak2",
-    "DisplayName": "PowerAttak2",
+    "Key": "DemoStandardMirror",
+    "DisplayName": "Зеркало-14: Стандарт",
     "SkillModifiers": [
       {
-        "Tag": "Bonus",
-        "Modifier": 1.5
+        "Tag": "Standard",
+        "Modifier": 1
       }
     ]
   },
   {
-    "Key": "ArmorPirsic2",
-    "Description": "Безсилен если НЕТ Брони и Щита",
-    "DisplayName": "ArmorPirsic2",
+    "Key": "DemoStandardAnchor",
+    "DisplayName": "Якорь-15: Стандарт",
+    "Description": "Еще одна feature для демонстрации стандартной категории.",
     "SkillModifiers": [
       {
-        "Tag": "Bonus",
-        "Modifier": 1.5
+        "Tag": "Standard",
+        "Modifier": 1
       }
     ]
   },
   {
-    "Key": "Toxic2",
-    "Description": "Безсилен к Броне",
-    "DisplayName": "Toxic2"
-  },
-  {
-    "Key": "Invisible2",
-    "DisplayName": "Invisible2",
-    "Description": "Уязвим к Массовым Атакам",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Dexteri2",
-    "DisplayName": "Dexteri2",
-    "Description": "Уязвим к Массовым Атакам",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Armor2",
-    "DisplayName": "Armor2",
-    "Description": "Уязвим к Бронебойному",
-    "SkillModifiers": [
-      {
-        "Tag": "Bonus",
-        "Modifier": 1.5
-      }
-    ]
-  },
-  {
-    "Key": "Flay2",
-    "DisplayName": "Flay2",
-    "Description": "Уязвим к Дальнобойным Атакам",
+    "Key": "DemoHiddenTemplate",
+    "DisplayName": "Шаблон-16: скрытая",
+    "Description": "Скрытая feature для проверки IsHidden.",
+    "IsHidden": true,
     "SkillModifiers": [
       {
         "Tag": "Bonus",

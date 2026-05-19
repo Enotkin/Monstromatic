@@ -7,8 +7,16 @@
              x:Class="Monstromatic.Views.SkillCounterView"
              x:DataType="viewModels:SkillCounterViewModel"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=SkillCounterViewModel}">
-    <StackPanel >
-        <Label Content="{Binding  SkillName}" HorizontalAlignment="Center" Height="25" FontSize="12"/>
+    <StackPanel>
+        <TextBlock Text="{Binding SkillName}"
+                   HorizontalAlignment="Stretch"
+                   Height="34"
+                   FontSize="12"
+                   Foreground="white"
+                   MaxLines="2"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Center" />
         <UniformGrid Rows="2" Columns="2">
             
             <UniformGrid.Styles>
