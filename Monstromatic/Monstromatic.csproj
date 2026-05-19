@@ -49,6 +49,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Resources\settings.json" />
     <EmbeddedResource Include="Data\Resources\features.json" />
+    <None Update="Data\Resources\settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>settings.json</TargetPath>
+    </None>
+    <None Update="Data\Resources\features.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>features.json</TargetPath>
+    </None>
     <None Remove="Data\DefaultSettings.json" />
   </ItemGroup>
   <ItemGroup>

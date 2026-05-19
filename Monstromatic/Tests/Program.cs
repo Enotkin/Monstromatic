@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using Monstromatic.Models;
 
 var tests = new (string Name, Action Run)[]
@@ -7,6 +9,10 @@ var tests = new (string Name, Action Run)[]
     ("standard x1.5 at levels 4, 6, 8", StandardModifierExamples),
     ("standard + feature + manual examples", CombinedModifierExamples),
     ("skill recalculates from new monster level", SkillRecalculatesFromNewLevel),
+    ("settings deserialize dynamic skills", SettingsDeserializeDynamicSkills),
+    ("feature deserialize skill modifiers", FeatureDeserializeSkillModifiers),
+    ("feature exposes tag-based modifiers", FeatureSkillModifiers),
+    ("legacy feature modifiers are converted to tags", LegacyFeatureModifiersFallback),
     ("odd monster level is validation error", OddMonsterLevelFails),
     ("fractional modifier delta is validation error", FractionalDeltaFails)
 };
@@ -41,6 +47,80 @@ static void SkillRecalculatesFromNewLevel()
     AssertEqual(13, skill.Value);
 }
 
+static void SettingsDeserializeDynamicSkills()
+{
+    var settings = JsonSerializer.Deserialize<MonstromaticSettings>(
+        """
+        {
+          "MonsterQualities": {},
+          "Skills": [
+            {
+              "Name": "Атака",
+              "Tag": "Attack",
+              "BaseModifier": 0.5
+            }
+          ]
+        }
+        """)!;
+
+    var skill = settings.SkillDefinitions.Single();
+
+    AssertEqual("Атака", skill.Name);
+    AssertEqual("Attack", skill.Tag);
+    AssertEqual(0.5, skill.BaseModifier);
+}
+
+static void FeatureDeserializeSkillModifiers()
+{
+    var feature = JsonSerializer.Deserialize<MonsterFeature>(
+        """
+        {
+          "Key": "Big",
+          "DisplayName": "Большой",
+          "SkillModifiers": [
+            {
+              "Tag": "Attack",
+              "Modifier": 1.5
+            }
+          ]
+        }
+        """)!;
+
+    var modifier = feature.GetSkillModifiers().Single();
+
+    AssertEqual("Attack", modifier.Tag);
+    AssertEqual(1.5, modifier.Modifier);
+}
+
+static void FeatureSkillModifiers()
+{
+    var feature = new MonsterFeature
+    {
+        SkillModifiers =
+        [
+            new SkillModifier { Tag = "Attack", Modifier = 1.5 },
+            new SkillModifier { Tag = "Defence", Modifier = 0.5 }
+        ]
+    };
+
+    AssertEqual(true, feature.HasSkillModifier("Attack"));
+    AssertEqual(false, feature.HasSkillModifier("Health"));
+    AssertEqual(1.5, feature.GetSkillModifiers().Single(modifier => modifier.Tag == "Attack").Modifier);
+}
+
+static void LegacyFeatureModifiersFallback()
+{
+    var feature = new MonsterFeature
+    {
+        AttackModifier = 1.5
+    };
+
+    var modifier = feature.GetSkillModifiers().Single();
+
+    AssertEqual("Attack", modifier.Tag);
+    AssertEqual(1.5, modifier.Modifier);
+}
+
 static void OddMonsterLevelFails()
 {
     AssertThrows<ValidationException>(() => new Skill("Attack", 5, 1));
@@ -60,9 +140,9 @@ static Skill CreateCombinedSkill(int level)
     return skill;
 }
 
-static void AssertEqual(int expected, int actual)
+static void AssertEqual<T>(T expected, T actual)
 {
-    if (expected != actual)
+    if (!Equals(expected, actual))
         throw new InvalidOperationException($"Expected {expected}, got {actual}.");
 }
 

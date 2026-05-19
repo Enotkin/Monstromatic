@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using Monstromatic.Models;
 using ReactiveUI;
@@ -12,72 +13,31 @@ public partial class MonsterViewModel : ViewModelBase
     public delegate void RemovingMonsterEvent(Guid monsterId);
 
     private readonly Monster _monster;
-    
-    public List<SkillCounterViewModel> SkillsVm { get; }
+    private decimal? _levell;
 
-    public event RemovingMonsterEvent RemovingMonsterEventInv;
-    
-    public ReactiveCommand<Unit, Unit> CloseCommand { get; }
-    
-    public Guid Id { get; }
-    
-    public bool IsAlive { get; set; } = true;
-    
-    public string Name => _monster.Name;
-    
-    public SkillCounterViewModel Attack { get; }
-    
-    public SkillCounterViewModel Defence { get; }
-    
-    public SkillCounterViewModel Bravery { get; }
-    
-    public SkillCounterViewModel Trickery { get; }
-    
     public MonsterViewModel(Monster monster)
     {
         _monster = monster;
-
         Id = _monster.Id;
-
         CloseCommand = ReactiveCommand.Create(RemoveMonster);
+        SkillsVm = monster.Skills.Select(skill => new SkillCounterViewModel(skill)).ToList();
 
-        Attack = new SkillCounterViewModel(monster.Attack);
-        Defence = new SkillCounterViewModel(monster.Defence);
-        Bravery = new SkillCounterViewModel(monster.Bravery);
-        Trickery = new SkillCounterViewModel(monster.Trickery);
+        this.WhenAnyValue(x => x.IsAlive).Subscribe(_ => RemoveMonster());
 
-        SkillsVm = [Attack, Defence, Bravery, Trickery];
-
-        this.WhenAnyValue(x => x.IsAlive).Subscribe(x => RemoveMonster());
-        
         _levell = _monster.Level;
     }
 
-    [ReactiveCommand]
-    private void ResetModifications()
-    {
-        UpdateSkills();
-    }
-    
-    [ReactiveCommand]
-    private void AddLevel()
-    {
-        _monster.PersonalLevel += 2;
-        _levell = _monster.Level;
-        this.RaisePropertyChanged(nameof(Level));
-        this.RaisePropertyChanged(nameof(Levell));
-    }
+    public List<SkillCounterViewModel> SkillsVm { get; }
 
-    [ReactiveCommand]
-    private void RemoveLevel()
-    {
-        _monster.PersonalLevel -= 2;
-        _levell = _monster.Level;
-        this.RaisePropertyChanged(nameof(Level));
-        this.RaisePropertyChanged(nameof(Levell));
-    }
+    public event RemovingMonsterEvent? RemovingMonsterEventInv;
 
-    private decimal? _levell;
+    public ReactiveCommand<Unit, Unit> CloseCommand { get; }
+
+    public Guid Id { get; }
+
+    public bool IsAlive { get; set; } = true;
+
+    public string Name => _monster.Name;
 
     public decimal? Levell
     {
@@ -100,15 +60,32 @@ public partial class MonsterViewModel : ViewModelBase
             _monster.PersonalLevel = level - _monster.EncounterLevel;
             this.RaiseAndSetIfChanged(ref _levell, value);
             this.RaisePropertyChanged(nameof(Level));
+            UpdateSkills();
         }
     }
-    
+
     public int Level => _monster.Level;
 
-    private void UpdateSkills() =>
-        SkillsVm.ForEach(skillVm => skillVm.RaisePropertyChanged(nameof(skillVm.SkillValue)));
+    [ReactiveCommand]
+    private void ResetModifications()
+    {
+        _monster.ResetModifications();
+        UpdateLevelAndSkills();
+    }
 
-    private void RemoveMonster() => RemovingMonsterEventInv?.Invoke(_monster.Id);
+    [ReactiveCommand]
+    private void AddLevel()
+    {
+        _monster.PersonalLevel += 2;
+        UpdateLevelAndSkills();
+    }
+
+    [ReactiveCommand]
+    private void RemoveLevel()
+    {
+        _monster.PersonalLevel -= 2;
+        UpdateLevelAndSkills();
+    }
 
     public void UpdateLevel()
     {
@@ -122,4 +99,9 @@ public partial class MonsterViewModel : ViewModelBase
         UpdateLevel();
         UpdateSkills();
     }
+
+    private void UpdateSkills() =>
+        SkillsVm.ForEach(skillVm => skillVm.RaisePropertyChanged(nameof(skillVm.SkillValue)));
+
+    private void RemoveMonster() => RemovingMonsterEventInv?.Invoke(_monster.Id);
 }

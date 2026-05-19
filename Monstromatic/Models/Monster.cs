@@ -1,41 +1,37 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Monstromatic.Models;
 
 public class Monster
 {
     public Guid Id { get; }
-    
+
     private int _encounterLevel;
     private int _personalMonsterLevel;
+    private readonly List<Skill> _skills;
 
-    private List<Skill> Skills { get;  }
-    
-    public Skill Attack { get; set; }
-    
-    public Skill Defence { get; set; }
-    
-    public Skill Bravery { get; set; }
-    
-    public Skill Trickery { get; set; }
-    
     public Monster(int level, string name, FeaturesBundle featuresBundle)
     {
         Id = Guid.NewGuid();
-        
+
         MonsterLevelRules.ValidateEvenLevel(level);
         _encounterLevel = level;
         _personalMonsterLevel = 0;
         Name = name;
-        
-        Attack = new Skill("Атака", _encounterLevel, featuresBundle.AttackStandardModifier, featuresBundle.AttackFeatureModifiers);
-        Defence = new Skill("Защита", _encounterLevel, featuresBundle.DefenceStandardModifier, featuresBundle.DefenceFeatureModifiers);
-        Bravery = new Skill("Храбрость", _encounterLevel, featuresBundle.BraveryStandardModifier, featuresBundle.BraveryFeatureModifiers);
-        Trickery = new Skill("Хитрость", _encounterLevel, featuresBundle.TrickeryStandardModifier, featuresBundle.TrickeryFeatureModifiers);
 
-        Skills = [Attack, Defence, Bravery, Trickery];
+        _skills = featuresBundle.SkillDefinitions
+            .Select(skill => new Skill(
+                skill.Name,
+                skill.Tag,
+                _encounterLevel,
+                skill.BaseModifier,
+                featuresBundle.GetFeatureModifiers(skill.Tag)))
+            .ToList();
     }
+
+    public IReadOnlyCollection<Skill> Skills => _skills;
 
     public int EncounterLevel
     {
@@ -47,7 +43,7 @@ public class Monster
             UpdateSkills();
         }
     }
-    
+
     public int Level => _encounterLevel + _personalMonsterLevel;
 
     public int PersonalLevel
@@ -61,23 +57,22 @@ public class Monster
         }
     }
 
-    private void UpdateSkills()
-    {
-        foreach (var skill in Skills)
-        {
-            skill.Level = Level;
-        }
-    }
+    public string Name { get; }
 
     public void ResetModifications()
     {
         PersonalLevel = 0;
-        foreach (var skill in Skills)
+        foreach (var skill in _skills)
         {
             skill.Reset();
         }
     }
-    
-    public string Name { get; }
-    
+
+    private void UpdateSkills()
+    {
+        foreach (var skill in _skills)
+        {
+            skill.Level = Level;
+        }
+    }
 }

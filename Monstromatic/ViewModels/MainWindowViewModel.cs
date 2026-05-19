@@ -1,14 +1,10 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using DynamicData;
 using Monstromatic.Data.AppSettingsProvider;
 using Monstromatic.Data.FeatureService;
-using Monstromatic.Data.Services;
 using Monstromatic.Models;
 using Monstromatic.Utils;
 using ReactiveUI;
@@ -19,57 +15,52 @@ namespace Monstromatic.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     public IProcessHelper ProcessHelper { get; }
+
     private readonly FeatureController _featureController = new();
     private readonly IAppSettingsProvider _settingsProvider;
-    private readonly FeatureService _featureService;
+    private IReadOnlyCollection<FeatureCategoryViewModel> _featureCategories = [];
 
-    [Reactive] private string _name;
+    [Reactive] private string? _name;
+    [Reactive] private string? _selectedQuality;
 
-    [Reactive] private string _selectedQuality;
-
-    private SourceList<FeatureViewModel> _features;
-
-    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _levelFeatures;
-    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _attackFeatures;
-    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _defenceFeatures;
-    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _braveryFeatures;
-    [Reactive] private ReadOnlyObservableCollection<FeatureViewModel> _trickeryFeatures;
-    
-    public IEnumerable<FeatureViewModel> Features => GetFeatureViewModels();
-    public IEnumerable<string> Qualities => _settingsProvider.Settings.MonsterQualities.Select(x => x.Key);
-    public ReactiveCommand<Unit, Unit> GenerateEncounterCommand { get; }
-    public ReactiveCommand<Unit, Unit> ShowAboutCommand { get; }
-    public ReactiveCommand<string, Unit> ShowSettingsCommand { get; }
-    public ReactiveCommand<Unit, Unit> ResetSettingsCommand { get; }
-
-    public Interaction<EncounterViewModel, Unit> ShowNewMonsterWindow { get; } = new ();
-    public Interaction<Unit, Unit> ShowAboutDialog { get; } = new ();
-    public Interaction<Unit, bool> ConfirmResetChanges { get; } = new();
-        
     public MainWindowViewModel(IAppSettingsProvider settingsProvider, IProcessHelper processHelper)
     {
         ProcessHelper = processHelper;
         _settingsProvider = settingsProvider;
-        _featureService = new FeatureService();
 
         var canGenerateEncounter = this
             .WhenAnyValue(x => x.Name, x => x.SelectedQuality,
                 (name, quality) => !string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(quality));
-            
+
         GenerateEncounterCommand = ReactiveCommand.CreateFromTask(GenerateNewEncounter, canGenerateEncounter);
         ShowAboutCommand = ReactiveCommand.CreateFromTask(async () => await ShowAboutDialog.Handle(Unit.Default));
         ShowSettingsCommand = ReactiveCommand.CreateFromTask<string>(ShowSettings);
         ResetSettingsCommand = ReactiveCommand.CreateFromTask(ResetSettings);
-        
-        _features = new SourceList<FeatureViewModel>();
 
-        _features.Connect().Filter(s => s.Feature.LevelModifier != 0).Bind(out _levelFeatures).Subscribe();
-        _features.Connect().Filter(s => s.Feature.AttackModifier != 0).Bind(out _attackFeatures).Subscribe();
-        _features.Connect().Filter(s => s.Feature.DefenceModifier != 0).Bind(out _defenceFeatures).Subscribe();
-        _features.Connect().Filter(s => s.Feature.BraveryModifier != 0).Bind(out _braveryFeatures).Subscribe();
-        _features.Connect().Filter(s => s.Feature.TrickeryModifier != 0).Bind(out _trickeryFeatures).Subscribe();
-        _features.AddRange(GetFeatureViewModels());
+        RebuildFeatureCategories();
     }
+
+    public IReadOnlyCollection<FeatureCategoryViewModel> FeatureCategories
+    {
+        get => _featureCategories;
+        private set => this.RaiseAndSetIfChanged(ref _featureCategories, value);
+    }
+
+    public IEnumerable<string> Qualities => _settingsProvider.Settings.MonsterQualities.Select(x => x.Key);
+
+    public ReactiveCommand<Unit, Unit> GenerateEncounterCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> ShowAboutCommand { get; }
+
+    public ReactiveCommand<string, Unit> ShowSettingsCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> ResetSettingsCommand { get; }
+
+    public Interaction<EncounterViewModel, Unit> ShowNewMonsterWindow { get; } = new();
+
+    public Interaction<Unit, Unit> ShowAboutDialog { get; } = new();
+
+    public Interaction<Unit, bool> ConfirmResetChanges { get; } = new();
 
     private async Task ResetSettings()
     {
@@ -83,8 +74,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async Task GenerateNewEncounter()
     {
-        var baseMonsterLevel = _settingsProvider.Settings.MonsterQualities[SelectedQuality];
-        var encounter = new Encounter(Name, baseMonsterLevel, _featureController.CreateFeaturesBundle());
+        var baseMonsterLevel = _settingsProvider.Settings.MonsterQualities[SelectedQuality!];
+        var encounter = new Encounter(Name!, baseMonsterLevel, _featureController.CreateFeaturesBundle());
         var encounterViewModel = new EncounterViewModel(encounter);
         await ShowNewMonsterWindow.Handle(encounterViewModel);
     }
@@ -98,14 +89,34 @@ public partial class MainWindowViewModel : ViewModelBase
     private void RefreshControls()
     {
         _settingsProvider.Reload();
-        this.RaisePropertyChanged(nameof(Features));
+        RebuildFeatureCategories();
         this.RaisePropertyChanged(nameof(Qualities));
+    }
+
+    private void RebuildFeatureCategories()
+    {
+        var features = GetFeatureViewModels().ToArray();
+        var categories = new List<FeatureCategoryViewModel>
+        {
+            new("Все особенности", features)
+        };
+
+        categories.Add(new(
+            "Уровень",
+            features.Where(feature => feature.Feature.LevelModifier != 0).ToArray()));
+
+        categories.AddRange(_settingsProvider.Settings.SkillDefinitions.Select(skill =>
+            new FeatureCategoryViewModel(
+                skill.Name,
+                features.Where(feature => feature.Feature.HasSkillModifier(skill.Tag)).ToArray())));
+
+        FeatureCategories = categories;
     }
 
     private IEnumerable<FeatureViewModel> GetFeatureViewModels()
     {
         return _settingsProvider.Features
-            .Where(f => f is { IsHidden: false })
+            .Where(f => !f.IsHidden)
             .Select(f => new FeatureViewModel(f, _featureController))
             .OrderBy(f => f.DisplayName);
     }

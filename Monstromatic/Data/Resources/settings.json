@@ -1,16 +1,25 @@
-﻿{
+{
   "MonsterQualities": {
     "Слабый": 2,
     "Обычный": 4,
     "Мини-Босс": 6,
     "БОСС!!!": 8
   },
-  "DefaultModifiers": {
-    "AttackModifier" : 0.5,
-    "DefenceModifier" : 1,
-    "HealthModifier" : 2,
-    "KnowledgeModifier" : 1,
-    "TemperModifier" : 1,
-    "TrickeryModifier" : 1
-  }
+  "Skills": [
+    {
+      "Name": "Штрафной Показатель",
+      "Tag": "Penalty",
+      "BaseModifier": 0.5
+    },
+    {
+      "Name": "Стандартный Показатель",
+      "Tag": "Standard",
+      "BaseModifier": 1
+    },
+    {
+      "Name": "Бонусный Показатель",
+      "Tag": "Bonus",
+      "BaseModifier": 1.5
+    }
+  ]
 }

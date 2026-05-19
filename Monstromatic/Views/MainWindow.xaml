@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:conv="clr-namespace:Monstromatic.Converters;assembly=Monstromatic"
         xmlns:resources="clr-namespace:Monstromatic.Data;assembly=Monstromatic"
+        xmlns:viewModels="clr-namespace:Monstromatic.ViewModels;assembly=Monstromatic"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
         Width="800" Height="400"
         MinWidth="650" MinHeight="350"
@@ -94,80 +95,25 @@
                     </StackPanel>
                 </Grid>
                 
-                <TabControl Grid.Column="1" Margin="3">
-                    
-                    <TabItem Header="Все осообености">
-                        <ScrollViewer AllowAutoHide="True">
-                            <ItemsControl ItemsSource="{Binding Features}" >
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </TabItem>
-                    
-                    <TabItem Header="Уровень">
-                        <ScrollViewer AllowAutoHide="True">
-                            <ItemsControl ItemsSource="{Binding LevelFeatures}" >
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </TabItem>
-                    
-                    <TabItem Header="Атака">
-                        <ScrollViewer AllowAutoHide="True">
-                            <ItemsControl ItemsSource="{Binding AttackFeatures}" >
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" RowSpacing="5" VerticalAlignment="Top"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </TabItem>
-                    
-                    <TabItem Header="Защита">
-                        <ScrollViewer AllowAutoHide="True">
-                            <ItemsControl ItemsSource="{Binding DefenceFeatures}" >
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </TabItem>
-                    
-                    <TabItem Header="Храбрость">
-                        <ScrollViewer AllowAutoHide="True">
-                            <ItemsControl ItemsSource="{Binding BraveryFeatures}" >
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </TabItem>
-                    
-                    <TabItem Header="Хитрость">
-                        <ScrollViewer AllowAutoHide="True">
-                            <ItemsControl ItemsSource="{Binding TrickeryFeatures}" >
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="4" VerticalAlignment="Top"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </TabItem>
-                    
+                <TabControl Grid.Column="1" Margin="3" ItemsSource="{Binding FeatureCategories}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate DataType="viewModels:FeatureCategoryViewModel">
+                            <TextBlock Text="{Binding DisplayName}" />
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate DataType="viewModels:FeatureCategoryViewModel">
+                            <ScrollViewer AllowAutoHide="True">
+                                <ItemsControl ItemsSource="{Binding Features}" >
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="4" RowSpacing="5" VerticalAlignment="Top"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
                 </TabControl>
                 
                 <!-- <HeaderedContentControl Grid.Column="1" Margin="3" Header="Особенности" -->

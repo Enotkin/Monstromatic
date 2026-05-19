@@ -30,8 +30,14 @@ public class Skill
     private int _level;
 
     public Skill(string name, int level, double standardModifier, IEnumerable<double>? featureModifiers = null)
+        : this(name, name, level, standardModifier, featureModifiers)
+    {
+    }
+
+    public Skill(string name, string tag, int level, double standardModifier, IEnumerable<double>? featureModifiers = null)
     {
         Name = name;
+        Tag = tag;
         Level = level;
         _standardModifier = standardModifier;
         _featureModifiers = featureModifiers?.ToArray() ?? [];
@@ -41,6 +47,8 @@ public class Skill
     /// Название навыка
     /// </summary>
     public string Name { get; }
+
+    public string Tag { get; }
 
     /// <summary>
     /// Значение навыка
