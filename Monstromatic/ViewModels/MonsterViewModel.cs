@@ -39,6 +39,8 @@ public partial class MonsterViewModel : ViewModelBase
 
     public string Name => _monster.Name;
 
+    public bool IsBoosted => _monster.IsBoosted;
+
     public decimal? Levell
     {
         get => _levell;
@@ -71,6 +73,15 @@ public partial class MonsterViewModel : ViewModelBase
     {
         _monster.ResetModifications();
         UpdateLevelAndSkills();
+        this.RaisePropertyChanged(nameof(IsBoosted));
+    }
+
+    [ReactiveCommand]
+    private void BoostSkills()
+    {
+        _monster.BoostSkills();
+        UpdateSkills();
+        this.RaisePropertyChanged(nameof(IsBoosted));
     }
 
     [ReactiveCommand]

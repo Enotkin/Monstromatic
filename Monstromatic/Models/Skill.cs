@@ -17,6 +17,8 @@ public class Skill
 
     private readonly double _standardModifier;
 
+    private readonly int _boostValue;
+
     /// <summary>
     /// Модификаторы навыка от особенностей
     /// </summary>
@@ -40,12 +42,17 @@ public class Skill
         int level,
         double standardModifier,
         IEnumerable<double>? featureModifiers = null,
-        IEnumerable<SkillComment>? comments = null)
+        IEnumerable<SkillComment>? comments = null,
+        int boostValue = 0)
     {
+        if (boostValue < 0)
+            throw new ValidationException("Skill boost value cannot be negative.");
+
         Name = name;
         Tag = tag;
         Level = level;
         _standardModifier = standardModifier;
+        _boostValue = boostValue;
         _featureModifiers = featureModifiers?.ToArray() ?? [];
         Comments = comments?.ToArray() ?? [];
     }
@@ -81,6 +88,19 @@ public class Skill
     /// Увеличить значение навыка
     /// </summary>
     public void Increment() => _manualDelta++;
+
+    /// <summary>
+    /// Применить заданное в настройках усиление навыка
+    /// </summary>
+    /// <returns>Признак того, что значение навыка изменилось</returns>
+    public bool ApplyBoost()
+    {
+        if (_boostValue == 0)
+            return false;
+
+        _manualDelta += _boostValue;
+        return true;
+    }
 
     /// <summary>
     /// Уменьшить значение навыка

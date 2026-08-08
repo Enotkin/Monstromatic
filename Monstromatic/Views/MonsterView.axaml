@@ -61,12 +61,27 @@
                                 </Path>
                             </Button>
 
-                            <!-- Название монстра -->
-                            <TextBlock Grid.Column="1" Text="{Binding Name}"
-                                       Classes="main"
-                                       HorizontalAlignment="Center"
-                                       Margin="2, 2, 2, 5"
-                                       TextWrapping="Wrap"/>
+                            <!-- Название монстра и индикатор усиления -->
+                            <Grid Grid.Column="1"
+                                  ColumnDefinitions="*,Auto"
+                                  VerticalAlignment="Center"
+                                  Margin="2, 2, 2, 5">
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding Name}"
+                                           Classes="main"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"/>
+
+                                <TextBlock Grid.Column="1"
+                                           Text="▲"
+                                           Foreground="#FF2E7D32"
+                                           FontWeight="Bold"
+                                           Margin="5,0,0,0"
+                                           VerticalAlignment="Center"
+                                           IsVisible="{Binding IsBoosted}"
+                                           ToolTip.Tip="Характеристики повышены"/>
+                            </Grid>
                         
                         
                             <!-- Кнопки управления -->
@@ -93,6 +108,12 @@
                                               IsCheckedChanged="DeathToggleButton_OnIsCheckedChanged"
                                               Content="☠"
                                               ToolTip.Tip="Отметить монстра" />
+
+                                <Button Grid.Column="2"
+                                        Command="{Binding BoostSkillsCommand}"
+                                        Content="▲"
+                                        IsEnabled="{Binding !IsBoosted}"
+                                        ToolTip.Tip="Повысить характеристики" />
 
                                 <!-- <Button Grid.Column="0"  Command="{Binding RemoveLevelCommand}" Content="&lt;&lt;" /> -->
                                 <!-- <TextBlock Grid.Column="1" Classes="main" Text="{Binding Level, StringFormat=Ур. \{0\}}" VerticalAlignment="Center"/> -->
