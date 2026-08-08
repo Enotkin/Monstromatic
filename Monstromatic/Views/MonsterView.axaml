@@ -63,24 +63,31 @@
 
                             <!-- Название монстра и индикатор усиления -->
                             <Grid Grid.Column="1"
-                                  ColumnDefinitions="*,Auto"
+                                  ColumnDefinitions="Auto,*"
                                   VerticalAlignment="Center"
                                   Margin="2, 2, 2, 5">
                                 <TextBlock Grid.Column="0"
+                                           Text="▲"
+                                           Foreground="#FF39FF14"
+                                           FontSize="24"
+                                           FontWeight="Black"
+                                           Margin="0,0,6,0"
+                                           VerticalAlignment="Center"
+                                           IsVisible="{Binding IsBoosted}"
+                                           ToolTip.Tip="Характеристики повышены">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="#FF39FF14"
+                                                          BlurRadius="8"
+                                                          Opacity="1"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="1"
                                            Text="{Binding Name}"
                                            Classes="main"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
                                            TextWrapping="Wrap"/>
-
-                                <TextBlock Grid.Column="1"
-                                           Text="▲"
-                                           Foreground="#FF2E7D32"
-                                           FontWeight="Bold"
-                                           Margin="5,0,0,0"
-                                           VerticalAlignment="Center"
-                                           IsVisible="{Binding IsBoosted}"
-                                           ToolTip.Tip="Характеристики повышены"/>
                             </Grid>
                         
                         
