@@ -62,11 +62,28 @@
                             </Button>
 
                             <!-- Название монстра -->
-                            <TextBlock Grid.Column="1" Text="{Binding Name}"
-                                       Classes="main"
-                                       HorizontalAlignment="Center"
-                                       Margin="2, 2, 2, 5"
-                                       TextWrapping="Wrap"/>
+                            <Border Grid.Column="1"
+                                    Background="Transparent"
+                                    PointerPressed="MonsterName_OnPointerPressed"
+                                    ToolTip.Tip="Дважды щёлкните, чтобы изменить название">
+                                <Grid>
+                                    <TextBlock Name="MonsterNameText"
+                                               Text="{Binding Name}"
+                                               Classes="main"
+                                               HorizontalAlignment="Center"
+                                               Margin="2, 2, 2, 5"
+                                               TextWrapping="Wrap"/>
+
+                                    <TextBox Name="MonsterNameEditor"
+                                             Text="{Binding EditableName, Mode=TwoWay}"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Center"
+                                             Margin="2, 0, 2, 3"
+                                             IsVisible="False"
+                                             LostFocus="MonsterNameEditor_OnLostFocus"
+                                             KeyDown="MonsterNameEditor_OnKeyDown"/>
+                                </Grid>
+                            </Border>
                         
                         
                             <!-- Кнопки управления -->
