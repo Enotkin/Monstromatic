@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Monstromatic.Data.AppSettingsProvider;
+using Monstromatic.Data.Bestiary;
 using Monstromatic.ViewModels;
 namespace Monstromatic.Utils;
 
@@ -21,6 +22,7 @@ public class ServiceHub
         services.AddTransient<MainWindowViewModel>();
         services.AddSingleton<TestWindowViewModel>();
         services.AddSingleton<IAppSettingsProvider, AppSettingsProvider>();
+        services.AddSingleton<IBestiaryService, BestiaryService>();
         services.AddSingleton<IProcessHelper, ProcessHelper>();
     }
 }

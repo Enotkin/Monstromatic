@@ -30,57 +30,84 @@
             <!-- Headers -->
             <Grid Grid.Row="0" VerticalAlignment="Top" RowDefinitions="Auto">
                 <Border>
-                    <Grid.RowSpan>2</Grid.RowSpan>
                     <Border.BorderThickness>2</Border.BorderThickness>
                     <Border.CornerRadius>10, 10, 0, 0</Border.CornerRadius>
                 </Border>
 
-                <Grid Grid.Row="0" Name="Header" Background="Transparent" PointerPressed="Header_PointerPressed" ColumnDefinitions="*,50,50,50">
+                <Grid Grid.Row="0"
+                      Name="Header"
+                      Background="Transparent"
+                      PointerPressed="Header_PointerPressed"
+                      ColumnDefinitions="*,40"
+                      RowDefinitions="34,34">
 
                     <!-- Styles -->
                     <Grid.Styles>
-                        <Style Selector="Grid > Button">
-                            <Setter Property="Width" Value="20"></Setter>
-                            <Setter Property="Height" Value="20"></Setter>
-                            <Setter Property="VerticalAlignment" Value="Center"></Setter>
-                            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
-                            <Setter Property="FontSize" Value="9"></Setter>
+                        <Style Selector="Button.header-small">
+                            <Setter Property="Width" Value="26" />
+                            <Setter Property="Height" Value="24" />
+                            <Setter Property="Padding" Value="2" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="FontSize" Value="9" />
                         </Style>
-                        <Style Selector="Button.round /template/ ContentPresenter">
-                            <Setter Property="CornerRadius" Value="10"/>
+                        <Style Selector="TextBlock.header-text">
+                            <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="IsHitTestVisible" Value="False" />
                         </Style>
                     </Grid.Styles>
 
-                    <!-- Name and Level  -->
-                    <Grid Grid.Column="0" ColumnDefinitions="*, Auto" Margin="5">
-                        <Grid.Styles>
-                            <Style Selector="TextBlock">
-                                <Setter Property="Foreground" Value="Black"/>
-                                <Setter Property="FontSize" Value="14"/>
-                                <Setter Property="FontWeight" Value="SemiBold" />
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                <Setter Property="VerticalAlignment" Value="Center"></Setter>
-                                <Setter Property="IsHitTestVisible" Value="False" />
-                            </Style>
-                            <Style Selector="Button.LevelModifier">
-                                <Setter Property="Margin" Value="5,-2,5,2" />
-                            </Style>
-                        </Grid.Styles>
+                    <!-- Monster name -->
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Classes="header-text"
+                               Margin="8,2"
+                               Text="{Binding Name}"
+                               TextWrapping="Wrap" />
 
-                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="2, 2, 2, 5"/>
-
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button Command="{Binding RemoveLevelCommand}" Classes="LevelModifier">&lt;&lt;</Button>
-                            <TextBlock Text="{Binding Level, StringFormat=Ур. \{0\}}"/>
-                            <Button Command="{Binding AddLevelCommand}" Classes="LevelModifier">&gt;&gt;</Button>
+                    <!-- Encounter controls -->
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="0"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="6">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="3">
+                            <Button Classes="header-small"
+                                    Command="{Binding RemoveLevelCommand}">&lt;&lt;</Button>
+                            <TextBlock Classes="header-text"
+                                       MinWidth="38"
+                                       Text="{Binding Level, StringFormat=Ур. \{0\}}" />
+                            <Button Classes="header-small"
+                                    Command="{Binding AddLevelCommand}">&gt;&gt;</Button>
                         </StackPanel>
-                    </Grid>
-                    
-                    <Button Grid.Column="1"  Command="{Binding ResetModificationsCommand}" Content="R" />
 
-                    <!-- Color Selecting -->
-                    <Grid Grid.Column="2">
-                        <ComboBox Height="35" Name="ColorSelector" SelectionChanged="ColorSelectorOnSelectionChanged">
+                        <Button Classes="header-small"
+                                Command="{Binding ResetModificationsCommand}"
+                                Content="R"
+                                ToolTip.Tip="Сбросить изменения" />
+
+                        <Button Name="AddToBestiaryButton"
+                                Classes="header-small"
+                                Command="{Binding AddToBestiaryCommand}"
+                                IsVisible="{Binding CanAddToBestiary}"
+                                ToolTip.Tip="Добавить в бестиарий">
+                            <Path Width="14"
+                                  Height="14"
+                                  Data="M 2 1 L 13 1 L 17 5 L 17 17 L 1 17 L 1 1 Z M 4 1 L 4 7 L 13 7 L 13 1 M 4 17 L 4 11 L 14 11 L 14 17"
+                                  Stroke="{StaticResource ThemeControlHighlightLowBrush}"
+                                  StrokeThickness="1.5" />
+                        </Button>
+
+                        <!-- Color selecting -->
+                        <ComboBox Width="44"
+                                  Height="28"
+                                  Name="ColorSelector"
+                                  SelectionChanged="ColorSelectorOnSelectionChanged">
                             <ComboBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <UniformGrid Columns="3" />
@@ -93,13 +120,27 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                    </Grid>
+                    </StackPanel>
 
-                    <!-- Close button -->
-                    <Button Grid.Column="3" Click="CloseButton_Click" Background="#bb0000">
-                        <Path Data="M 0 0 L 10 10 M 0 10 L 10 0" Stroke="{StaticResource ThemeControlHighlightLowBrush}" StrokeThickness="2"></Path>
+                    <!-- Two-row close button -->
+                    <Button Grid.Row="0"
+                            Grid.RowSpan="2"
+                            Grid.Column="1"
+                            Width="28"
+                            Height="28"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Click="CloseButton_Click"
+                            Background="#bb0000"
+                            ToolTip.Tip="Закрыть">
+                        <Path Width="16"
+                              Height="16"
+                              Data="M 1 1 L 15 15 M 1 15 L 15 1"
+                              Stroke="{StaticResource ThemeControlHighlightLowBrush}"
+                              StrokeThickness="2" />
                     </Button>
                 </Grid>
+
             </Grid>
 
             <!-- Monsters-->

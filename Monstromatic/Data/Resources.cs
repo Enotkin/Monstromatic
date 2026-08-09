@@ -13,11 +13,16 @@ public class Resources
 
     public const string FeaturesFileName = "features";
 
+    public const string BestiaryFileName = "bestiary";
+
     public static string SettingsFilePath { get; } =
         AppDomain.CurrentDomain.BaseDirectory + SettingsFileName + FileExtension;
 
     public static string FeaturesFilePath { get; } = 
         AppDomain.CurrentDomain.BaseDirectory + FeaturesFileName + FileExtension;
+
+    public static string BestiaryFilePath { get; } =
+        AppDomain.CurrentDomain.BaseDirectory + BestiaryFileName + FileExtension;
     public static string GetData(string fileName)
     {
         var name = Assembly.GetExecutingAssembly().GetName().Name;

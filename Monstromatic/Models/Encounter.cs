@@ -18,7 +18,11 @@ public partial class Encounter : ReactiveObject
     private const string MonsterNamePattern = "{0} - {1}";
     public string Name { get; }
 
+    public string QualityName { get; }
+
     public IReadOnlyCollection<MonsterFeature> Features => _featuresBundle.Features;
+
+    public IReadOnlyCollection<SkillDefinition> SkillDefinitions => _featuresBundle.SkillDefinitions;
 
     public List<Monster> Monsters => _monsters.Values.ToList();
 
@@ -32,12 +36,21 @@ public partial class Encounter : ReactiveObject
         }
     }
 
-    public Encounter(string name, int baseLevel, IEnumerable<MonsterFeature> monsterFeatures) 
-        : this(name, baseLevel, new FeaturesBundle(monsterFeatures)) {}
+    public Encounter(
+        string name,
+        int baseLevel,
+        IEnumerable<MonsterFeature> monsterFeatures,
+        string? qualityName = null)
+        : this(name, baseLevel, new FeaturesBundle(monsterFeatures), qualityName) {}
     
-    public Encounter(string name, int baseLevel, FeaturesBundle featuresBundle)
+    public Encounter(
+        string name,
+        int baseLevel,
+        FeaturesBundle featuresBundle,
+        string? qualityName = null)
     {
         Name = name;
+        QualityName = qualityName ?? string.Empty;
         Level = baseLevel + featuresBundle.LevelModificator;
         MonsterLevelRules.ValidateEvenLevel(Level);
         _baseLevel = baseLevel;

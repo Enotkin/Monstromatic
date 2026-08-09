@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Monstromatic.Data.Bestiary;
 using Monstromatic.Models;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -13,20 +16,29 @@ namespace Monstromatic.ViewModels;
 public partial class EncounterViewModel : ViewModelBase
 {
     private readonly Encounter _encounter;
+    private readonly IBestiaryService _bestiaryService;
     
-    public EncounterViewModel(Encounter encounter)
+    public EncounterViewModel(
+        Encounter encounter,
+        IBestiaryService bestiaryService,
+        bool canAddToBestiary = true)
     {
         _encounter = encounter;
-        var monsterViewModel = new MonsterViewModel(_encounter.Monsters.First());
-        monsterViewModel.RemovingMonsterEventInv += RemoveMonster;
-        Monsters = [monsterViewModel];
+        _bestiaryService = bestiaryService;
+        CanAddToBestiary = canAddToBestiary;
+        Monsters = new ObservableCollection<MonsterViewModel>(
+            _encounter.Monsters.Select(CreateMonsterViewModel));
         
         Monsters.CollectionChanged += MonstersOnCollectionChanged;
     }
 
     private Interaction<Unit, Unit> MonsterCreated { get; } = new();
 
+    public Interaction<string, Unit> ShowBestiaryMessage { get; } = new();
+
     public string Name => _encounter.Name;
+
+    public bool CanAddToBestiary { get; }
 
     public int Level
     {
@@ -49,9 +61,7 @@ public partial class EncounterViewModel : ViewModelBase
     private void AddMonster()
     {
         var monster = _encounter.AddMonster();
-        var monsterViewModel = new MonsterViewModel(monster);
-        monsterViewModel.RemovingMonsterEventInv += RemoveMonster;
-        Monsters.Add(monsterViewModel);
+        Monsters.Add(CreateMonsterViewModel(monster));
     }
 
     [ReactiveCommand]
@@ -84,10 +94,26 @@ public partial class EncounterViewModel : ViewModelBase
         this.RaisePropertyChanged(nameof(Monsters));
     }
 
+    [ReactiveCommand]
+    private async Task AddToBestiary()
+    {
+        if (!_bestiaryService.TryAdd(_encounter))
+        {
+            await ShowBestiaryMessage.Handle("Такой монстр уже есть в бестиарии");
+        }
+    }
+
     private MonsterViewModel GetMonsterViewModelForRemoving(Guid monsterId)
     {
         return monsterId == Guid.Empty 
             ? Monsters.OrderBy(m => m.Name.Last()).Last()   
             : Monsters.First(m => m.Id == monsterId);
+    }
+
+    private MonsterViewModel CreateMonsterViewModel(Monster monster)
+    {
+        var monsterViewModel = new MonsterViewModel(monster);
+        monsterViewModel.RemovingMonsterEventInv += RemoveMonster;
+        return monsterViewModel;
     }
 }

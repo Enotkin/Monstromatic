@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Monstromatic.Data.FeatureService;
+using Monstromatic.Data.Bestiary;
 using Monstromatic.Models;
 using Monstromatic.Utils;
 
@@ -25,7 +26,7 @@ namespace Monstromatic.ViewModels.Design
         public EncounterViewModel EncounterViewModel => new(new Encounter("TestName", 4, new List<MonsterFeature>()
         {
             _monsterFeature
-        }));
+        }), ServiceHub.Default.ServiceProvider.Get<IBestiaryService>());
         
         public FeatureViewModel FeatureVm => new(new MonsterFeature(){Key = "Test", DisplayName = "Test Display Name"}, new FeatureController());
 

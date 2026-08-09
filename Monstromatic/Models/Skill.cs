@@ -59,6 +59,8 @@ public class Skill
 
     public IReadOnlyCollection<SkillComment> Comments { get; }
 
+    public int ManualDelta => _manualDelta;
+
     /// <summary>
     /// Значение навыка
     /// </summary>
@@ -92,6 +94,8 @@ public class Skill
     }
 
     public void Reset() => _manualDelta = 0;
+
+    public void SetManualDelta(int manualDelta) => _manualDelta = manualDelta;
 
     private int GetValue()
     {

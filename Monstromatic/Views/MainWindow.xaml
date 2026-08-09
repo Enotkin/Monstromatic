@@ -48,6 +48,8 @@
             
             <Border DockPanel.Dock="Top" Background="{StaticResource ThemeControlHighBrush}" BorderThickness="1"></Border>
             
+            <TabControl SelectedIndex="0" Margin="3">
+                <TabItem Header="Создать монстра">
             <Grid ColumnDefinitions="150,*">
                 <Grid.Styles>
                     <Style Selector="HeaderedContentControl">
@@ -116,19 +118,108 @@
                     </TabControl.ContentTemplate>
                 </TabControl>
                 
-                <!-- <HeaderedContentControl Grid.Column="1" Margin="3" Header="Особенности" -->
-                <!--                         Background="{StaticResource ThemeControlHighlightLowBrush}" > -->
-                <!--     <ScrollViewer AllowAutoHide="True"> -->
-                <!--         <ItemsControl ItemsSource="{Binding Features}" > -->
-                <!--             <ItemsControl.ItemsPanel> -->
-                <!--                 <ItemsPanelTemplate> -->
-                <!--                     <UniformGrid Columns="4" /> -->
-                <!--                 </ItemsPanelTemplate> -->
-                <!--             </ItemsControl.ItemsPanel> -->
-                <!--         </ItemsControl> -->
-                <!--     </ScrollViewer> -->
-                <!-- </HeaderedContentControl> -->
             </Grid>
+                </TabItem>
+
+                <TabItem Header="Бестиарий">
+                    <Grid RowDefinitions="Auto,*,Auto" Margin="3">
+                        <TextBox Grid.Row="0"
+                                 Margin="0,0,0,8"
+                                 Height="34"
+                                 Watermark="Поиск по названию монстра"
+                                 Text="{Binding BestiarySearchText}" />
+
+                        <ListBox Grid.Row="1"
+                                 Margin="0,0,0,8"
+                                 Background="Transparent"
+                                 ItemsSource="{Binding BestiaryEntries}"
+                                 SelectedItem="{Binding SelectedBestiaryEntry}">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListBox.Styles>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="2"
+                                            BorderBrush="{StaticResource ThemeControlHighlightLowBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4">
+                                        <Grid ColumnDefinitions="2*,1.5*,3*">
+                                            <Border Grid.Column="0" Padding="12,8">
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontSize="16"
+                                                           FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"
+                                                           TextWrapping="Wrap" />
+                                            </Border>
+
+                                            <Border Grid.Column="1"
+                                                    Padding="12,8"
+                                                    BorderBrush="{StaticResource ThemeControlHighlightLowBrush}"
+                                                    BorderThickness="1,0">
+                                                <StackPanel Spacing="3" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding QualityDisplayName}"
+                                                               FontWeight="SemiBold"
+                                                               TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding Level, StringFormat=Уровень: \{0\}}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Grid.Column="2" Padding="12,8">
+                                                <Grid>
+                                                    <ItemsControl ItemsSource="{Binding Features}"
+                                                                  IsVisible="{Binding HasFeatures}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid ColumnDefinitions="Auto,*" Margin="0,1">
+                                                                    <TextBlock Grid.Column="0" Text="•" Margin="0,0,6,0" />
+                                                                    <TextBlock Grid.Column="1"
+                                                                               Text="{Binding DisplayName}"
+                                                                               TextWrapping="Wrap" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                    <TextBlock Text="Без особенностей"
+                                                               IsVisible="{Binding HasFeatures, Converter={StaticResource BoolInverseConverter}}"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <StackPanel Grid.Row="2"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Left"
+                                    Spacing="8">
+                            <Button Width="42"
+                                    Height="34"
+                                    Command="{Binding SelectBestiaryEntryCommand}"
+                                    ToolTip.Tip="Выбрать монстра">
+                                <Path Width="16"
+                                      Height="12"
+                                      Data="M 1 6 L 5 10 L 15 1"
+                                      Stroke="{StaticResource ThemeControlHighlightLowBrush}"
+                                      StrokeThickness="2" />
+                            </Button>
+                            <Button Width="42"
+                                    Height="34"
+                                    Command="{Binding DeleteBestiaryEntryCommand}"
+                                    ToolTip.Tip="Удалить из бестиария">
+                                <Path Width="14"
+                                      Height="14"
+                                      Data="M 1 1 L 13 13 M 13 1 L 1 13"
+                                      Stroke="{StaticResource ThemeControlHighlightLowBrush}"
+                                      StrokeThickness="2" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
         </DockPanel>
     </ExperimentalAcrylicBorder>
 

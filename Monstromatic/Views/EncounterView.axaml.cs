@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -7,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Monstromatic.ViewModels;
+using ReactiveUI;
 using ReactiveUI.Avalonia;
 
 namespace Monstromatic.Views;
@@ -19,6 +21,10 @@ public partial class EncounterView : ReactiveWindow<EncounterViewModel>
     public EncounterView()
     {
         InitializeComponent();
+
+        this.WhenActivated(disposables =>
+            disposables(ViewModel?.ShowBestiaryMessage.RegisterHandler(DoShowBestiaryMessage)
+                        ?? throw new InvalidOperationException()));
 
         this.FindControl<Grid>("Header")?.AddHandler(
             PointerPressedEvent, Header_PointerPressed, RoutingStrategies.Bubble | RoutingStrategies.Direct, true);
@@ -95,6 +101,28 @@ public partial class EncounterView : ReactiveWindow<EncounterViewModel>
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private Task DoShowBestiaryMessage(IInteractionContext<string, Unit> interactionContext)
+    {
+        var button = this.GetControl<Button>("AddToBestiaryButton");
+        var flyout = new Flyout
+        {
+            Content = new Border
+            {
+                Padding = new Thickness(10),
+                Child = new TextBlock
+                {
+                    Text = interactionContext.Input,
+                    TextWrapping = TextWrapping.Wrap,
+                    MaxWidth = 230
+                }
+            }
+        };
+
+        flyout.ShowAt(button);
+        interactionContext.SetOutput(Unit.Default);
+        return Task.CompletedTask;
     }
 
     private void Header_PointerPressed(object sender, PointerPressedEventArgs e)
