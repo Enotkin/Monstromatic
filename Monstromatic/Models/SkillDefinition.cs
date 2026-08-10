@@ -7,4 +7,6 @@ public class SkillDefinition
     public string Tag { get; init; } = string.Empty;
 
     public double BaseModifier { get; init; }
+
+    public int BoostValue { get; init; }
 }

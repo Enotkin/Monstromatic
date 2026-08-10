@@ -25,7 +25,7 @@
                             <Border.CornerRadius>10, 10, 0, 0</Border.CornerRadius>
                         </Border>
 
-                        <Grid Grid.Row="0" Name="Header" ColumnDefinitions="Auto,*,Auto">
+                        <Grid Grid.Row="0" Name="Header" ColumnDefinitions="Auto, Auto, *,Auto">
                         
                             <Grid.Styles>
                                 <Style Selector="Button">
@@ -62,7 +62,17 @@
                             </Button>
 
                             <!-- Название монстра -->
-                            <Border Grid.Column="1"
+                            <TextBlock Grid.Column="1"
+                                       Text="▲"
+                                       Foreground="#FF39FF14"
+                                       FontSize="24"
+                                       FontWeight="Black"
+                                       Margin="8,0,2,0"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding IsBoosted}"
+                                       ToolTip.Tip="Характеристики повышены"/>
+                            
+                            <Border Grid.Column="2"
                                     Background="Transparent"
                                     PointerPressed="MonsterName_OnPointerPressed"
                                     ToolTip.Tip="Дважды щёлкните, чтобы изменить название">
@@ -84,10 +94,10 @@
                                              KeyDown="MonsterNameEditor_OnKeyDown"/>
                                 </Grid>
                             </Border>
-                        
+                            
                         
                             <!-- Кнопки управления -->
-                            <Grid Grid.Column="2" Margin="0, 0, 0, 0 " ColumnDefinitions="*, *, *, *, *" HorizontalAlignment="Center" >
+                            <Grid Grid.Column="3" Margin="0, 0, 0, 0 " ColumnDefinitions="*, *, *, *, *" HorizontalAlignment="Center" >
                             
                                 <NumericUpDown Grid.Column="0" 
                                                Value="{Binding Levell, Mode=TwoWay}" 
@@ -110,6 +120,12 @@
                                               IsCheckedChanged="DeathToggleButton_OnIsCheckedChanged"
                                               Content="☠"
                                               ToolTip.Tip="Отметить монстра" />
+
+                                <Button Grid.Column="2"
+                                        Command="{Binding BoostSkillsCommand}"
+                                        Content="▲"
+                                        IsEnabled="{Binding !IsBoosted}"
+                                        ToolTip.Tip="Повысить характеристики" />
 
                                 <!-- <Button Grid.Column="0"  Command="{Binding RemoveLevelCommand}" Content="&lt;&lt;" /> -->
                                 <!-- <TextBlock Grid.Column="1" Classes="main" Text="{Binding Level, StringFormat=Ур. \{0\}}" VerticalAlignment="Center"/> -->

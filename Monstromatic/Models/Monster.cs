@@ -28,7 +28,8 @@ public class Monster
                 _encounterLevel,
                 skill.BaseModifier,
                 featuresBundle.GetFeatureModifiers(skill.Tag),
-                featuresBundle.GetSkillComments(skill.Tag)))
+                featuresBundle.GetSkillComments(skill.Tag),
+                skill.BoostValue))
             .ToList();
     }
 
@@ -62,6 +63,23 @@ public class Monster
 
     public void Rename(string name) => Name = name;
 
+    public bool IsBoosted { get; private set; }
+
+    public void BoostSkills()
+    {
+        if (IsBoosted)
+            return;
+
+        var hasChanges = false;
+        foreach (var skill in _skills)
+        {
+            if (skill.ApplyBoost())
+                hasChanges = true;
+        }
+
+        IsBoosted = hasChanges;
+    }
+
     public void ResetModifications()
     {
         PersonalLevel = 0;
@@ -69,6 +87,8 @@ public class Monster
         {
             skill.Reset();
         }
+
+        IsBoosted = false;
     }
 
     private void UpdateSkills()

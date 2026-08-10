@@ -9,6 +9,7 @@ var tests = new (string Name, Action Run)[]
     ("standard x1.5 at levels 4, 6, 8", StandardModifierExamples),
     ("standard + feature + manual examples", CombinedModifierExamples),
     ("skill recalculates from new monster level", SkillRecalculatesFromNewLevel),
+    ("skill applies configured boost", SkillAppliesConfiguredBoost),
     ("settings deserialize dynamic skills", SettingsDeserializeDynamicSkills),
     ("feature deserialize skill modifiers", FeatureDeserializeSkillModifiers),
     ("feature exposes tag-based modifiers", FeatureSkillModifiers),
@@ -48,6 +49,15 @@ static void SkillRecalculatesFromNewLevel()
     AssertEqual(13, skill.Value);
 }
 
+static void SkillAppliesConfiguredBoost()
+{
+    var skill = new Skill("Attack", "Attack", 4, 1, boostValue: 3);
+
+    AssertEqual(4, skill.Value);
+    AssertEqual(true, skill.ApplyBoost());
+    AssertEqual(7, skill.Value);
+}
+
 static void SettingsDeserializeDynamicSkills()
 {
     var settings = JsonSerializer.Deserialize<MonstromaticSettings>(
@@ -58,7 +68,8 @@ static void SettingsDeserializeDynamicSkills()
             {
               "Name": "Атака",
               "Tag": "Attack",
-              "BaseModifier": 0.5
+              "BaseModifier": 0.5,
+              "BoostValue": 3
             }
           ]
         }
@@ -69,6 +80,7 @@ static void SettingsDeserializeDynamicSkills()
     AssertEqual("Атака", skill.Name);
     AssertEqual("Attack", skill.Tag);
     AssertEqual(0.5, skill.BaseModifier);
+    AssertEqual(3, skill.BoostValue);
 }
 
 static void FeatureDeserializeSkillModifiers()

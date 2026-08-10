@@ -9,17 +9,20 @@
     {
       "Name": "Штрафной",
       "Tag": "Penalty",
-      "BaseModifier": 0.5
+      "BaseModifier": 0.5,
+      "BoostValue": 1
     },
     {
       "Name": "Стандартный",
       "Tag": "Standard",
-      "BaseModifier": 1
+      "BaseModifier": 1,
+      "BoostValue": 2
     },
     {
       "Name": "Бонусный",
       "Tag": "Bonus",
-      "BaseModifier": 1.5
+      "BaseModifier": 1.5,
+      "BoostValue": 3
     }
   ]
 }
