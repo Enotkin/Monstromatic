@@ -14,6 +14,7 @@ public partial class MonsterViewModel : ViewModelBase
 
     private readonly Monster _monster;
     private decimal? _levell;
+    private string _editableName;
 
     public MonsterViewModel(Monster monster)
     {
@@ -21,6 +22,7 @@ public partial class MonsterViewModel : ViewModelBase
         Id = _monster.Id;
         CloseCommand = ReactiveCommand.Create(RemoveMonster);
         SkillsVm = monster.Skills.Select(skill => new SkillCounterViewModel(skill)).ToList();
+        _editableName = monster.Name;
 
         this.WhenAnyValue(x => x.IsAlive).Subscribe(_ => RemoveMonster());
 
@@ -38,6 +40,30 @@ public partial class MonsterViewModel : ViewModelBase
     public bool IsAlive { get; set; } = true;
 
     public string Name => _monster.Name;
+
+    public string EditableName
+    {
+        get => _editableName;
+        set => this.RaiseAndSetIfChanged(ref _editableName, value ?? string.Empty);
+    }
+
+    public void BeginNameEditing() => EditableName = Name;
+
+    public void CommitNameEditing()
+    {
+        var newName = EditableName.Trim();
+        if (string.IsNullOrWhiteSpace(newName))
+        {
+            CancelNameEditing();
+            return;
+        }
+
+        _monster.Rename(newName);
+        EditableName = newName;
+        this.RaisePropertyChanged(nameof(Name));
+    }
+
+    public void CancelNameEditing() => EditableName = Name;
 
     public decimal? Levell
     {

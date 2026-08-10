@@ -58,7 +58,9 @@ public class Monster
         }
     }
 
-    public string Name { get; }
+    public string Name { get; private set; }
+
+    public void Rename(string name) => Name = name;
 
     public void ResetModifications()
     {
