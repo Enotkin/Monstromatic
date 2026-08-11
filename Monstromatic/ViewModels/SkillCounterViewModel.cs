@@ -3,12 +3,15 @@ using System.Linq;
 using System.Reactive;
 using Monstromatic.Models;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace Monstromatic.ViewModels;
 
-public class SkillCounterViewModel : ViewModelBase
+public partial class SkillCounterViewModel : ViewModelBase
 {
     private readonly Skill _skill;
+
+    [Reactive] private int _modificator;
 
     public SkillCounterViewModel(Skill skill)
     {
@@ -43,18 +46,21 @@ public class SkillCounterViewModel : ViewModelBase
     private void IncreaseValue()
     {
         _skill.Increment();
+        Modificator++;
         this.RaisePropertyChanged(nameof(SkillValue));
     }
 
     private void DecreaseValue()
     {
         _skill.Decrement();
+        Modificator--;
         this.RaisePropertyChanged(nameof(SkillValue));
     }
 
     private void ResetValue()
     {
         _skill.Reset();
+        Modificator = 0;
         this.RaisePropertyChanged(nameof(SkillValue));
     }
 }
