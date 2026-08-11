@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="480"
+        d:DesignHeight="300"
+        x:Class="Monstromatic.Views.FeatureDeletionWarningWindow"
+        Title="Удаление особенностей"
+        Width="480"
+        Height="300"
+        MinWidth="420"
+        MinHeight="240"
+        CanResize="True"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="22">
+        <StackPanel Grid.Row="0" Spacing="6" Margin="0,0,0,14">
+            <TextBlock Text="Некоторые особенности нельзя удалить"
+                       FontSize="20"
+                       FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="Программа сохранила особенности, которые уже используются монстрами."
+                       Opacity="0.72"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <TextBlock Name="WarningTextBlock"
+                       TextWrapping="Wrap"
+                       LineHeight="22" />
+        </ScrollViewer>
+
+        <Button Grid.Row="2"
+                Width="90"
+                Height="36"
+                Margin="0,16,0,0"
+                HorizontalAlignment="Right"
+                Content="Понятно"
+                Click="CloseButton_OnClick" />
+    </Grid>
+</Window>

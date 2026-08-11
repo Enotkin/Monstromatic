@@ -21,7 +21,12 @@ public class BestiaryEntry
     [JsonIgnore]
     public string FeaturesSummary => Features.Count == 0
         ? "Без особенностей"
-        : string.Join(", ", Features.Select(feature => feature.DisplayName));
+        : string.Join(", ", FeatureDisplayNames);
+
+    [JsonIgnore]
+    public IReadOnlyCollection<string> FeatureDisplayNames => Features
+        .Select(feature => FeatureDisplayNameFormatter.Format(feature, SkillDefinitions))
+        .ToArray();
 
     [JsonIgnore]
     public string QualityDisplayName => string.IsNullOrWhiteSpace(QualityName)

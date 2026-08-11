@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace Monstromatic.Data.Services;
@@ -12,6 +13,12 @@ public class BaseFileStorage<T>
     private const string Template = "{0}{1}.json";
 
     protected T Value { get; private set; }
+
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
 
     protected BaseFileStorage(string fileName)
     {
@@ -29,7 +36,7 @@ public class BaseFileStorage<T>
 
         try
         {
-            Value = JsonSerializer.Deserialize<T>(stream);
+            Value = JsonSerializer.Deserialize<T>(stream, _jsonOptions)!;
         }
         catch (Exception e)
         {
@@ -52,5 +59,17 @@ public class BaseFileStorage<T>
             File.Delete(_defaultFilePath);
         }
         CreateFeatureFile();
+    }
+
+    protected void Save(T value)
+    {
+        var temporaryFilePath = _defaultFilePath + ".tmp";
+        using (var stream = File.Create(temporaryFilePath))
+        {
+            JsonSerializer.Serialize(stream, value, _jsonOptions);
+        }
+
+        File.Move(temporaryFilePath, _defaultFilePath, true);
+        Value = value;
     }
 }

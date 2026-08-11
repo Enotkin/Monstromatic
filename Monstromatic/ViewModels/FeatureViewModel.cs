@@ -14,18 +14,27 @@ public partial class FeatureViewModel : ViewModelBase
 {
     public readonly MonsterFeature Feature;
     private readonly IFeatureController _featureController;
+    private readonly IReadOnlyCollection<SkillDefinition> _skillDefinitions;
 
     public string Key => Feature.Key;
 
-    public string DisplayName => Feature.DisplayName;
+    public string DisplayName => FeatureDisplayNameFormatter.Format(Feature, _skillDefinitions);
+
+    public bool HasComment => !string.IsNullOrWhiteSpace(Feature.Description);
+
+    public string Comment => Feature.Description;
     
     [ObservableAsProperty]
     private bool _isFeatureSelected;
 
-    public FeatureViewModel(MonsterFeature feature, IFeatureController featureController)
+    public FeatureViewModel(
+        MonsterFeature feature,
+        IFeatureController featureController,
+        IEnumerable<SkillDefinition>? skillDefinitions = null)
     {
         Feature = feature;
         _featureController = featureController;
+        _skillDefinitions = (skillDefinitions ?? []).ToArray();
 
         var canAddFeature = _featureController.SelectedFeatures
             .Connect()

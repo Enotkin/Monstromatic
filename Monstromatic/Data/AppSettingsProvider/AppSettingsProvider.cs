@@ -26,6 +26,16 @@ public class AppSettingsProvider : IAppSettingsProvider
         _featureService.Reload();
     }
 
+    public void AddFeature(MonsterFeature feature)
+    {
+        _featureService.Add(feature);
+    }
+
+    public void RemoveFeatures(IEnumerable<MonsterFeature> features)
+    {
+        _featureService.Remove(features);
+    }
+
     public void Reset()
     {
         _settingsService.ResetToDefault();
