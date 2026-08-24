@@ -98,9 +98,16 @@
                 </Grid>
                 
                 <TabControl Grid.Column="1" Margin="3" ItemsSource="{Binding FeatureCategories}">
+                    <TabControl.Styles>
+                        <Style Selector="TabItem">
+                            <Setter Property="MinWidth" Value="0" />
+                            <Setter Property="Padding" Value="3,6" />
+                            <Setter Property="FontSize" Value="14" />
+                        </Style>
+                    </TabControl.Styles>
                     <TabControl.ItemTemplate>
                         <DataTemplate DataType="viewModels:FeatureCategoryViewModel">
-                            <TextBlock Text="{Binding DisplayName}" />
+                            <TextBlock Text="{Binding DisplayName}" TextWrapping="NoWrap" />
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>

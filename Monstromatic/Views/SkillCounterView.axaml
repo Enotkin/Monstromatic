@@ -14,25 +14,35 @@
         <utils:ModificatorColorConverter x:Key="ModificatorColorConverter" />
     </UserControl.Resources>
     
-    <StackPanel>
-        <Border Height="34"
+    <StackPanel Margin="0,1">
+        <Border Height="24"
                 Background="Transparent"
                 ToolTip.Tip="{Binding CommentsToolTipText}">
             
             <TextBlock Text="{Binding SkillName}"
                        HorizontalAlignment="Stretch"
-                       FontSize="12"
+                       FontSize="11"
                        Foreground="white"
-                       MaxLines="2"
+                       MaxLines="1"
                        TextAlignment="Center"
                        TextWrapping="Wrap"
                        VerticalAlignment="Center" />
         </Border>
         
-        <Grid ColumnDefinitions="*, Auto">
+        <Grid Height="46" ColumnDefinitions="*, Auto">
             
             <Grid RowDefinitions="*, *" ColumnDefinitions="*, *, *" >
-                <Button Grid.Row="0" Grid.Column="2" Background="Transparent" Content="R" BorderBrush="Transparent" Opacity="200" Command="{Binding Reset}"></Button>
+                <Button Grid.Row="0"
+                        Grid.Column="2"
+                        Width="22"
+                        Height="20"
+                        Padding="0"
+                        FontSize="10"
+                        Background="Transparent"
+                        Content="R"
+                        BorderBrush="Transparent"
+                        Opacity="200"
+                        Command="{Binding Reset}" />
             </Grid>
             
             <StackPanel Grid.Column="0"
@@ -43,19 +53,19 @@
                 <TextBlock x:Name="CurrentSkillValue"
                            Text="{Binding SkillValue}"
                            Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
-                           FontSize="32"
+                           FontSize="27"
                            VerticalAlignment="Center" />
 
                 <TextBlock Text="{Binding Modificator, Converter={StaticResource ModificatorTextConverter}, Mode=OneWay}"
                            Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
-                           FontSize="13"
+                           FontSize="11"
                            VerticalAlignment="Bottom"
-                           Margin="2,0,0,6" />
+                           Margin="2,0,0,5" />
             </StackPanel>
             
-            <Grid Grid.Column="1" RowDefinitions="Auto, Auto" Margin="0, 0, 5, 0">
-                <Button Grid.Row="0" Content="+" Command="{Binding Increase}" Margin="0, 0, 0, 2"/>
-                <Button Grid.Row="1" Content="-" Command="{Binding Decrease}" Margin="0, 1, 0, 0" />
+            <Grid Grid.Column="1" RowDefinitions="*, *" Margin="0,0,4,0">
+                <Button Grid.Row="0" Width="24" Padding="0" Content="+" Command="{Binding Increase}" Margin="0,0,0,1"/>
+                <Button Grid.Row="1" Width="24" Padding="0" Content="-" Command="{Binding Decrease}" Margin="0,1,0,0" />
             </Grid>
             
         </Grid>

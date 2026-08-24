@@ -149,13 +149,13 @@
                 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="{Binding SkillsVm.Count}" />
+                            <UniformGrid Columns="3" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <views:SkillCounterView Margin="5, 0, 5, 5"/>
+                            <views:SkillCounterView Margin="4,0,4,2"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 

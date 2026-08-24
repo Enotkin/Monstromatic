@@ -23,6 +23,24 @@
       "Tag": "Bonus",
       "BaseModifier": 1.5,
       "BoostValue": 3
+    },
+    {
+      "Name": "Атака",
+      "Tag": "Attack",
+      "BaseModifier": 1,
+      "BoostValue": 2
+    },
+    {
+      "Name": "Защита",
+      "Tag": "Defence",
+      "BaseModifier": 1,
+      "BoostValue": 2
+    },
+    {
+      "Name": "Магия",
+      "Tag": "Magic",
+      "BaseModifier": 1,
+      "BoostValue": 2
     }
   ]
 }

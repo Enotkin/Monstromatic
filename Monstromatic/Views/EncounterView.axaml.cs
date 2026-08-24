@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia;
@@ -7,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using Monstromatic.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
@@ -29,7 +31,7 @@ public partial class EncounterView : ReactiveWindow<EncounterViewModel>
         this.FindControl<Grid>("Header")?.AddHandler(
             PointerPressedEvent, Header_PointerPressed, RoutingStrategies.Bubble | RoutingStrategies.Direct, true);
 
-        Height = 300;
+        Height = 360;
         this.AddHandler(SizeChangedEvent, WindowResized);
 
         ExpandableGrid.PropertyChanged += (sender, args) =>
@@ -52,7 +54,43 @@ public partial class EncounterView : ReactiveWindow<EncounterViewModel>
     protected override void OnOpened(EventArgs e)
     {
         base.OnOpened(e);
+        EnsureFirstMonsterIsFullyVisibleAsync();
         UpdateWindowMeasureAsync();
+    }
+
+    private async void EnsureFirstMonsterIsFullyVisibleAsync()
+    {
+        // Даём окну завершить раскладку, затем при необходимости увеличиваем его
+        // ровно настолько, чтобы первая карточка монстра была видна целиком.
+        for (var attempt = 0; attempt < 3; attempt++)
+        {
+            await Task.Delay(50);
+
+            var firstMonster = this.GetVisualDescendants().OfType<MonsterView>().FirstOrDefault();
+            var monsterBottom = firstMonster?.TranslatePoint(
+                new Point(0, firstMonster.Bounds.Height),
+                this);
+
+            if (monsterBottom is null)
+            {
+                continue;
+            }
+
+            const double bottomMargin = 12;
+            var missingHeight = monsterBottom.Value.Y + bottomMargin - ClientSize.Height;
+            if (missingHeight <= 0)
+            {
+                return;
+            }
+
+            var newHeight = Math.Min(MaxHeight, Height + missingHeight);
+            if (newHeight <= Height)
+            {
+                return;
+            }
+
+            Height = Math.Ceiling(newHeight);
+        }
     }
 
     private static List<IBrush> GetBrushes()
