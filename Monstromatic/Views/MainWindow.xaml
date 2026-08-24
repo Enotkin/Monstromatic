@@ -105,15 +105,51 @@
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
                         <DataTemplate DataType="viewModels:FeatureCategoryViewModel">
-                            <ScrollViewer AllowAutoHide="True">
-                                <ItemsControl ItemsSource="{Binding Features}" >
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <UniformGrid Columns="4" RowSpacing="5" VerticalAlignment="Top"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-                            </ScrollViewer>
+                            <Grid>
+                                <ScrollViewer AllowAutoHide="True">
+                                    <ItemsControl ItemsSource="{Binding Features}"
+                                                  Margin="0,0,0,58">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <UniformGrid Columns="4" RowSpacing="5" VerticalAlignment="Top"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            Margin="0,0,36,12"
+                                            Spacing="8"
+                                            IsVisible="{Binding CanManageFeatures}"
+                                            Panel.ZIndex="10">
+                                    <Button Width="44"
+                                            Height="44"
+                                            Padding="12"
+                                            CornerRadius="4"
+                                            Opacity="0.76"
+                                            Background="{StaticResource MonstromaticAccent}"
+                                            Command="{Binding CreateFeatureCommand}"
+                                            ToolTip.Tip="Создать особенность">
+                                        <Path Data="M 8 1 L 8 15 M 1 8 L 15 8"
+                                              Stroke="White"
+                                              StrokeThickness="2.2" />
+                                    </Button>
+                                    <Button Width="44"
+                                            Height="44"
+                                            Padding="11"
+                                            CornerRadius="4"
+                                            Opacity="0.76"
+                                            Background="{StaticResource MonstromaticAccent}"
+                                            Command="{Binding DeleteFeaturesCommand}"
+                                            ToolTip.Tip="Удалить выбранные особенности">
+                                        <Path Data="M 3 5 L 17 5 M 6 5 L 7 18 L 13 18 L 14 5 M 7 2 L 13 2 L 14 5 M 9 8 L 9 15 M 12 8 L 12 15"
+                                              Stroke="White"
+                                              StrokeThickness="1.7" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </TabControl>
@@ -168,14 +204,14 @@
 
                                             <Border Grid.Column="2" Padding="12,8">
                                                 <Grid>
-                                                    <ItemsControl ItemsSource="{Binding Features}"
+                                                    <ItemsControl ItemsSource="{Binding FeatureDisplayNames}"
                                                                   IsVisible="{Binding HasFeatures}">
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
                                                                 <Grid ColumnDefinitions="Auto,*" Margin="0,1">
                                                                     <TextBlock Grid.Column="0" Text="•" Margin="0,0,6,0" />
                                                                     <TextBlock Grid.Column="1"
-                                                                               Text="{Binding DisplayName}"
+                                                                               Text="{Binding}"
                                                                                TextWrapping="Wrap" />
                                                                 </Grid>
                                                             </DataTemplate>

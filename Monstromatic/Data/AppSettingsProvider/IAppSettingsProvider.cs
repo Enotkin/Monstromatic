@@ -7,6 +7,8 @@ public interface IAppSettingsProvider
 {
     MonstromaticSettings Settings { get; }
     IEnumerable<MonsterFeature> Features { get; }
+    void AddFeature(MonsterFeature feature);
+    void RemoveFeatures(IEnumerable<MonsterFeature> features);
     void Reload();
     void Reset();
 }

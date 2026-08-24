@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using DynamicData;
 using Monstromatic.Data.AppSettingsProvider;
 using Monstromatic.Data.Bestiary;
 using Monstromatic.Data.FeatureService;
@@ -75,6 +76,16 @@ public partial class MainWindowViewModel : ViewModelBase
             DeleteBestiaryEntry,
             hasSelectedBestiaryEntry);
 
+        var hasSelectedFeatures = _featureController.SelectedFeatures
+            .Connect()
+            .QueryWhenChanged(features => features.Count > 0)
+            .StartWith(false);
+
+        CreateFeatureCommand = ReactiveCommand.CreateFromTask(CreateFeature);
+        DeleteFeaturesCommand = ReactiveCommand.CreateFromTask(
+            DeleteSelectedFeatures,
+            hasSelectedFeatures);
+
         RebuildFeatureCategories();
     }
 
@@ -103,11 +114,19 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> DeleteBestiaryEntryCommand { get; }
 
+    public ReactiveCommand<Unit, Unit> CreateFeatureCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> DeleteFeaturesCommand { get; }
+
     public Interaction<EncounterViewModel, Unit> ShowNewMonsterWindow { get; } = new();
 
     public Interaction<Unit, Unit> ShowAboutDialog { get; } = new();
 
     public Interaction<Unit, bool> ConfirmResetChanges { get; } = new();
+
+    public Interaction<CreateFeatureViewModel, MonsterFeature?> ShowCreateFeatureDialog { get; } = new();
+
+    public Interaction<string, Unit> ShowFeatureDeletionWarning { get; } = new();
 
     private async Task ResetSettings()
     {
@@ -129,6 +148,76 @@ public partial class MainWindowViewModel : ViewModelBase
             SelectedQuality);
         var encounterViewModel = new EncounterViewModel(encounter, _bestiaryService);
         await ShowNewMonsterWindow.Handle(encounterViewModel);
+    }
+
+    private async Task CreateFeature()
+    {
+        var viewModel = new CreateFeatureViewModel(
+            _settingsProvider.Settings.SkillDefinitions,
+            _settingsProvider.Features.Select(feature => feature.DisplayName));
+
+        var feature = await ShowCreateFeatureDialog.Handle(viewModel);
+        if (feature is null)
+        {
+            return;
+        }
+
+        _settingsProvider.AddFeature(feature);
+        RebuildFeatureCategories();
+    }
+
+    private async Task DeleteSelectedFeatures()
+    {
+        var selectedFeatures = _featureController.SelectedFeatures.Items.ToArray();
+        if (selectedFeatures.Length == 0)
+        {
+            return;
+        }
+
+        var blockedFeatures = selectedFeatures
+            .Select(feature => new
+            {
+                Feature = feature,
+                MonsterNames = FindFeatureUsageNames(feature)
+            })
+            .Where(usage => usage.MonsterNames.Count > 0)
+            .ToArray();
+
+        var blockedKeys = blockedFeatures
+            .Select(usage => usage.Feature.Key)
+            .ToHashSet();
+        var removableFeatures = selectedFeatures
+            .Where(feature => !blockedKeys.Contains(feature.Key))
+            .ToArray();
+
+        if (removableFeatures.Length > 0)
+        {
+            _settingsProvider.RemoveFeatures(removableFeatures);
+            foreach (var feature in removableFeatures)
+            {
+                _featureController.RemoveFeature(feature);
+            }
+
+            RebuildFeatureCategories();
+        }
+
+        if (blockedFeatures.Length > 0)
+        {
+            var warningLines = blockedFeatures.Select(usage =>
+                $"• «{usage.Feature.DisplayName}» — {string.Join(", ", usage.MonsterNames.Select(name => $"«{name}»"))}");
+            await ShowFeatureDeletionWarning.Handle(string.Join(Environment.NewLine, warningLines));
+        }
+    }
+
+    private IReadOnlyCollection<string> FindFeatureUsageNames(MonsterFeature feature)
+    {
+        var bestiaryNames = _bestiaryService.Entries
+            .Where(entry => entry.Features.Any(entryFeature => entryFeature.Key == feature.Key))
+            .Select(entry => entry.Name);
+
+        return bestiaryNames
+            .Distinct(StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
     }
 
     private async Task SelectBestiaryEntry()
@@ -200,7 +289,12 @@ public partial class MainWindowViewModel : ViewModelBase
         var features = GetFeatureViewModels().ToArray();
         var categories = new List<FeatureCategoryViewModel>
         {
-            new("Все особенности", features)
+            new(
+                "Все особенности",
+                features,
+                canManageFeatures: true,
+                createFeatureCommand: CreateFeatureCommand,
+                deleteFeaturesCommand: DeleteFeaturesCommand)
         };
 
         categories.Add(new(
@@ -219,7 +313,10 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         return _settingsProvider.Features
             .Where(f => !f.IsHidden)
-            .Select(f => new FeatureViewModel(f, _featureController))
+            .Select(f => new FeatureViewModel(
+                f,
+                _featureController,
+                _settingsProvider.Settings.SkillDefinitions))
             .OrderBy(f => f.DisplayName);
     }
 }
