@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -44,9 +44,11 @@ public partial class FeatureViewModel : ViewModelBase
 
         AddFeatureCommand = ReactiveCommand.Create<bool>(AddFeature, canAddFeature);
 
-        _featureController.SelectedFeatures
+        // Результат подписки нужно сохранить, иначе свойство остаётся пустым и
+        // галочка на кнопке живёт сама по себе, не отражая выбор в программе.
+        _isFeatureSelectedHelper = _featureController.SelectedFeatures
             .Connect()
-            .QueryWhenChanged(x => x.Contains(Feature))
+            .QueryWhenChanged(selected => selected.Contains(Feature))
             .ToProperty(this, x => x.IsFeatureSelected);
     }
 

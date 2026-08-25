@@ -5,22 +5,23 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Monstromatic.Data.Profiles;
 using Monstromatic.Models;
 
 namespace Monstromatic.Data.Bestiary;
 
 public class BestiaryService : IBestiaryService
 {
-    private readonly string _filePath;
     private readonly ObservableCollection<BestiaryEntry> _entries;
+    private string _filePath;
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
-    public BestiaryService()
-        : this(Resources.BestiaryFilePath)
+    public BestiaryService(IProfileService profileService)
+        : this(GetBestiaryFilePath(profileService.CurrentProfileDirectory))
     {
     }
 
@@ -32,6 +33,17 @@ public class BestiaryService : IBestiaryService
     }
 
     public ReadOnlyObservableCollection<BestiaryEntry> Entries { get; }
+
+    public void UseProfile(string directory)
+    {
+        _filePath = GetBestiaryFilePath(directory);
+
+        _entries.Clear();
+        foreach (var entry in Load())
+        {
+            _entries.Add(entry);
+        }
+    }
 
     public bool TryAdd(Encounter encounter)
     {
@@ -94,6 +106,9 @@ public class BestiaryService : IBestiaryService
 
         File.Move(temporaryFilePath, _filePath, true);
     }
+
+    private static string GetBestiaryFilePath(string directory) =>
+        Resources.GetFilePath(directory, Resources.BestiaryFileName);
 
     private static bool HasSameName(string firstName, string secondName) =>
         string.Equals(firstName.Trim(), secondName.Trim(), StringComparison.CurrentCultureIgnoreCase);

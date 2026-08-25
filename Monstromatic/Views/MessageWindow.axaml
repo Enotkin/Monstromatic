@@ -5,8 +5,8 @@
         mc:Ignorable="d"
         d:DesignWidth="480"
         d:DesignHeight="300"
-        x:Class="Monstromatic.Views.FeatureDeletionWarningWindow"
-        Title="Удаление особенностей"
+        x:Class="Monstromatic.Views.MessageWindow"
+        Title="Monstromatic"
         Width="480"
         Height="300"
         MinWidth="420"
@@ -17,27 +17,34 @@
 
     <Grid RowDefinitions="Auto,*,Auto" Margin="22">
         <StackPanel Grid.Row="0" Spacing="6" Margin="0,0,0,14">
-            <TextBlock Text="Некоторые особенности нельзя удалить"
+            <TextBlock Name="HeadingTextBlock"
                        FontSize="20"
                        FontWeight="SemiBold"
                        TextWrapping="Wrap" />
-            <TextBlock Text="Программа сохранила особенности, которые уже используются монстрами."
+            <TextBlock Name="SubtitleTextBlock"
                        Opacity="0.72"
                        TextWrapping="Wrap" />
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <TextBlock Name="WarningTextBlock"
+            <TextBlock Name="BodyTextBlock"
                        TextWrapping="Wrap"
                        LineHeight="22" />
         </ScrollViewer>
 
-        <Button Grid.Row="2"
-                Width="90"
-                Height="36"
-                Margin="0,16,0,0"
-                HorizontalAlignment="Right"
-                Content="Понятно"
-                Click="CloseButton_OnClick" />
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="9"
+                    Margin="0,16,0,0">
+            <Button Name="ConfirmButton"
+                    MinWidth="90"
+                    Height="36"
+                    Click="ConfirmButton_OnClick" />
+            <Button Name="CancelButton"
+                    MinWidth="90"
+                    Height="36"
+                    Click="CancelButton_OnClick" />
+        </StackPanel>
     </Grid>
 </Window>

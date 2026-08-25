@@ -10,4 +10,7 @@ public interface IBestiaryService
     bool TryAdd(Encounter encounter);
 
     bool Remove(BestiaryEntry entry);
+
+    /// <summary>Переключить бестиарий на другой профиль.</summary>
+    void UseProfile(string directory);
 }

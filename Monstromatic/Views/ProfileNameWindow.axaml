@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="420"
+        d:DesignHeight="210"
+        x:Class="Monstromatic.Views.ProfileNameWindow"
+        Title="Профиль"
+        Width="420"
+        Height="210"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="22">
+        <TextBlock Grid.Row="0"
+                   Text="{Binding Heading}"
+                   FontSize="20"
+                   FontWeight="SemiBold"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,14" />
+
+        <TextBox Grid.Row="1"
+                 Height="34"
+                 Text="{Binding Name}"
+                 Watermark="Например: Тёмное фэнтези"
+                 MaxLength="60" />
+
+        <TextBlock Grid.Row="2"
+                   Margin="0,6,0,0"
+                   VerticalAlignment="Top"
+                   Text="{Binding ValidationMessage}"
+                   Foreground="#E98B8B"
+                   FontSize="12"
+                   TextWrapping="Wrap" />
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="9">
+            <Button MinWidth="90"
+                    Height="36"
+                    Content="Сохранить"
+                    IsEnabled="{Binding CanSave}"
+                    Click="SaveButton_OnClick" />
+            <Button MinWidth="90"
+                    Height="36"
+                    Content="Отмена"
+                    Click="CancelButton_OnClick" />
+        </StackPanel>
+    </Grid>
+</Window>

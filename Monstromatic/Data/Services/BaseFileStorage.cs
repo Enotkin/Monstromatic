@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -8,11 +8,10 @@ namespace Monstromatic.Data.Services;
 
 public class BaseFileStorage<T>
 {
-    private readonly string _defaultFilePath;
-    private readonly string _filename;
-    private const string Template = "{0}{1}.json";
+    private readonly string _fileName;
+    private string _filePath = string.Empty;
 
-    protected T Value { get; private set; }
+    protected T Value { get; private set; } = default!;
 
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -20,19 +19,27 @@ public class BaseFileStorage<T>
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
-    protected BaseFileStorage(string fileName)
+    protected BaseFileStorage(string directory, string fileName)
     {
-        _defaultFilePath = string.Format(Template, AppDomain.CurrentDomain.BaseDirectory, fileName);
-        _filename = fileName;
+        _fileName = fileName;
+        UseDirectory(directory);
+    }
+
+    /// <summary>
+    /// Переключает хранилище на папку другого профиля и перечитывает данные.
+    /// </summary>
+    public void UseDirectory(string directory)
+    {
+        _filePath = Resources.GetFilePath(directory, _fileName);
         Reload();
     }
-    
+
     public void Reload()
     {
-        if (!File.Exists(_defaultFilePath)) 
-            CreateFeatureFile();
+        if (!File.Exists(_filePath)) 
+            CreateDefaultFile();
 
-        using var stream = File.OpenRead(_defaultFilePath);
+        using var stream = File.OpenRead(_filePath);
 
         try
         {
@@ -44,32 +51,44 @@ public class BaseFileStorage<T>
         }
     }
     
-    private void CreateFeatureFile()
+    private void CreateDefaultFile()
     {
-        var defaultData = Resources.GetData(_filename);
+        var defaultData = Resources.GetData(_fileName);
 
-        using var inputStream = File.Create(_defaultFilePath);
+        var directory = Path.GetDirectoryName(_filePath);
+        if (!string.IsNullOrEmpty(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        using var inputStream = File.Create(_filePath);
         inputStream.Write(Encoding.UTF8.GetBytes(defaultData));
     }
     
     public void ResetToDefault()
     {
-        if (File.Exists(_defaultFilePath))
+        if (File.Exists(_filePath))
         {
-            File.Delete(_defaultFilePath);
+            File.Delete(_filePath);
         }
-        CreateFeatureFile();
+        CreateDefaultFile();
     }
 
     protected void Save(T value)
     {
-        var temporaryFilePath = _defaultFilePath + ".tmp";
+        var directory = Path.GetDirectoryName(_filePath);
+        if (!string.IsNullOrEmpty(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        var temporaryFilePath = _filePath + ".tmp";
         using (var stream = File.Create(temporaryFilePath))
         {
             JsonSerializer.Serialize(stream, value, _jsonOptions);
         }
 
-        File.Move(temporaryFilePath, _defaultFilePath, true);
+        File.Move(temporaryFilePath, _filePath, true);
         Value = value;
     }
 }

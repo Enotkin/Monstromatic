@@ -69,6 +69,29 @@ public class MonsterFeature
     public bool HasSkillModifier(string tag) =>
         GetSkillModifiers().Any(modifier => modifier.Tag == tag && modifier.Modifier != 0);
 
+    /// <summary>
+    /// Создаёт копию особенности с заданным списком модификаторов навыков.
+    /// Устаревшие поля модификаторов при этом обнуляются: список
+    /// <see cref="SkillModifiers"/> становится единственным источником правды.
+    /// </summary>
+    public MonsterFeature WithSkillModifiers(IEnumerable<SkillModifier> skillModifiers) =>
+        new()
+        {
+            Key = Key,
+            DisplayName = DisplayName,
+            DetailsDisplayName = DetailsDisplayName,
+            LevelModifier = LevelModifier,
+            SkillModifiers = skillModifiers.ToArray(),
+            Description = Description,
+            IsHidden = IsHidden,
+            IncompatibleFeaturesKeys = IncompatibleFeaturesKeys,
+            IncludedFeaturesKeys = IncludedFeaturesKeys,
+            ExcludedFeaturesKeys = ExcludedFeaturesKeys,
+            IncompatibleFeatures = IncompatibleFeatures,
+            IncludedFeatures = IncludedFeatures,
+            ExcludedFeatures = ExcludedFeatures
+        };
+
     public override bool Equals(object? obj)
     {
         return obj is MonsterFeature feature && Equals(feature);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -15,6 +15,12 @@ namespace Monstromatic.Views;
 
 public partial class EncounterView : ReactiveWindow<EncounterViewModel>
 {
+    /// <summary>
+    /// Высота окна до того, как оно научилось подстраиваться под содержимое.
+    /// Ниже неё не опускаемся, чтобы монстр без комментариев выглядел как раньше.
+    /// </summary>
+    private const double MinimalHeight = 300;
+
     private bool _isExpanded = true;
     private double _expanderHeight;
 
@@ -29,7 +35,9 @@ public partial class EncounterView : ReactiveWindow<EncounterViewModel>
         this.FindControl<Grid>("Header")?.AddHandler(
             PointerPressedEvent, Header_PointerPressed, RoutingStrategies.Bubble | RoutingStrategies.Direct, true);
 
-        Height = 300;
+        // Окно само подбирает высоту, чтобы комментарии особенностей не
+        // выталкивали монстра под нижний край.
+        SizeToContent = SizeToContent.Height;
         this.AddHandler(SizeChangedEvent, WindowResized);
 
         ExpandableGrid.PropertyChanged += (sender, args) =>
@@ -53,6 +61,24 @@ public partial class EncounterView : ReactiveWindow<EncounterViewModel>
     {
         base.OnOpened(e);
         UpdateWindowMeasureAsync();
+        ReleaseAutoHeightAsync();
+    }
+
+    /// <summary>
+    /// Высота подобрана под комментарии и первого монстра — дальше размером
+    /// окна распоряжается пользователь, а добавленные монстры уходят под
+    /// полосу прокрутки.
+    /// </summary>
+    private async void ReleaseAutoHeightAsync()
+    {
+        await Task.Delay(150);
+
+        SizeToContent = SizeToContent.Manual;
+
+        if (Height < MinimalHeight)
+        {
+            Height = MinimalHeight;
+        }
     }
 
     private static List<IBrush> GetBrushes()

@@ -14,5 +14,10 @@
     <Compile Include="..\Models\MonstromaticSettings.cs" Link="Models\MonstromaticSettings.cs" />
     <Compile Include="..\Models\SkillDefinition.cs" Link="Models\SkillDefinition.cs" />
     <Compile Include="..\Models\SkillModifier.cs" Link="Models\SkillModifier.cs" />
+    <Compile Include="..\Models\SkillTagMigration.cs" Link="Models\SkillTagMigration.cs" />
+    <Compile Include="..\Models\Profile.cs" Link="Models\Profile.cs" />
+    <Compile Include="..\Data\Resources.cs" Link="Data\Resources.cs" />
+    <Compile Include="..\Data\Profiles\IProfileService.cs" Link="Data\Profiles\IProfileService.cs" />
+    <Compile Include="..\Data\Profiles\ProfileService.cs" Link="Data\Profiles\ProfileService.cs" />
   </ItemGroup>
 </Project>

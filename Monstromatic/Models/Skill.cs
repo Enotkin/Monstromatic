@@ -127,9 +127,20 @@ public class Skill
         return value < MinValue ? MinValue : value;
     }
 
+    /// <summary>
+    /// Проверяет, что модификатор даёт целую прибавку на заданном уровне.
+    /// Редакторы используют эту же проверку, чтобы не дать сохранить набор,
+    /// на котором расчёт навыка упадёт.
+    /// </summary>
+    public static bool IsModifierValidForLevel(int level, double modifier)
+    {
+        var delta = GetDelta(level, modifier);
+        return delta == decimal.Truncate(delta);
+    }
+
     private static int CalculateDelta(int level, double modifier)
     {
-        var delta = level * (Convert.ToDecimal(modifier) - 1m);
+        var delta = GetDelta(level, modifier);
 
         if (delta != decimal.Truncate(delta))
             throw new ValidationException(
@@ -137,4 +148,7 @@ public class Skill
 
         return decimal.ToInt32(delta);
     }
+
+    private static decimal GetDelta(int level, double modifier) =>
+        level * (Convert.ToDecimal(modifier) - 1m);
 }

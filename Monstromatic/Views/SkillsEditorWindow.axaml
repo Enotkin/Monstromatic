@@ -1,0 +1,233 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Monstromatic.Views;assembly=Monstromatic"
+        mc:Ignorable="d"
+        d:DesignWidth="980"
+        d:DesignHeight="620"
+        x:Class="Monstromatic.Views.SkillsEditorWindow"
+        Title="Скиллы"
+        Width="980"
+        Height="620"
+        MinWidth="820"
+        MinHeight="520"
+        CanResize="True"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Styles>
+        <Style Selector="Button.icon-button">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+        <Style Selector="TextBlock.field-label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Opacity" Value="0.72" />
+            <Setter Property="Margin" Value="0,0,0,3" />
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="22">
+
+        <StackPanel Grid.Row="0" Spacing="6" Margin="0,0,0,18">
+            <TextBlock Text="Скиллы"
+                       FontSize="22"
+                       FontWeight="SemiBold" />
+            <TextBlock Text="Слева — монстр-пример, он пересчитывается сразу. Справа — сам набор скиллов."
+                       Opacity="0.72"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,1.15*">
+
+            <!-- Монстр-пример -->
+            <Border Grid.Column="0"
+                    Padding="14"
+                    BorderBrush="{StaticResource ThemeControlHighlightLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="5">
+                <DockPanel LastChildFill="True">
+                    <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,14">
+                        <TextBox Grid.Column="0"
+                                 Height="34"
+                                 Margin="0,0,10,0"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding PreviewName}"
+                                 Watermark="Имя монстра-примера"
+                                 MaxLength="60" />
+                        <NumericUpDown Grid.Column="1"
+                                       Width="118"
+                                       Height="34"
+                                       VerticalAlignment="Center"
+                                       Value="{Binding PreviewLevel}"
+                                       Increment="2"
+                                       Minimum="2"
+                                       Maximum="200"
+                                       FormatString="0"
+                                       ToolTip.Tip="Уровень монстра-примера">
+                            <NumericUpDown.InnerLeftContent>
+                                <TextBlock Text="Ур. " VerticalAlignment="Center" />
+                            </NumericUpDown.InnerLeftContent>
+                        </NumericUpDown>
+                    </Grid>
+
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="{Binding PreviewMessage}"
+                               IsVisible="{Binding PreviewMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               Opacity="0.72"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,10" />
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding PreviewSkills}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <views:SkillCounterView Width="96" Margin="0,0,8,10" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1"
+                    Width="1"
+                    Margin="16,0"
+                    Background="{StaticResource ThemeControlHighlightLowBrush}" />
+
+            <!-- Набор скиллов -->
+            <DockPanel Grid.Column="2" LastChildFill="True">
+                <Button DockPanel.Dock="Bottom"
+                        Height="38"
+                        Margin="0,8,8,0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        CornerRadius="4"
+                        Command="{Binding AddSkillCommand}"
+                        ToolTip.Tip="Добавить скилл">
+                    <Path Width="16"
+                          Height="16"
+                          Data="M 8 1 L 8 15 M 1 8 L 15 8"
+                          Stroke="{StaticResource ThemeControlHighlightLowBrush}"
+                          StrokeThickness="2" />
+                </Button>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Skills}" Margin="0,0,8,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,0,8"
+                                        Padding="12,10"
+                                        BorderBrush="{StaticResource ThemeControlHighlightLowBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="5">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding Number}"
+                                                   FontSize="30"
+                                                   FontWeight="Light"
+                                                   Opacity="0.55"
+                                                   VerticalAlignment="Center"
+                                                   Margin="2,0,14,0" />
+
+                                        <StackPanel Grid.Column="1" Spacing="8">
+                                            <TextBox Height="34"
+                                                     Text="{Binding Name}"
+                                                     Watermark="Название, например: Атака"
+                                                     MaxLength="60" />
+
+                                            <Grid ColumnDefinitions="*,*,*">
+                                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                                    <TextBlock Classes="field-label" Text="Tag" />
+                                                    <TextBox Height="32"
+                                                             Text="{Binding Tag}"
+                                                             Watermark="Attack"
+                                                             MaxLength="40"
+                                                             ToolTip.Tip="Короткое служебное имя скилла. По нему особенности находят этот скилл." />
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                                    <TextBlock Classes="field-label" Text="Базовый модификатор" />
+                                                    <NumericUpDown Height="32"
+                                                                   Value="{Binding BaseModifier}"
+                                                                   Increment="0.5"
+                                                                   Minimum="0"
+                                                                   Maximum="10"
+                                                                   FormatString="0.0" />
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Classes="field-label" Text="Модификатор буста" />
+                                                    <NumericUpDown Height="32"
+                                                                   Value="{Binding BoostValue}"
+                                                                   Increment="1"
+                                                                   Minimum="0"
+                                                                   Maximum="50"
+                                                                   FormatString="0" />
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <TextBlock Text="{Binding ValidationMessage}"
+                                                       IsVisible="{Binding ValidationMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                       Foreground="#E98B8B"
+                                                       FontSize="12"
+                                                       TextWrapping="Wrap" />
+                                        </StackPanel>
+
+                                        <Button Grid.Column="2"
+                                                Width="34"
+                                                Height="34"
+                                                Margin="10,0,0,0"
+                                                Padding="6"
+                                                VerticalAlignment="Top"
+                                                Command="{Binding RemoveCommand}"
+                                                ToolTip.Tip="Удалить скилл">
+                                            <Path Data="M 2 2 L 12 12 M 12 2 L 2 12"
+                                                  Stroke="{StaticResource ThemeControlHighlightLowBrush}"
+                                                  StrokeThickness="2" />
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,16,0,0">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Text="{Binding ValidationMessage}"
+                       Foreground="#E98B8B"
+                       FontSize="12"
+                       TextWrapping="Wrap" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="9">
+                <Button Classes="icon-button"
+                        IsEnabled="{Binding CanSave}"
+                        Click="SaveButton_OnClick"
+                        ToolTip.Tip="{Binding ConfirmButtonTooltip}">
+                    <Path Width="18"
+                          Height="14"
+                          Data="M 1 7 L 6 12 L 17 1"
+                          Stroke="{StaticResource ThemeControlHighlightLowBrush}"
+                          StrokeThickness="2.2" />
+                </Button>
+                <Button Classes="icon-button"
+                        Click="CancelButton_OnClick"
+                        ToolTip.Tip="Закрыть без сохранения">
+                    <Path Width="16"
+                          Height="16"
+                          Data="M 1 1 L 15 15 M 15 1 L 1 15"
+                          Stroke="{StaticResource ThemeControlHighlightLowBrush}"
+                          StrokeThickness="2" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

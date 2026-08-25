@@ -1,4 +1,4 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -156,7 +156,9 @@
                     <Grid ColumnDefinitions="*, Auto" >
                                             
                         <Border BorderBrush="{StaticResource ThemeControlHighlightLowBrush}" 
-                                BorderThickness="2" CornerRadius="5" Margin="0, 0, 5, 0">
+                                BorderThickness="2" CornerRadius="5" Margin="0, 0, 5, 0"
+                                MaxHeight="200">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <ItemsControl VerticalAlignment="Stretch" ItemsSource="{Binding DescriptiveFeatures}">
                 
                                 <ItemsControl.Styles>
@@ -179,6 +181,7 @@
                                 </ItemsControl.ItemTemplate>
                 
                             </ItemsControl>
+                            </ScrollViewer>
                         </Border>
                         
                         <!-- ������ ���������� ������� -->

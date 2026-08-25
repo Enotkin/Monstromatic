@@ -9,6 +9,7 @@ using DynamicData;
 using Monstromatic.Data.AppSettingsProvider;
 using Monstromatic.Data.Bestiary;
 using Monstromatic.Data.FeatureService;
+using Monstromatic.Data.Profiles;
 using Monstromatic.Models;
 using Monstromatic.Utils;
 using ReactiveUI;
@@ -20,24 +21,35 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     public IProcessHelper ProcessHelper { get; }
 
+    /// <summary>Нужен окну, чтобы запустить мастер настройки нового профиля.</summary>
+    public IAppSettingsProvider SettingsProvider => _settingsProvider;
+
+    /// <summary>Нужен окну, чтобы показать список профилей.</summary>
+    public IProfileService ProfileService => _profileService;
+
     private readonly FeatureController _featureController = new();
     private readonly IAppSettingsProvider _settingsProvider;
     private readonly IBestiaryService _bestiaryService;
+    private readonly IProfileService _profileService;
     private IReadOnlyCollection<FeatureCategoryViewModel> _featureCategories = [];
 
     [Reactive] private string? _name;
     [Reactive] private string? _selectedQuality;
     [Reactive] private BestiaryEntry? _selectedBestiaryEntry;
     [Reactive] private string? _bestiarySearchText;
+    [Reactive] private bool _hasRememberedProfile;
 
     public MainWindowViewModel(
         IAppSettingsProvider settingsProvider,
         IBestiaryService bestiaryService,
+        IProfileService profileService,
         IProcessHelper processHelper)
     {
         ProcessHelper = processHelper;
         _settingsProvider = settingsProvider;
         _bestiaryService = bestiaryService;
+        _profileService = profileService;
+        _hasRememberedProfile = profileService.RememberedProfileId is not null;
 
         ResolveMissingQualityNames();
         ((INotifyCollectionChanged)_bestiaryService.Entries).CollectionChanged += (_, _) =>
@@ -62,7 +74,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
         GenerateEncounterCommand = ReactiveCommand.CreateFromTask(GenerateNewEncounter, canGenerateEncounter);
         ShowAboutCommand = ReactiveCommand.CreateFromTask(async () => await ShowAboutDialog.Handle(Unit.Default));
-        ShowSettingsCommand = ReactiveCommand.CreateFromTask<string>(ShowSettings);
+        EditQualityLevelsCommand = ReactiveCommand.CreateFromTask(EditQualityLevels);
+        RenameProfileCommand = ReactiveCommand.CreateFromTask(RenameProfile);
+        SwitchProfileCommand = ReactiveCommand.CreateFromTask(SwitchProfile);
+        CreateProfileCommand = ReactiveCommand.CreateFromTask(CreateProfile);
+        ForgetRememberedProfileCommand = ReactiveCommand.Create(
+            ForgetRememberedProfile,
+            this.WhenAnyValue(x => x.HasRememberedProfile));
+        EditSkillsCommand = ReactiveCommand.CreateFromTask(EditSkills);
         ResetSettingsCommand = ReactiveCommand.CreateFromTask(ResetSettings);
 
         var hasSelectedBestiaryEntry = this
@@ -106,7 +125,19 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> ShowAboutCommand { get; }
 
-    public ReactiveCommand<string, Unit> ShowSettingsCommand { get; }
+    public ReactiveCommand<Unit, Unit> EditQualityLevelsCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> EditSkillsCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> RenameProfileCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> SwitchProfileCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> CreateProfileCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> ForgetRememberedProfileCommand { get; }
+
+    public string ProfileMenuHeader => $"Профиль: {_profileService.Current.Name}";
 
     public ReactiveCommand<Unit, Unit> ResetSettingsCommand { get; }
 
@@ -126,7 +157,18 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public Interaction<CreateFeatureViewModel, MonsterFeature?> ShowCreateFeatureDialog { get; } = new();
 
-    public Interaction<string, Unit> ShowFeatureDeletionWarning { get; } = new();
+    public Interaction<MessageRequest, Unit> ShowMessage { get; } = new();
+
+    public Interaction<QualityLevelsViewModel, Dictionary<string, int>?> ShowQualityLevelsDialog { get; } = new();
+
+    public Interaction<SkillsEditorViewModel, SkillsEditorResult?> ShowSkillsEditorDialog { get; } = new();
+
+    public Interaction<ProfileNameViewModel, string?> ShowProfileNameDialog { get; } = new();
+
+    public Interaction<Unit, ProfileSelectionResult?> ShowProfileSelectionDialog { get; } = new();
+
+    /// <summary>Проводит новый профиль через обязательные шаги настройки.</summary>
+    public Interaction<Unit, bool> RunProfileSetupWizard { get; } = new();
 
     private async Task ResetSettings()
     {
@@ -148,6 +190,11 @@ public partial class MainWindowViewModel : ViewModelBase
             SelectedQuality);
         var encounterViewModel = new EncounterViewModel(encounter, _bestiaryService);
         await ShowNewMonsterWindow.Handle(encounterViewModel);
+
+        // Следующий монстр начинается с чистого листа: иначе он молча унаследует
+        // особенности предыдущего — галочки прячутся за открывшимся окном.
+        _featureController.Clear();
+        Name = null;
     }
 
     private async Task CreateFeature()
@@ -174,11 +221,14 @@ public partial class MainWindowViewModel : ViewModelBase
             return;
         }
 
+        var featureUsage = GetBestiaryFeatureUsage();
         var blockedFeatures = selectedFeatures
             .Select(feature => new
             {
                 Feature = feature,
-                MonsterNames = FindFeatureUsageNames(feature)
+                MonsterNames = featureUsage.TryGetValue(feature.Key, out var monsterNames)
+                    ? monsterNames
+                    : []
             })
             .Where(usage => usage.MonsterNames.Count > 0)
             .ToArray();
@@ -205,19 +255,42 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             var warningLines = blockedFeatures.Select(usage =>
                 $"• «{usage.Feature.DisplayName}» — {string.Join(", ", usage.MonsterNames.Select(name => $"«{name}»"))}");
-            await ShowFeatureDeletionWarning.Handle(string.Join(Environment.NewLine, warningLines));
+            await ShowMessage.Handle(new MessageRequest(
+                "Удаление особенностей",
+                "Некоторые особенности нельзя удалить",
+                "Программа сохранила особенности, которые уже используются монстрами.",
+                string.Join(Environment.NewLine, warningLines)));
         }
     }
 
-    private IReadOnlyCollection<string> FindFeatureUsageNames(MonsterFeature feature)
+    /// <summary>
+    /// Какие монстры из бестиария используют каждую особенность: ключ особенности
+    /// → названия монстров. По этому списку решается, что удалять нельзя.
+    /// </summary>
+    private IReadOnlyDictionary<string, IReadOnlyCollection<string>> GetBestiaryFeatureUsage()
     {
-        var bestiaryNames = _bestiaryService.Entries
-            .Where(entry => entry.Features.Any(entryFeature => entryFeature.Key == feature.Key))
-            .Select(entry => entry.Name);
+        var usage = new Dictionary<string, List<string>>();
 
-        return bestiaryNames
-            .Distinct(StringComparer.CurrentCultureIgnoreCase)
-            .ToArray();
+        foreach (var entry in _bestiaryService.Entries)
+        {
+            foreach (var feature in entry.Features)
+            {
+                if (!usage.TryGetValue(feature.Key, out var monsterNames))
+                {
+                    monsterNames = [];
+                    usage[feature.Key] = monsterNames;
+                }
+
+                if (!monsterNames.Contains(entry.Name, StringComparer.CurrentCultureIgnoreCase))
+                {
+                    monsterNames.Add(entry.Name);
+                }
+            }
+        }
+
+        return usage.ToDictionary(
+            pair => pair.Key,
+            pair => (IReadOnlyCollection<string>)pair.Value);
     }
 
     private async Task SelectBestiaryEntry()
@@ -246,10 +319,173 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedBestiaryEntry = null;
     }
 
-    private async Task ShowSettings(string path)
+    private async Task RenameProfile()
     {
-        await ProcessHelper.StartNewAndWaitAsync(path);
+        var current = _profileService.Current;
+        var otherNames = _profileService.Profiles
+            .Where(profile => profile.Id != current.Id)
+            .Select(profile => profile.Name);
+
+        var name = await ShowProfileNameDialog.Handle(
+            new ProfileNameViewModel("Название профиля", current.Name, otherNames));
+
+        if (name is null)
+        {
+            return;
+        }
+
+        _profileService.Rename(current, name);
+        this.RaisePropertyChanged(nameof(ProfileMenuHeader));
+    }
+
+    private async Task SwitchProfile()
+    {
+        var result = await ShowProfileSelectionDialog.Handle(Unit.Default);
+        if (result is null)
+        {
+            return;
+        }
+
+        if (result.Remember is { } remember)
+        {
+            _profileService.Remember(remember ? result.Profile : null);
+            HasRememberedProfile = remember;
+        }
+
+        if (result.IsNew)
+        {
+            await SetUpNewProfile(result.Profile);
+            return;
+        }
+
+        if (result.Profile.Id != _profileService.Current.Id)
+        {
+            SwitchToProfile(result.Profile);
+        }
+    }
+
+    private async Task CreateProfile()
+    {
+        var name = await ShowProfileNameDialog.Handle(new ProfileNameViewModel(
+            "Название нового профиля",
+            string.Empty,
+            _profileService.Profiles.Select(profile => profile.Name)));
+
+        if (name is null)
+        {
+            return;
+        }
+
+        await SetUpNewProfile(_profileService.Create(name));
+    }
+
+    /// <summary>
+    /// Переключается на только что созданный профиль и проводит его через
+    /// обязательные шаги настройки. Если мастер отменили, профиль удаляется,
+    /// а программа возвращается к прежнему — полупустых профилей не остаётся.
+    /// </summary>
+    private async Task SetUpNewProfile(Profile profile)
+    {
+        var previous = _profileService.Current;
+        SwitchToProfile(profile);
+
+        if (await RunProfileSetupWizard.Handle(Unit.Default))
+        {
+            RefreshControls();
+            return;
+        }
+
+        _profileService.Delete(profile);
+        SwitchToProfile(previous);
+    }
+
+    private void ForgetRememberedProfile()
+    {
+        _profileService.Remember(null);
+        HasRememberedProfile = false;
+    }
+
+    private void SwitchToProfile(Profile profile)
+    {
+        _profileService.SetCurrent(profile);
+
+        var directory = _profileService.GetProfileDirectory(profile);
+        _settingsProvider.UseProfile(directory);
+        _bestiaryService.UseProfile(directory);
+
+        // Выбор монстра и особенностей относился к прошлому профилю.
+        _featureController.Clear();
+        SelectedBestiaryEntry = null;
+        SelectedQuality = null;
+        Name = null;
+
         RefreshControls();
+        this.RaisePropertyChanged(nameof(ProfileMenuHeader));
+    }
+
+    private async Task EditQualityLevels()
+    {
+        var originalNames = _settingsProvider.Settings.MonsterQualities.Keys.ToArray();
+        var viewModel = new QualityLevelsViewModel(_settingsProvider.Settings.MonsterQualities);
+
+        var qualities = await ShowQualityLevelsDialog.Handle(viewModel);
+        if (qualities is null)
+        {
+            return;
+        }
+
+        _settingsProvider.ApplyQualities(qualities);
+        RefreshControls();
+
+        await WarnAboutBestiaryQualities(viewModel.GetRemovedQualityNames(originalNames));
+    }
+
+    private async Task EditSkills()
+    {
+        var viewModel = new SkillsEditorViewModel(
+            _settingsProvider.Settings.SkillDefinitions,
+            _settingsProvider.Settings.MonsterQualities,
+            _settingsProvider.Features,
+            GetBestiaryFeatureUsage());
+
+        var result = await ShowSkillsEditorDialog.Handle(viewModel);
+        if (result is null)
+        {
+            return;
+        }
+
+        _settingsProvider.ApplySkills(result);
+        RefreshControls();
+
+        _featureController.Resynchronize(_settingsProvider.Features);
+    }
+
+    /// <summary>
+    /// Записи бестиария хранят название качества текстом. Если такого качества
+    /// больше нет, подпись у них станет устаревшей — предупреждаем об этом.
+    /// </summary>
+    private async Task WarnAboutBestiaryQualities(IReadOnlyCollection<string> removedQualityNames)
+    {
+        if (removedQualityNames.Count == 0)
+        {
+            return;
+        }
+
+        var affectedMonsters = _bestiaryService.Entries
+            .Where(entry => removedQualityNames.Contains(entry.QualityName, StringComparer.CurrentCultureIgnoreCase))
+            .Select(entry => $"• {entry.Name}")
+            .ToArray();
+
+        if (affectedMonsters.Length == 0)
+        {
+            return;
+        }
+
+        await ShowMessage.Handle(new MessageRequest(
+            "Стартовые уровни",
+            "У этих монстров устарела подпись качества",
+            "Качества, с которыми они были созданы, больше нет в наборе. Сами монстры работают как раньше.",
+            string.Join(Environment.NewLine, affectedMonsters)));
     }
 
     private void RefreshControls()
@@ -257,6 +493,15 @@ public partial class MainWindowViewModel : ViewModelBase
         _settingsProvider.Reload();
         ResolveMissingQualityNames();
         RebuildFeatureCategories();
+
+        // Выбранное качество могло исчезнуть при правке стартовых уровней —
+        // иначе генерация монстра пошла бы за несуществующим уровнем.
+        if (SelectedQuality is not null &&
+            !_settingsProvider.Settings.MonsterQualities.ContainsKey(SelectedQuality))
+        {
+            SelectedQuality = null;
+        }
+
         this.RaisePropertyChanged(nameof(Qualities));
         this.RaisePropertyChanged(nameof(BestiaryEntries));
     }

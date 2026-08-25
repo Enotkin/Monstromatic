@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="440"
+        d:DesignHeight="460"
+        x:Class="Monstromatic.Views.ProfileSelectionWindow"
+        Title="Monstromatic — выбор профиля"
+        Width="440"
+        Height="460"
+        MinWidth="380"
+        MinHeight="380"
+        CanResize="True"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Margin="22">
+        <StackPanel Grid.Row="0" Spacing="6" Margin="0,0,0,16">
+            <TextBlock Text="С каким профилем работаем?"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="У каждого профиля свои стартовые уровни, скиллы, особенности и бестиарий."
+                       Opacity="0.72"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <ListBox Grid.Row="1"
+                 Background="Transparent"
+                 ItemsSource="{Binding Profiles}"
+                 SelectedItem="{Binding SelectedProfile}">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="2"
+                            Padding="14,12"
+                            BorderBrush="{StaticResource ThemeControlHighlightLowBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                        <TextBlock Text="{Binding Name}"
+                                   FontSize="16"
+                                   TextWrapping="Wrap" />
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <CheckBox Grid.Row="2"
+                  Margin="2,12,0,0"
+                  Content="Запомнить выбор"
+                  IsChecked="{Binding RememberChoice}"
+                  ToolTip.Tip="При следующем запуске программа сразу откроет этот профиль" />
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="9"
+                    Margin="0,14,0,0">
+            <Button MinWidth="150"
+                    Height="36"
+                    Content="Создать профиль"
+                    Click="CreateButton_OnClick" />
+            <Button MinWidth="100"
+                    Height="36"
+                    Content="Открыть"
+                    IsEnabled="{Binding CanOpen}"
+                    Click="OpenButton_OnClick" />
+        </StackPanel>
+    </Grid>
+</Window>

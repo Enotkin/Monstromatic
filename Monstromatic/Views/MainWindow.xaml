@@ -1,9 +1,8 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:conv="clr-namespace:Monstromatic.Converters;assembly=Monstromatic"
-        xmlns:resources="clr-namespace:Monstromatic.Data;assembly=Monstromatic"
         xmlns:viewModels="clr-namespace:Monstromatic.ViewModels;assembly=Monstromatic"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
         Width="800" Height="400"
@@ -17,7 +16,6 @@
     
     <Window.Resources>
         <conv:BoolInverseConverter x:Key="BoolInverseConverter" />
-        <resources:Resources x:Key="Resources" />
     </Window.Resources>
     
     <ExperimentalAcrylicBorder>
@@ -34,14 +32,19 @@
             
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Настройки">
-                    <MenuItem Header="Общие"
-                              Command="{Binding ShowSettingsCommand}"
-                              CommandParameter="{Binding Source={StaticResource Resources}, Path=SettingsFilePath}" />
-                    <MenuItem Header="Особенности"
-                              Command="{Binding ShowSettingsCommand}"
-                              CommandParameter="{Binding Source={StaticResource Resources}, Path=FeaturesFilePath}" />
+                    <MenuItem Header="Стартовые уровни" Command="{Binding EditQualityLevelsCommand}" />
+                    <MenuItem Header="Скиллы" Command="{Binding EditSkillsCommand}" />
                     <Separator />
                     <MenuItem Header="Сбросить" Command="{Binding ResetSettingsCommand}" />
+                </MenuItem>
+                <MenuItem Header="{Binding ProfileMenuHeader}">
+                    <MenuItem Header="Сменить профиль" Command="{Binding SwitchProfileCommand}" />
+                    <MenuItem Header="Переименовать профиль" Command="{Binding RenameProfileCommand}" />
+                    <MenuItem Header="Создать профиль" Command="{Binding CreateProfileCommand}" />
+                    <Separator />
+                    <MenuItem Header="Забыть запомненный выбор"
+                              Command="{Binding ForgetRememberedProfileCommand}"
+                              ToolTip.Tip="При следующем запуске программа снова спросит, какой профиль открыть" />
                 </MenuItem>
                 <MenuItem Header="О программе" Command="{Binding ShowAboutCommand}" />
             </Menu>

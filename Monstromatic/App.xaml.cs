@@ -1,9 +1,8 @@
-﻿using Avalonia;
+using System;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Monstromatic.Utils;
-using Monstromatic.ViewModels;
-using Monstromatic.Views;
 
 namespace Monstromatic
 {
@@ -18,13 +17,26 @@ namespace Monstromatic
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = ServiceHub.Default.ServiceProvider.Get<MainWindowViewModel>(),
-                };
+                var startup = new ApplicationStartup(desktop, ServiceHub.Default.ServiceProvider);
+                _ = RunStartupAsync(startup, desktop);
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+
+        private static async System.Threading.Tasks.Task RunStartupAsync(
+            ApplicationStartup startup,
+            IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            try
+            {
+                await startup.RunAsync();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                desktop.Shutdown(1);
+            }
         }
     }
 }
