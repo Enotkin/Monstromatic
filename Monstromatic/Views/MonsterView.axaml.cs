@@ -22,7 +22,7 @@ namespace Monstromatic.Views
         {
             _isExpanded = !_isExpanded;
             var grid = this.GetControl<ItemsControl>("ExpanderGrid");
-            grid.Height = _isExpanded ? 100 : 0;
+            grid.Height = _isExpanded ? double.NaN : 0;
             
             AnimateButton(sender as Visual, _isExpanded);
         }

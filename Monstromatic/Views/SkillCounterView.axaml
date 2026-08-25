@@ -14,66 +14,91 @@
         <utils:ModificatorColorConverter x:Key="ModificatorColorConverter" />
     </UserControl.Resources>
     
-    <StackPanel>
-        <Border Height="34"
-                Background="Transparent"
-                ToolTip.Tip="{Binding CommentsToolTipText}">
-            
-            <TextBlock Text="{Binding SkillName}"
-                       HorizontalAlignment="Stretch"
-                       FontSize="12"
-                       Foreground="white"
-                       MaxLines="2"
-                       TextAlignment="Center"
-                       TextWrapping="Wrap"
-                       VerticalAlignment="Center" />
-        </Border>
-        
-        <Grid ColumnDefinitions="*, Auto">
-            
-            <Grid RowDefinitions="*, *" ColumnDefinitions="*, *, *" >
-                <Button Grid.Row="0" Grid.Column="2" Background="Transparent" Content="R" BorderBrush="Transparent" Opacity="200" Command="{Binding Reset}"></Button>
-            </Grid>
-            
-            <StackPanel Grid.Column="0"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
+    <!--
+        Every skill is designed at one reference size and then scaled as a whole.
+        The parent UniformGrid gives each skill 1/N of the available row width,
+        so three skills are larger than four, four are larger than five, and so on.
+    -->
+    <Viewbox Stretch="Uniform"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Margin="0, 10">
+        <Grid Width="140"
+              Height="78"
+              RowDefinitions="26,*">
+            <Border Background="Transparent"
+                    ToolTip.Tip="{Binding CommentsToolTipText}">
+                <TextBlock Text="{Binding SkillName}"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           MaxLines="2"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap" />
+            </Border>
 
-                <TextBlock x:Name="CurrentSkillValue"
-                           Text="{Binding SkillValue}"
-                           Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
-                           FontSize="32"
-                           VerticalAlignment="Center" />
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="*,28">
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <TextBlock x:Name="CurrentSkillValue"
+                               Text="{Binding SkillValue}"
+                               Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
+                               FontSize="44"
+                               VerticalAlignment="Center" />
 
-                <TextBlock Text="{Binding Modificator, Converter={StaticResource ModificatorTextConverter}, Mode=OneWay}"
-                           Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
-                           FontSize="13"
-                           VerticalAlignment="Bottom"
-                           Margin="2,0,0,6" />
-            </StackPanel>
-            
-            <Grid Grid.Column="1" RowDefinitions="Auto, Auto" Margin="0, 0, 5, 0">
-                <Button Grid.Row="0" Content="+" Command="{Binding Increase}" Margin="0, 0, 0, 2"/>
-                <Button Grid.Row="1" Content="-" Command="{Binding Decrease}" Margin="0, 1, 0, 0" />
+                    <TextBlock Text="{Binding Modificator, Converter={StaticResource ModificatorTextConverter}, Mode=OneWay}"
+                               Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
+                               FontSize="18"
+                               VerticalAlignment="Bottom"
+                               Margin="2,0,0,7" />
+                </StackPanel>
+
+                <!-- The reset button overlays the value without participating in its layout. -->
+                <Button Grid.Column="0"
+                        Width="38"
+                        Height="26"
+                        MinWidth="0"
+                        MinHeight="0"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Content="R"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Command="{Binding Reset}"
+                        ToolTip.Tip="Сбросить изменение навыка" />
+
+                <Grid Grid.Column="1"
+                      Height="48"
+                      RowDefinitions="*,*"
+                      VerticalAlignment="Center">
+                    <Button Grid.Row="0"
+                            MinWidth="0"
+                            MinHeight="0"
+                            Padding="0"
+                            Margin="0,0,0,1"
+                            Content="+"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Command="{Binding Increase}" />
+                    <Button Grid.Row="1"
+                            MinWidth="0"
+                            MinHeight="0"
+                            Padding="0"
+                            Margin="0,1,0,0"
+                            Content="-"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Command="{Binding Decrease}" />
+                </Grid>
             </Grid>
-            
         </Grid>
-        
-        <UniformGrid Rows="2" Columns="2">
-            
-            <UniformGrid.Styles>
-                <Style Selector="TextBox">
-                    <Setter Property="Margin" Value="2"></Setter>
-                </Style>
-                
-                <Style Selector="Button">
-                    <Setter Property="Margin" Value="2"></Setter>
-
-                    <Setter Property="FontWeight" Value="Bold"></Setter>
-                </Style>
-                
-            </UniformGrid.Styles>
-        </UniformGrid>
-    </StackPanel>
+    </Viewbox>
 </UserControl>

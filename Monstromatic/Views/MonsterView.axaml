@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:Monstromatic.Views;assembly=Monstromatic"
              xmlns:viewModels="clr-namespace:Monstromatic.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="150"
+             mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="200"
              x:Class="Monstromatic.Views.MonsterView"
              x:DataType="viewModels:MonsterViewModel"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=MonsterViewModel}">
@@ -145,17 +145,21 @@
                     </Grid>
                 </Border>
 
-                <ItemsControl Name="ExpanderGrid" ItemsSource="{Binding SkillsVm}">
+                <ItemsControl Name="ExpanderGrid"
+                              ItemsSource="{Binding SkillsVm}"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              ClipToBounds="True">
                 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="{Binding SkillsVm.Count}" />
+                            <UniformGrid Rows="1" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <views:SkillCounterView Margin="5, 0, 5, 5"/>
+                            <views:SkillCounterView />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 
