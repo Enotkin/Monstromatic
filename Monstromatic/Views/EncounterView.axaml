@@ -12,7 +12,7 @@
         CanResize="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaToDecorationsHint="True"
-        Width="350" MaxWidth="350" MinWidth="350">
+        Width="350" MaxWidth="450" MinWidth="450">
     <Window.Resources>
         <conv:DoubleToGridLengthConverter x:Key="GridLengthConverter"/>
         <conv:GridHeightFeatureCountConverter x:Key="FeatureCountConverter" />
