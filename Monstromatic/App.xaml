@@ -15,5 +15,8 @@
 
   <Application.Styles>
     <SimpleTheme />
+    <Style Selector="Window">
+      <Setter Property="Icon" Value="/Assets/monstromatic.ico" />
+    </Style>
   </Application.Styles>
 </Application>

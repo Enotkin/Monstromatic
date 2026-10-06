@@ -9,7 +9,6 @@
         Width="800" Height="400"
         MinWidth="650" MinHeight="350"
         x:Class="Monstromatic.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
         Title="Monstromatic"
         TransparencyLevelHint="AcrylicBlur"
         WindowStartupLocation="CenterScreen"

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\monstromatic.ico</ApplicationIcon>
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
