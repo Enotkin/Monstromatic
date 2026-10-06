@@ -13,8 +13,11 @@ namespace Monstromatic.Views;
 
 public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewModel>
 {
-    private const double BodyHeight = 60;
-    private const double ExpandedHeight = 82;
+    private const double BodyHeight = 66;
+    private const double ExpandedHeight = 88;
+    // Grow mostly down from the top of the value row, keeping the original
+    // pointer position over the enlarged number rather than its title.
+    private const double ScaleAnchorY = 20;
     private SkillLensPanel? _lensPanel;
     private readonly Grid _lens;
     private readonly Grid _actions;
@@ -33,8 +36,8 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
     }
 
     internal double LensWidth => _lens.Width;
-    internal double LensAnchorY => _lens.Margin.Top + BodyHeight / 2;
-    internal double TopExtent => BodyHeight / 2 + 2;
+    internal double LensAnchorY => _lens.Margin.Top + ScaleAnchorY;
+    internal double TopExtent => ScaleAnchorY + 2;
     internal static double GetLensHeight(bool showActions) => showActions ? ExpandedHeight : BodyHeight;
 
     internal Rect? GetLensBounds(Visual relativeTo) => GetBounds(_lens, relativeTo);
@@ -103,7 +106,7 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
         if (change.Property == BoundsProperty && _lens != null)
         {
             _lens.Width = Math.Clamp(Bounds.Width - 8, 16, 112);
-            _lens.RenderTransformOrigin = new RelativePoint(_lens.Width / 2, BodyHeight / 2, RelativeUnit.Absolute);
+            _lens.RenderTransformOrigin = new RelativePoint(_lens.Width / 2, ScaleAnchorY, RelativeUnit.Absolute);
             _lensPanel?.RefreshLayout();
         }
     }

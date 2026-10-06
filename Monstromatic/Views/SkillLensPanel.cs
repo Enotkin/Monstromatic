@@ -207,10 +207,12 @@ public sealed class SkillLensPanel : UniformGrid
             var wave = distance < InfluenceRadius
                 ? Math.Pow(0.5 * (1 + Math.Cos(Math.PI * distance / InfluenceRadius)), 2)
                 : 0;
-            if (entry.Skill == focus)
-                wave = Math.Max(0.86, wave);
-
-            scales[index] = NeighborScale + (ExpandedScale - NeighborScale) * wave;
+            // Only the selected skill grows beyond its resting size. A pointer
+            // caught between moving lenses must not freeze two enlarged skills.
+            // Neighbors still follow the wave and interpolate during a switch.
+            scales[index] = entry.Skill == focus
+                ? NeighborScale + (ExpandedScale - NeighborScale) * Math.Max(0.86, wave)
+                : NeighborScale + (1 - NeighborScale) * wave;
             // Fit the eventual surface from the first hover, including at the
             // viewport edge. The dwell then grows only its bottom boundary.
             var height = SkillCounterView.GetLensHeight(entry.Skill == focus);
