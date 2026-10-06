@@ -20,13 +20,6 @@ namespace Monstromatic.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        protected override void OnPointerExited(PointerEventArgs e)
-        {
-            base.OnPointerExited(e);
-            // Moving into the header keeps the lens; leaving the monster closes it.
-            foreach (var panel in this.GetVisualDescendants().OfType<SkillLensPanel>())
-                panel.ResetSelection();
-        }
         
         private void ChangeExpandState(object sender, RoutedEventArgs routedEventArgs)
         {
@@ -35,6 +28,9 @@ namespace Monstromatic.Views
             if (!_isExpanded)
                 grid.GetVisualDescendants().OfType<SkillLensPanel>().FirstOrDefault()?.ResetSelection();
             grid.Height = _isExpanded ? double.NaN : 0;
+            // Clipping is disabled for the floating lens, so collapse must also
+            // hide the content instead of relying on a zero-height clip.
+            grid.IsVisible = _isExpanded;
             
             AnimateButton(sender as Visual, _isExpanded);
         }

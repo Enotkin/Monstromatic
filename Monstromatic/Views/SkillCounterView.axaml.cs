@@ -19,6 +19,7 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
     private readonly Border _glow;
     private double _targetScale = 1;
     private double _targetOffset;
+    private double _targetOffsetY;
     private bool _showActions;
 
     public SkillCounterView()
@@ -30,6 +31,7 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
     }
 
     internal double LensWidth => _lens.Width;
+    internal double LensHeight => _lens.Height;
 
     internal Rect? GetLensBounds(Visual relativeTo) => GetBounds(_lens, relativeTo);
 
@@ -43,21 +45,25 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
         return topLeft is { } start && bottomRight is { } end ? new Rect(start, end) : null;
     }
 
-    internal void SetLens(double scale, double offset, bool showActions)
+    internal void SetLens(double scale, double offset, double offsetY, bool showActions)
     {
-        if (Math.Abs(_targetScale - scale) > 0.0001 || Math.Abs(_targetOffset - offset) > 0.01)
+        if (Math.Abs(_targetScale - scale) > 0.0001 || Math.Abs(_targetOffset - offset) > 0.01 ||
+            Math.Abs(_targetOffsetY - offsetY) > 0.01)
         {
             _targetScale = scale;
             _targetOffset = offset;
+            _targetOffsetY = offsetY;
             var transform = new TransformOperations.Builder(2);
             transform.AppendScale(scale, scale);
-            transform.AppendTranslate(offset, 0);
+            transform.AppendTranslate(offset, offsetY);
             _lens.RenderTransform = transform.Build();
         }
+        // Give the wave an opaque surface too, so enlarged text remains legible
+        // while passing over another monster before the actions appear.
+        _glow.Opacity = scale > 1.1 ? 1 : 0;
         if (_showActions != showActions)
         {
             _showActions = showActions;
-            _glow.Opacity = showActions ? 1 : 0;
             _actions.Opacity = showActions ? 1 : 0;
             _actions.IsHitTestVisible = showActions;
             _actions.IsEnabled = showActions;
@@ -75,7 +81,7 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
     {
         _lensPanel?.Unregister(this);
         _lensPanel = null;
-        SetLens(1, 0, false);
+        SetLens(1, 0, 0, false);
         base.OnDetachedFromVisualTree(e);
     }
 

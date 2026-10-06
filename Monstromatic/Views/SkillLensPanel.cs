@@ -5,6 +5,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Presenters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -24,6 +25,12 @@ public sealed class SkillLensPanel : UniformGrid
     private readonly Stopwatch _clock = Stopwatch.StartNew();
     private readonly DispatcherTimer _dwellTimer;
     private Point? _pointerPosition;
+    private TopLevel? _window;
+    private MonsterView? _monster;
+    private ScrollViewer? _scrollViewer;
+    private ScrollContentPresenter? _viewport;
+    private Visual? _monsterContainer;
+    private int _restingZIndex;
 
     public SkillLensPanel()
     {
@@ -34,7 +41,11 @@ public sealed class SkillLensPanel : UniformGrid
         _dwellTimer.Tick += OnDwell;
         AddHandler(PointerMovedEvent, OnPointerMovedInRow, RoutingStrategies.Tunnel, handledEventsToo: true);
         PointerEntered += OnPointerMovedInRow;
-        PointerExited += (_, _) => MoveTo(null, null);
+        PointerExited += (_, e) =>
+        {
+            if (!IsOverFocusLens(e.GetPosition(this)))
+                MoveTo(null, null);
+        };
     }
 
     internal void Register(SkillCounterView skill)
@@ -74,6 +85,11 @@ public sealed class SkillLensPanel : UniformGrid
     private void OnPointerMovedInRow(object? sender, PointerEventArgs e)
     {
         var position = e.GetPosition(this);
+        if (!IsInsideInteractionArea(position))
+        {
+            ResetSelection();
+            return;
+        }
         SkillCounterView? hovered = null;
 
         // Expanded buttons can extend past the original input slot. Keep them
@@ -158,11 +174,13 @@ public sealed class SkillLensPanel : UniformGrid
             .OrderBy(entry => entry.Slot!.Value.Left)
             .ToArray();
         var focus = _state.ActiveSkill ?? _state.HoveredSkill;
+        if (_monsterContainer != null)
+            _monsterContainer.ZIndex = focus == null ? _restingZIndex : Math.Max(1, _restingZIndex + 1);
         if (focus == null)
         {
             foreach (var skill in _skills)
             {
-                skill.SetLens(1, 0, false);
+                skill.SetLens(1, 0, 0, false);
                 SetContainerZIndex(skill, 0);
             }
             return;
@@ -172,6 +190,10 @@ public sealed class SkillLensPanel : UniformGrid
             ? GetSlot(focus)?.Center.X
             : _pointerPosition?.X ?? GetSlot(focus)?.Center.X;
         if (focusX == null || entries.Length == 0)
+            return;
+
+        var visibleArea = GetVisibleArea();
+        if (visibleArea.Height <= 4)
             return;
 
         var scales = new double[entries.Length];
@@ -188,6 +210,7 @@ public sealed class SkillLensPanel : UniformGrid
                 wave = _state.ActiveSkill != null ? 1 : Math.Max(0.86, wave);
 
             scales[index] = NeighborScale + (ExpandedScale - NeighborScale) * wave;
+            scales[index] = Math.Min(scales[index], (visibleArea.Height - 4) / (entry.Skill.LensHeight + 4));
             totalWidth += (entry.Skill.LensWidth + 4) * scales[index];
         }
 
@@ -203,7 +226,10 @@ public sealed class SkillLensPanel : UniformGrid
             var scale = scales[index] * fit;
             var width = (entry.Skill.LensWidth + 4) * scale;
             var offset = left + width / 2 - entry.Slot!.Value.Center.X;
-            entry.Skill.SetLens(scale, offset, entry.Skill == _state.ActiveSkill);
+            var halfHeight = (entry.Skill.LensHeight + 4) * scale / 2;
+            var centerY = entry.Slot.Value.Center.Y;
+            var offsetY = Math.Clamp(centerY, visibleArea.Top + halfHeight, visibleArea.Bottom - halfHeight) - centerY;
+            entry.Skill.SetLens(scale, offset, offsetY, entry.Skill == _state.ActiveSkill);
             SetContainerZIndex(entry.Skill, entry.Skill == focus ? 1 : 0);
             left += width + gap;
         }
@@ -216,6 +242,77 @@ public sealed class SkillLensPanel : UniformGrid
             container = parent;
         if (container.GetVisualParent() == this)
             container.ZIndex = zIndex;
+    }
+
+    private bool IsOverFocusLens(Point position)
+    {
+        var focus = _state.ActiveSkill ?? _state.HoveredSkill;
+        return focus?.GetLensBounds(this) is { } lens &&
+               lens.Intersect(GetVisibleArea()).Contains(position);
+    }
+
+    private bool IsInsideInteractionArea(Point position)
+    {
+        var owner = (Visual?)_monster ?? this;
+        var origin = owner.TranslatePoint(default, this) ?? default;
+        var card = new Rect(origin, owner.Bounds.Size).Intersect(GetVisibleArea());
+        return card.Contains(position) || IsOverFocusLens(position);
+    }
+
+    private Rect GetVisibleArea()
+    {
+        if (_window == null)
+            return new Rect(Bounds.Size);
+
+        var origin = _window.TranslatePoint(default, this) ?? default;
+        var area = new Rect(origin, _window.Bounds.Size);
+        if (_viewport?.TranslatePoint(default, this) is { } viewportOrigin)
+            area = area.Intersect(new Rect(viewportOrigin, _viewport.Bounds.Size));
+        return area;
+    }
+
+    private void OnWindowPointerMoved(object? sender, PointerEventArgs e)
+    {
+        // A floating lens is part of its monster even outside the card's frame.
+        // Observe the window so leaving that union also closes the lens reliably.
+        if ((_state.ActiveSkill != null || _state.HoveredSkill != null) &&
+            !IsInsideInteractionArea(e.GetPosition(this)))
+            ResetSelection();
+    }
+
+    private void OnWindowPointerExited(object? sender, PointerEventArgs e) => ResetSelection();
+
+    private void OnWindowPointerWheelChanged(object? sender, PointerWheelEventArgs e) => ResetSelection();
+
+    private void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
+    {
+        if (e.OffsetDelta != default(Vector))
+            ResetSelection();
+        else
+            UpdateLenses();
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _window = TopLevel.GetTopLevel(this);
+        _monster = this.GetVisualAncestors().OfType<MonsterView>().FirstOrDefault();
+        _scrollViewer = this.GetVisualAncestors().OfType<ScrollViewer>().FirstOrDefault();
+        _viewport = this.GetVisualAncestors().OfType<ScrollContentPresenter>().FirstOrDefault();
+        if (_monster != null)
+        {
+            Visual container = _monster;
+            while (container.GetVisualParent() is { } parent && parent is not Panel)
+                container = parent;
+            _monsterContainer = container;
+            _restingZIndex = container.ZIndex;
+        }
+        _window?.AddHandler(PointerMovedEvent, OnWindowPointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
+        _window?.AddHandler(PointerWheelChangedEvent, OnWindowPointerWheelChanged, RoutingStrategies.Tunnel, handledEventsToo: true);
+        if (_window != null)
+            _window.PointerExited += OnWindowPointerExited;
+        if (_scrollViewer != null)
+            _scrollViewer.ScrollChanged += OnScrollChanged;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -240,6 +337,17 @@ public sealed class SkillLensPanel : UniformGrid
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         ResetSelection();
+        _window?.RemoveHandler(PointerMovedEvent, OnWindowPointerMoved);
+        _window?.RemoveHandler(PointerWheelChangedEvent, OnWindowPointerWheelChanged);
+        if (_window != null)
+            _window.PointerExited -= OnWindowPointerExited;
+        if (_scrollViewer != null)
+            _scrollViewer.ScrollChanged -= OnScrollChanged;
+        _window = null;
+        _monster = null;
+        _scrollViewer = null;
+        _viewport = null;
+        _monsterContainer = null;
         base.OnDetachedFromVisualTree(e);
     }
 }

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Monstromatic.ViewModels"
              xmlns:utils="clr-namespace:Monstromatic.Utils"
-             mc:Ignorable="d" d:DesignWidth="75" d:DesignHeight="164"
+             mc:Ignorable="d" d:DesignWidth="75" d:DesignHeight="72"
              x:Class="Monstromatic.Views.SkillCounterView"
              x:DataType="viewModels:SkillCounterViewModel"
              Background="Transparent" Focusable="True" ClipToBounds="False"
@@ -27,10 +27,11 @@
         </Style>
     </UserControl.Styles>
 
-    <!-- Values keep their readable size even with six skills in a narrow window.
-         The row reserves vertical room for the enlarged controls. -->
-        <Grid Height="164">
+    <!-- Only the resting content takes layout space; the lens can float above
+         and below the compact row without moving the surrounding monsters. -->
+        <Grid Height="72" ClipToBounds="False">
             <Grid x:Name="Lens" Width="67" Height="82" RowDefinitions="22,38,22"
+                  Background="Transparent"
                   HorizontalAlignment="Center" VerticalAlignment="Center"
                   RenderTransform="scale(1)" RenderTransformOrigin="50%,50%">
                 <Grid.Transitions>

@@ -7,7 +7,7 @@
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="200"
              x:Class="Monstromatic.Views.MonsterView"
              x:DataType="viewModels:MonsterViewModel"
-             Background="Transparent"
+             Background="Transparent" ClipToBounds="False"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=MonsterViewModel}">
     
     <UserControl.Styles>
@@ -150,7 +150,7 @@
                               ItemsSource="{Binding SkillsVm}"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Center"
-                              ClipToBounds="True">
+                              ClipToBounds="False" ZIndex="1">
                 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
