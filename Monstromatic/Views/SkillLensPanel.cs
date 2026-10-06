@@ -210,7 +210,8 @@ public sealed class SkillLensPanel : UniformGrid
                 wave = _state.ActiveSkill != null ? 1 : Math.Max(0.86, wave);
 
             scales[index] = NeighborScale + (ExpandedScale - NeighborScale) * wave;
-            scales[index] = Math.Min(scales[index], (visibleArea.Height - 4) / (entry.Skill.LensHeight + 4));
+            var height = SkillCounterView.GetLensHeight(entry.Skill == _state.ActiveSkill);
+            scales[index] = Math.Min(scales[index], (visibleArea.Height - 4) / (height + 4));
             totalWidth += (entry.Skill.LensWidth + 4) * scales[index];
         }
 
@@ -226,9 +227,13 @@ public sealed class SkillLensPanel : UniformGrid
             var scale = scales[index] * fit;
             var width = (entry.Skill.LensWidth + 4) * scale;
             var offset = left + width / 2 - entry.Slot!.Value.Center.X;
-            var halfHeight = (entry.Skill.LensHeight + 4) * scale / 2;
-            var centerY = entry.Slot.Value.Center.Y;
-            var offsetY = Math.Clamp(centerY, visibleArea.Top + halfHeight, visibleArea.Bottom - halfHeight) - centerY;
+            // Height grows below the fixed title/value anchor, so revealing
+            // actions never lifts the text just to make room for the new strip.
+            var height = SkillCounterView.GetLensHeight(entry.Skill == _state.ActiveSkill);
+            var topExtent = entry.Skill.TopExtent * scale;
+            var bottomExtent = (height + 4 - entry.Skill.TopExtent) * scale;
+            var anchorY = entry.Slot.Value.Top + entry.Skill.LensAnchorY;
+            var offsetY = Math.Clamp(anchorY, visibleArea.Top + topExtent, visibleArea.Bottom - bottomExtent) - anchorY;
             entry.Skill.SetLens(scale, offset, offsetY, entry.Skill == _state.ActiveSkill);
             SetContainerZIndex(entry.Skill, entry.Skill == focus ? 1 : 0);
             left += width + gap;

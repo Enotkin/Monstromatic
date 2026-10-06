@@ -30,17 +30,18 @@
     <!-- Only the resting content takes layout space; the lens can float above
          and below the compact row without moving the surrounding monsters. -->
         <Grid Height="72" ClipToBounds="False">
-            <Grid x:Name="Lens" Width="67" Height="82" RowDefinitions="22,38,22"
+            <Grid x:Name="Lens" Width="67" Height="60" Margin="0,8,0,0"
                   Background="Transparent"
-                  HorizontalAlignment="Center" VerticalAlignment="Center"
-                  RenderTransform="scale(1)" RenderTransformOrigin="50%,50%">
+                  HorizontalAlignment="Center" VerticalAlignment="Top"
+                  RenderTransform="scale(1)" RenderTransformOrigin="33.5,30">
                 <Grid.Transitions>
                     <Transitions>
                         <TransformOperationsTransition Property="RenderTransform"
                                                        Duration="0:0:0.18" Easing="CubicEaseOut" />
+                        <DoubleTransition Property="Height" Duration="0:0:0.18" Easing="CubicEaseOut" />
                     </Transitions>
                 </Grid.Transitions>
-                <Border x:Name="LensGlow" Grid.RowSpan="3" Margin="-2"
+                <Border x:Name="LensGlow" Margin="-2"
                         Background="#EE30283E" BorderBrush="#A8896AB8" BorderThickness="1"
                         CornerRadius="9" Opacity="0" IsHitTestVisible="False">
                     <Border.Transitions>
@@ -49,6 +50,11 @@
                         </Transitions>
                     </Border.Transitions>
                 </Border>
+                <!-- The surface grows down around fixed title/value content.
+                     Clipping reveals the actions without reserving their height at rest. -->
+                <Border Height="{Binding Height, ElementName=Lens}"
+                        VerticalAlignment="Top" ClipToBounds="True">
+                <Grid Height="82" RowDefinitions="22,38,22" VerticalAlignment="Top">
                 <Border ToolTip.Tip="{Binding CommentsToolTipText}">
                     <Viewbox Stretch="Uniform" StretchDirection="DownOnly" Margin="3,0">
                         <TextBlock Text="{Binding SkillName}" Foreground="White"
@@ -66,13 +72,12 @@
                                FontSize="12" VerticalAlignment="Bottom" Margin="2,0,0,5" />
                 </StackPanel>
                 </Viewbox>
-                <!-- Reserve the strip so revealing actions cannot shift the value. -->
                 <Grid x:Name="SkillActions" Grid.Row="2" ColumnDefinitions="*,*,*"
                       ColumnSpacing="3" Margin="2,1,2,1" Opacity="0"
                       IsHitTestVisible="False" IsEnabled="False">
                     <Grid.Transitions>
                         <Transitions>
-                            <DoubleTransition Property="Opacity" Duration="0:0:0.12" Easing="CubicEaseOut" />
+                            <DoubleTransition Property="Opacity" Duration="0:0:0.08" Easing="CubicEaseOut" />
                         </Transitions>
                     </Grid.Transitions>
                     <Button Grid.Column="0" Classes="skillAction" Content="−"
@@ -85,6 +90,8 @@
                             Command="{Binding Reset}" ToolTip.Tip="Сбросить изменение навыка"
                             AutomationProperties.Name="Сбросить изменение навыка" />
                 </Grid>
+                </Grid>
+                </Border>
             </Grid>
         </Grid>
 </UserControl>

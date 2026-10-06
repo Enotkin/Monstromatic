@@ -13,6 +13,8 @@ namespace Monstromatic.Views;
 
 public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewModel>
 {
+    private const double BodyHeight = 60;
+    private const double ExpandedHeight = 82;
     private SkillLensPanel? _lensPanel;
     private readonly Grid _lens;
     private readonly Grid _actions;
@@ -31,12 +33,15 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
     }
 
     internal double LensWidth => _lens.Width;
-    internal double LensHeight => _lens.Height;
+    internal double LensAnchorY => _lens.Margin.Top + BodyHeight / 2;
+    internal double TopExtent => BodyHeight / 2 + 2;
+    internal static double GetLensHeight(bool showActions) => showActions ? ExpandedHeight : BodyHeight;
 
     internal Rect? GetLensBounds(Visual relativeTo) => GetBounds(_lens, relativeTo);
 
     internal bool HitActions(Point position, Visual relativeTo) =>
-        _showActions && GetBounds(_actions, relativeTo) is { } bounds && bounds.Contains(position);
+        _showActions && GetBounds(_actions, relativeTo) is { } bounds &&
+        GetLensBounds(relativeTo) is { } lens && bounds.Intersect(lens).Contains(position);
 
     private static Rect? GetBounds(Control control, Visual relativeTo)
     {
@@ -64,6 +69,7 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
         if (_showActions != showActions)
         {
             _showActions = showActions;
+            _lens.Height = GetLensHeight(showActions);
             _actions.Opacity = showActions ? 1 : 0;
             _actions.IsHitTestVisible = showActions;
             _actions.IsEnabled = showActions;
@@ -97,6 +103,7 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
         if (change.Property == BoundsProperty && _lens != null)
         {
             _lens.Width = Math.Clamp(Bounds.Width - 8, 16, 112);
+            _lens.RenderTransformOrigin = new RelativePoint(_lens.Width / 2, BodyHeight / 2, RelativeUnit.Absolute);
             _lensPanel?.RefreshLayout();
         }
     }

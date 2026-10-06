@@ -206,8 +206,8 @@ static void SkillLensMovementPreservesDwell()
     var lens = new SkillLensState<object>();
     var skill = new object();
     lens.MoveTo(skill, TimeSpan.Zero);
-    lens.MoveTo(skill, TimeSpan.FromMilliseconds(100));
-    lens.MoveTo(skill, TimeSpan.FromMilliseconds(300));
+    lens.MoveTo(skill, SkillLensState<object>.ActivationDelay / 2);
+    lens.MoveTo(skill, SkillLensState<object>.ActivationDelay - TimeSpan.FromMilliseconds(1));
 
     AssertEqual(true, lens.TryActivate(SkillLensState<object>.ActivationDelay));
     AssertEqual(skill, lens.ActiveSkill);
@@ -263,7 +263,7 @@ static void SkillLensReentryRestartsDwell()
     var lens = new SkillLensState<object>();
     var skill = new object();
     lens.MoveTo(skill, TimeSpan.Zero);
-    lens.MoveTo(null, TimeSpan.FromMilliseconds(300));
+    lens.MoveTo(null, SkillLensState<object>.ActivationDelay - TimeSpan.FromMilliseconds(1));
     AssertEqual(false, lens.TryActivate(TimeSpan.FromSeconds(1)));
 
     var reenteredAt = TimeSpan.FromSeconds(2);
