@@ -3,6 +3,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using Monstromatic.Models;
+using Monstromatic.Views;
 
 var tests = new (string Name, Action Run)[]
 {
@@ -16,7 +17,14 @@ var tests = new (string Name, Action Run)[]
     ("skill stores feature comments", SkillStoresFeatureComments),
     ("legacy feature modifiers are converted to tags", LegacyFeatureModifiersFallback),
     ("odd monster level is validation error", OddMonsterLevelFails),
-    ("fractional modifier delta is validation error", FractionalDeltaFails)
+    ("fractional modifier delta is validation error", FractionalDeltaFails),
+    ("quick skill sweep never reveals controls", SkillLensQuickSweep),
+    ("skill controls appear only after full dwell", SkillLensRequiresFullDwell),
+    ("movement within a skill preserves dwell", SkillLensMovementPreservesDwell),
+    ("switching skills requires a new full dwell", SkillLensSwitchStartsNewDwell),
+    ("leaving and reentering active skill preserves selection", SkillLensActiveSelectionPersists),
+    ("leaving cancels dwell before reentry", SkillLensReentryRestartsDwell),
+    ("reset clears active selection and pending dwell", SkillLensResetClearsState)
 };
 
 foreach (var test in tests)
@@ -159,6 +167,133 @@ static void FractionalDeltaFails()
     var skill = new Skill("Attack", 4, 1.2);
 
     AssertThrows<ValidationException>(() => _ = skill.Value);
+}
+
+static void SkillLensQuickSweep()
+{
+    var lens = new SkillLensState<object>();
+    var skills = new[] { new object(), new object(), new object() };
+
+    for (var index = 0; index < skills.Length; index++)
+    {
+        lens.MoveTo(skills[index], TimeSpan.FromMilliseconds(index * 100));
+        AssertEqual(false, lens.TryActivate(TimeSpan.FromMilliseconds(index * 100 + 99)));
+        AssertEqual<object?>(null, lens.ActiveSkill);
+    }
+
+    lens.MoveTo(null, TimeSpan.FromMilliseconds(300));
+    AssertEqual(false, lens.TryActivate(TimeSpan.FromSeconds(2)));
+    AssertEqual<object?>(null, lens.HoveredSkill);
+    AssertEqual<object?>(null, lens.ActiveSkill);
+}
+
+static void SkillLensRequiresFullDwell()
+{
+    var lens = new SkillLensState<object>();
+    var skill = new object();
+    var enteredAt = TimeSpan.FromSeconds(1);
+    lens.MoveTo(skill, enteredAt);
+
+    AssertEqual(false, lens.TryActivate(enteredAt + SkillLensState<object>.ActivationDelay - TimeSpan.FromMilliseconds(1)));
+    AssertEqual<object?>(null, lens.ActiveSkill);
+    AssertEqual(true, lens.TryActivate(enteredAt + SkillLensState<object>.ActivationDelay));
+    AssertEqual(skill, lens.ActiveSkill);
+    AssertEqual(false, lens.TryActivate(enteredAt + TimeSpan.FromSeconds(1)));
+}
+
+static void SkillLensMovementPreservesDwell()
+{
+    var lens = new SkillLensState<object>();
+    var skill = new object();
+    lens.MoveTo(skill, TimeSpan.Zero);
+    lens.MoveTo(skill, TimeSpan.FromMilliseconds(100));
+    lens.MoveTo(skill, TimeSpan.FromMilliseconds(300));
+
+    AssertEqual(true, lens.TryActivate(SkillLensState<object>.ActivationDelay));
+    AssertEqual(skill, lens.ActiveSkill);
+}
+
+static void SkillLensSwitchStartsNewDwell()
+{
+    var lens = new SkillLensState<object>();
+    var first = new object();
+    var second = new object();
+    lens.MoveTo(first, TimeSpan.Zero);
+    var interruptedAt = SkillLensState<object>.ActivationDelay - TimeSpan.FromMilliseconds(1);
+    lens.MoveTo(second, interruptedAt);
+    AssertEqual(false, lens.TryActivate(SkillLensState<object>.ActivationDelay));
+    AssertEqual(false, lens.TryActivate(interruptedAt + SkillLensState<object>.ActivationDelay - TimeSpan.FromMilliseconds(1)));
+    AssertEqual(true, lens.TryActivate(interruptedAt + SkillLensState<object>.ActivationDelay));
+    AssertEqual(second, lens.ActiveSkill);
+
+    var switchedAt = TimeSpan.FromSeconds(1);
+    lens.MoveTo(first, switchedAt);
+    AssertEqual(first, lens.HoveredSkill);
+    AssertEqual<object?>(null, lens.ActiveSkill);
+    AssertEqual(false, lens.TryActivate(switchedAt + SkillLensState<object>.ActivationDelay - TimeSpan.FromMilliseconds(1)));
+    AssertEqual(true, lens.TryActivate(switchedAt + SkillLensState<object>.ActivationDelay));
+    AssertEqual(first, lens.ActiveSkill);
+}
+
+static void SkillLensActiveSelectionPersists()
+{
+    var lens = new SkillLensState<object>();
+    var skill = new object();
+    lens.MoveTo(skill, TimeSpan.Zero);
+    AssertEqual(true, lens.TryActivate(SkillLensState<object>.ActivationDelay));
+
+    lens.MoveTo(null, TimeSpan.FromSeconds(1));
+    AssertEqual<object?>(null, lens.HoveredSkill);
+    AssertEqual(skill, lens.ActiveSkill);
+    AssertEqual(false, lens.TryActivate(TimeSpan.FromSeconds(2)));
+
+    lens.MoveTo(skill, TimeSpan.FromSeconds(3));
+    AssertEqual(skill, lens.ActiveSkill);
+    AssertEqual(false, lens.TryActivate(TimeSpan.FromSeconds(4)));
+
+    lens.MoveTo(null, TimeSpan.FromSeconds(5));
+    var anotherSkill = new object();
+    lens.MoveTo(anotherSkill, TimeSpan.FromSeconds(6));
+    AssertEqual<object?>(null, lens.ActiveSkill);
+    AssertEqual(anotherSkill, lens.HoveredSkill);
+}
+
+static void SkillLensReentryRestartsDwell()
+{
+    var lens = new SkillLensState<object>();
+    var skill = new object();
+    lens.MoveTo(skill, TimeSpan.Zero);
+    lens.MoveTo(null, TimeSpan.FromMilliseconds(300));
+    AssertEqual(false, lens.TryActivate(TimeSpan.FromSeconds(1)));
+
+    var reenteredAt = TimeSpan.FromSeconds(2);
+    lens.MoveTo(skill, reenteredAt);
+    AssertEqual(false, lens.TryActivate(reenteredAt + SkillLensState<object>.ActivationDelay - TimeSpan.FromMilliseconds(1)));
+    AssertEqual(true, lens.TryActivate(reenteredAt + SkillLensState<object>.ActivationDelay));
+    AssertEqual(skill, lens.ActiveSkill);
+}
+
+static void SkillLensResetClearsState()
+{
+    var lens = new SkillLensState<object>();
+    var skill = new object();
+    lens.MoveTo(skill, TimeSpan.Zero);
+    AssertEqual(true, lens.TryActivate(SkillLensState<object>.ActivationDelay));
+
+    lens.Reset();
+    AssertEqual<object?>(null, lens.HoveredSkill);
+    AssertEqual<object?>(null, lens.ActiveSkill);
+    AssertEqual(false, lens.TryActivate(TimeSpan.FromSeconds(1)));
+
+    lens.MoveTo(skill, TimeSpan.FromSeconds(2));
+    lens.Reset();
+    AssertEqual(false, lens.TryActivate(TimeSpan.FromSeconds(3)));
+    AssertEqual<object?>(null, lens.HoveredSkill);
+    AssertEqual<object?>(null, lens.ActiveSkill);
+
+    lens.MoveTo(skill, TimeSpan.FromSeconds(4));
+    AssertEqual(true, lens.TryActivate(TimeSpan.FromSeconds(4) + SkillLensState<object>.ActivationDelay));
+    AssertEqual(skill, lens.ActiveSkill);
 }
 
 static Skill CreateCombinedSkill(int level)

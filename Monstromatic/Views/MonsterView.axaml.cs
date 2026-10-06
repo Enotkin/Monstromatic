@@ -1,5 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using System.Linq;
+using Avalonia.VisualTree;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -22,6 +24,8 @@ namespace Monstromatic.Views
         {
             _isExpanded = !_isExpanded;
             var grid = this.GetControl<ItemsControl>("ExpanderGrid");
+            if (!_isExpanded)
+                grid.GetVisualDescendants().OfType<SkillLensPanel>().FirstOrDefault()?.ResetSelection();
             grid.Height = _isExpanded ? double.NaN : 0;
             
             AnimateButton(sender as Visual, _isExpanded);

@@ -1,102 +1,85 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Monstromatic.ViewModels"
              xmlns:utils="clr-namespace:Monstromatic.Utils"
-             mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="100"
+             mc:Ignorable="d" d:DesignWidth="140" d:DesignHeight="122"
              x:Class="Monstromatic.Views.SkillCounterView"
              x:DataType="viewModels:SkillCounterViewModel"
+             Background="Transparent" Focusable="True"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=SkillCounterViewModel}">
-    
     <UserControl.Resources>
         <utils:ModificatorTextConverter x:Key="ModificatorTextConverter" />
         <utils:ModificatorColorConverter x:Key="ModificatorColorConverter" />
     </UserControl.Resources>
-    
-    <!--
-        Every skill is designed at one reference size and then scaled as a whole.
-        The parent UniformGrid gives each skill 1/N of the available row width,
-        so three skills are larger than four, four are larger than five, and so on.
-    -->
-    <Viewbox Stretch="Uniform"
-             HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch"
-             Margin="0, 10">
-        <Grid Width="140"
-              Height="78"
-              RowDefinitions="26,*">
-            <Border Background="Transparent"
-                    ToolTip.Tip="{Binding CommentsToolTipText}">
-                <TextBlock Text="{Binding SkillName}"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="18"
-                           FontWeight="SemiBold"
-                           MaxLines="2"
-                           TextAlignment="Center"
-                           TextWrapping="Wrap" />
-            </Border>
+    <UserControl.Styles>
+        <Style Selector="Button.skillAction">
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Background" Value="#403C344F" />
+            <Setter Property="BorderBrush" Value="#605D5174" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+    </UserControl.Styles>
 
-            <Grid Grid.Row="1"
-                  ColumnDefinitions="*,28">
-                <StackPanel Grid.Column="0"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                    <TextBlock x:Name="CurrentSkillValue"
-                               Text="{Binding SkillValue}"
+    <!-- Fixed slots have enough inset for the fully magnified lens at either edge. -->
+    <Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid Width="140" Height="122">
+            <Grid x:Name="Lens" Width="112" Height="96" RowDefinitions="32,40,24"
+                  RenderTransform="scale(1)" RenderTransformOrigin="50%,50%">
+                <Grid.Transitions>
+                    <Transitions>
+                        <TransformOperationsTransition Property="RenderTransform"
+                                                       Duration="0:0:0.18" Easing="CubicEaseOut" />
+                    </Transitions>
+                </Grid.Transitions>
+                <Border x:Name="LensGlow" Grid.RowSpan="3" Margin="-2"
+                        Background="#283E3159" BorderBrush="#665F4B82" BorderThickness="1"
+                        CornerRadius="9" Opacity="0" IsHitTestVisible="False">
+                    <Border.Transitions>
+                        <Transitions>
+                            <DoubleTransition Property="Opacity" Duration="0:0:0.18" />
+                        </Transitions>
+                    </Border.Transitions>
+                </Border>
+                <Border ToolTip.Tip="{Binding CommentsToolTipText}">
+                    <Viewbox Stretch="Uniform" StretchDirection="DownOnly" Margin="3,0">
+                        <TextBlock Text="{Binding SkillName}" Foreground="White"
+                                   FontSize="16" FontWeight="SemiBold" TextAlignment="Center" />
+                    </Viewbox>
+                </Border>
+                <StackPanel Grid.Row="1" Orientation="Horizontal"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock x:Name="CurrentSkillValue" Text="{Binding SkillValue}"
                                Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
-                               FontSize="44"
-                               VerticalAlignment="Center" />
-
+                               FontSize="36" VerticalAlignment="Center" />
                     <TextBlock Text="{Binding Modificator, Converter={StaticResource ModificatorTextConverter}, Mode=OneWay}"
                                Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
-                               FontSize="18"
-                               VerticalAlignment="Bottom"
-                               Margin="2,0,0,7" />
+                               FontSize="15" VerticalAlignment="Bottom" Margin="2,0,0,5" />
                 </StackPanel>
-
-                <!-- The reset button overlays the value without participating in its layout. -->
-                <Button Grid.Column="0"
-                        Width="38"
-                        Height="26"
-                        MinWidth="0"
-                        MinHeight="0"
-                        Padding="0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Background="Transparent"
-                        BorderBrush="Transparent"
-                        Content="R"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Command="{Binding Reset}"
-                        ToolTip.Tip="Сбросить изменение навыка" />
-
-                <Grid Grid.Column="1"
-                      Height="48"
-                      RowDefinitions="*,*"
-                      VerticalAlignment="Center">
-                    <Button Grid.Row="0"
-                            MinWidth="0"
-                            MinHeight="0"
-                            Padding="0"
-                            Margin="0,0,0,1"
-                            Content="+"
-                            FontSize="18"
-                            FontWeight="Bold"
-                            Command="{Binding Increase}" />
-                    <Button Grid.Row="1"
-                            MinWidth="0"
-                            MinHeight="0"
-                            Padding="0"
-                            Margin="0,1,0,0"
-                            Content="-"
-                            FontSize="18"
-                            FontWeight="Bold"
-                            Command="{Binding Decrease}" />
+                <!-- Reserve the strip so revealing actions cannot shift the value. -->
+                <Grid x:Name="SkillActions" Grid.Row="2" ColumnDefinitions="*,*,*"
+                      ColumnSpacing="4" Margin="8,1,8,1" Opacity="0"
+                      IsHitTestVisible="False" IsEnabled="False">
+                    <Grid.Transitions>
+                        <Transitions>
+                            <DoubleTransition Property="Opacity" Duration="0:0:0.12" Easing="CubicEaseOut" />
+                        </Transitions>
+                    </Grid.Transitions>
+                    <Button Grid.Column="0" Classes="skillAction" Content="−"
+                            Command="{Binding Decrease}" ToolTip.Tip="Уменьшить навык"
+                            AutomationProperties.Name="Уменьшить навык" />
+                    <Button Grid.Column="1" Classes="skillAction" Content="+"
+                            Command="{Binding Increase}" ToolTip.Tip="Увеличить навык"
+                            AutomationProperties.Name="Увеличить навык" />
+                    <Button Grid.Column="2" Classes="skillAction" Content="R"
+                            Command="{Binding Reset}" ToolTip.Tip="Сбросить изменение навыка"
+                            AutomationProperties.Name="Сбросить изменение навыка" />
                 </Grid>
             </Grid>
         </Grid>
