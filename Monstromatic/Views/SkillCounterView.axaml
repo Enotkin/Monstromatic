@@ -38,7 +38,7 @@
                     <Transitions>
                         <TransformOperationsTransition Property="RenderTransform"
                                                        Duration="0:0:0.18" Easing="CubicEaseOut" />
-                        <DoubleTransition Property="Height" Duration="0:0:0.18" Easing="CubicEaseOut" />
+                        <DoubleTransition Property="Height" Duration="0:0:0.32" Easing="CubicEaseInOut" />
                     </Transitions>
                 </Grid.Transitions>
                 <Border x:Name="LensGlow" Margin="-2"
@@ -77,7 +77,8 @@
                       IsHitTestVisible="False" IsEnabled="False">
                     <Grid.Transitions>
                         <Transitions>
-                            <DoubleTransition Property="Opacity" Duration="0:0:0.08" Easing="CubicEaseOut" />
+                            <DoubleTransition Property="Opacity" Duration="0:0:0.28"
+                                              Delay="0:0:0.04" Easing="CubicEaseInOut" />
                         </Transitions>
                     </Grid.Transitions>
                     <Button Grid.Column="0" Classes="skillAction" Content="−"

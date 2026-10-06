@@ -24,7 +24,7 @@ public sealed class SkillLensPanel : UniformGrid
     private readonly SkillLensState<SkillCounterView> _state = new();
     private readonly Stopwatch _clock = Stopwatch.StartNew();
     private readonly DispatcherTimer _dwellTimer;
-    private Point? _pointerPosition;
+    private double? _waveFocusX;
     private TopLevel? _window;
     private MonsterView? _monster;
     private ScrollViewer? _scrollViewer;
@@ -67,7 +67,7 @@ public sealed class SkillLensPanel : UniformGrid
     {
         _dwellTimer.Stop();
         _state.Reset();
-        _pointerPosition = null;
+        _waveFocusX = null;
         UpdateLenses();
     }
 
@@ -75,7 +75,7 @@ public sealed class SkillLensPanel : UniformGrid
     {
         ResetOtherRows();
         _dwellTimer.Stop();
-        _pointerPosition = null;
+        _waveFocusX = null;
         _state.MoveTo(null, _clock.Elapsed);
         _state.MoveTo(skill, _clock.Elapsed - SkillLensState<SkillCounterView>.ActivationDelay);
         _state.TryActivate(_clock.Elapsed);
@@ -130,7 +130,10 @@ public sealed class SkillLensPanel : UniformGrid
             if (skill != null && _state.ActiveSkill != skill)
                 _dwellTimer.Start();
         }
-        _pointerPosition = position;
+        // Keep the last hover geometry while controls are open. Revealing them
+        // must not recenter the wave or change the title/value scale.
+        if (_state.ActiveSkill == null)
+            _waveFocusX = position?.X;
         UpdateLenses();
     }
 
@@ -186,9 +189,7 @@ public sealed class SkillLensPanel : UniformGrid
             return;
         }
 
-        var focusX = _state.ActiveSkill != null
-            ? GetSlot(focus)?.Center.X
-            : _pointerPosition?.X ?? GetSlot(focus)?.Center.X;
+        var focusX = _waveFocusX ?? GetSlot(focus)?.Center.X;
         if (focusX == null || entries.Length == 0)
             return;
 
@@ -207,10 +208,12 @@ public sealed class SkillLensPanel : UniformGrid
                 ? Math.Pow(0.5 * (1 + Math.Cos(Math.PI * distance / InfluenceRadius)), 2)
                 : 0;
             if (entry.Skill == focus)
-                wave = _state.ActiveSkill != null ? 1 : Math.Max(0.86, wave);
+                wave = Math.Max(0.86, wave);
 
             scales[index] = NeighborScale + (ExpandedScale - NeighborScale) * wave;
-            var height = SkillCounterView.GetLensHeight(entry.Skill == _state.ActiveSkill);
+            // Fit the eventual surface from the first hover, including at the
+            // viewport edge. The dwell then grows only its bottom boundary.
+            var height = SkillCounterView.GetLensHeight(entry.Skill == focus);
             scales[index] = Math.Min(scales[index], (visibleArea.Height - 4) / (height + 4));
             totalWidth += (entry.Skill.LensWidth + 4) * scales[index];
         }
@@ -229,7 +232,7 @@ public sealed class SkillLensPanel : UniformGrid
             var offset = left + width / 2 - entry.Slot!.Value.Center.X;
             // Height grows below the fixed title/value anchor, so revealing
             // actions never lifts the text just to make room for the new strip.
-            var height = SkillCounterView.GetLensHeight(entry.Skill == _state.ActiveSkill);
+            var height = SkillCounterView.GetLensHeight(entry.Skill == focus);
             var topExtent = entry.Skill.TopExtent * scale;
             var bottomExtent = (height + 4 - entry.Skill.TopExtent) * scale;
             var anchorY = entry.Slot.Value.Top + entry.Skill.LensAnchorY;

@@ -5,7 +5,7 @@ namespace Monstromatic.Views;
 // Leaving the row does not mean explicitly moving onto another skill.
 internal sealed class SkillLensState<T> where T : class
 {
-    public static readonly TimeSpan ActivationDelay = TimeSpan.FromMilliseconds(220);
+    public static readonly TimeSpan ActivationDelay = TimeSpan.FromMilliseconds(320);
     private TimeSpan _hoverStarted;
 
     public T? HoveredSkill { get; private set; }
