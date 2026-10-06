@@ -19,6 +19,14 @@ namespace Monstromatic.Views
         {
             AvaloniaXamlLoader.Load(this);
         }
+
+        protected override void OnPointerExited(PointerEventArgs e)
+        {
+            base.OnPointerExited(e);
+            // Moving into the header keeps the lens; leaving the monster closes it.
+            foreach (var panel in this.GetVisualDescendants().OfType<SkillLensPanel>())
+                panel.ResetSelection();
+        }
         
         private void ChangeExpandState(object sender, RoutedEventArgs routedEventArgs)
         {

@@ -7,6 +7,7 @@
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="200"
              x:Class="Monstromatic.Views.MonsterView"
              x:DataType="viewModels:MonsterViewModel"
+             Background="Transparent"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=MonsterViewModel}">
     
     <UserControl.Styles>

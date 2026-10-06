@@ -13,10 +13,11 @@ using Avalonia.VisualTree;
 
 namespace Monstromatic.Views;
 
-// Input belongs to fixed slots; only their inner content is magnified.
+// Layout slots stay fixed. The lenses themselves grow and make room for each other.
 public sealed class SkillLensPanel : UniformGrid
 {
-    private const double Magnification = 0.20;
+    private const double ExpandedScale = 1.85;
+    private const double NeighborScale = 0.80;
     private const double InfluenceRadius = 1.6;
     private readonly List<SkillCounterView> _skills = new();
     private readonly SkillLensState<SkillCounterView> _state = new();
@@ -41,6 +42,8 @@ public sealed class SkillLensPanel : UniformGrid
         if (!_skills.Contains(skill))
             _skills.Add(skill);
     }
+
+    internal void RefreshLayout() => UpdateLenses();
 
     internal void Unregister(SkillCounterView skill)
     {
@@ -72,12 +75,29 @@ public sealed class SkillLensPanel : UniformGrid
     {
         var position = e.GetPosition(this);
         SkillCounterView? hovered = null;
-        foreach (var skill in _skills)
+
+        // Expanded buttons can extend past the original input slot. Keep them
+        // usable all the way to their edges, including during the transition.
+        if (_state.ActiveSkill is { } active && active.HitActions(position, this))
+            hovered = active;
+
+        if (hovered == null)
         {
-            if (GetSlot(skill) is { } slot && slot.Contains(position))
+            hovered = _skills
+                .OrderByDescending(skill => skill == _state.ActiveSkill || skill == _state.HoveredSkill)
+                .FirstOrDefault(skill => skill.GetLensBounds(this) is { } lens && lens.Contains(position));
+        }
+
+        // Empty space around the lenses still belongs to the original slots.
+        if (hovered == null)
+        {
+            foreach (var skill in _skills)
             {
-                hovered = skill;
-                break;
+                if (GetSlot(skill) is { } slot && slot.Contains(position))
+                {
+                    hovered = skill;
+                    break;
+                }
             }
         }
         MoveTo(hovered, hovered == null ? null : position);
@@ -132,30 +152,89 @@ public sealed class SkillLensPanel : UniformGrid
 
     private void UpdateLenses()
     {
-        foreach (var skill in _skills)
+        var entries = _skills
+            .Select(skill => (Skill: skill, Slot: GetSlot(skill)))
+            .Where(entry => entry.Slot is { Width: > 0 })
+            .OrderBy(entry => entry.Slot!.Value.Left)
+            .ToArray();
+        var focus = _state.ActiveSkill ?? _state.HoveredSkill;
+        if (focus == null)
         {
-            var active = _state.ActiveSkill == skill;
-            var influence = active ? 1.0 : 0.0;
-            if (!active && _pointerPosition is { } pointer && GetSlot(skill) is { Width: > 0 } slot)
+            foreach (var skill in _skills)
             {
-                var distance = Math.Abs(pointer.X - slot.Center.X) / slot.Width;
-                if (distance < InfluenceRadius)
-                {
-                    var wave = 0.5 * (1 + Math.Cos(Math.PI * distance / InfluenceRadius));
-                    influence = wave * wave;
-                }
+                skill.SetLens(1, 0, false);
+                SetContainerZIndex(skill, 0);
             }
-            skill.SetLens(1 + Magnification * influence, active);
+            return;
         }
+
+        var focusX = _state.ActiveSkill != null
+            ? GetSlot(focus)?.Center.X
+            : _pointerPosition?.X ?? GetSlot(focus)?.Center.X;
+        if (focusX == null || entries.Length == 0)
+            return;
+
+        var scales = new double[entries.Length];
+        double totalWidth = 0;
+        for (var index = 0; index < entries.Length; index++)
+        {
+            var entry = entries[index];
+            var slot = entry.Slot!.Value;
+            var distance = Math.Abs(focusX.Value - slot.Center.X) / slot.Width;
+            var wave = distance < InfluenceRadius
+                ? Math.Pow(0.5 * (1 + Math.Cos(Math.PI * distance / InfluenceRadius)), 2)
+                : 0;
+            if (entry.Skill == focus)
+                wave = _state.ActiveSkill != null ? 1 : Math.Max(0.86, wave);
+
+            scales[index] = NeighborScale + (ExpandedScale - NeighborScale) * wave;
+            totalWidth += (entry.Skill.LensWidth + 4) * scales[index];
+        }
+
+        // Pack visible lenses inside the row: edge skills remain readable and
+        // their buttons are reachable even in the 450px encounter window.
+        var minimumGaps = 4 * (entries.Length - 1);
+        var fit = Math.Min(1, Math.Max(1, Bounds.Width - minimumGaps) / totalWidth);
+        var gap = entries.Length > 1 ? (Bounds.Width - totalWidth * fit) / (entries.Length - 1) : 0;
+        var left = entries.Length == 1 ? (Bounds.Width - totalWidth * fit) / 2 : 0;
+        for (var index = 0; index < entries.Length; index++)
+        {
+            var entry = entries[index];
+            var scale = scales[index] * fit;
+            var width = (entry.Skill.LensWidth + 4) * scale;
+            var offset = left + width / 2 - entry.Slot!.Value.Center.X;
+            entry.Skill.SetLens(scale, offset, entry.Skill == _state.ActiveSkill);
+            SetContainerZIndex(entry.Skill, entry.Skill == focus ? 1 : 0);
+            left += width + gap;
+        }
+    }
+
+    private void SetContainerZIndex(SkillCounterView skill, int zIndex)
+    {
+        Visual container = skill;
+        while (container.GetVisualParent() is { } parent && parent != this)
+            container = parent;
+        if (container.GetVisualParent() == this)
+            container.ZIndex = zIndex;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (_dwellTimer != null &&
-            ((change.Property == BoundsProperty && Bounds.Height <= 0) ||
-             (change.Property == IsVisibleProperty && !IsVisible)))
+        if (_dwellTimer == null)
+            return;
+
+        if (change.Property == BoundsProperty)
+        {
+            if (Bounds.Height <= 0)
+                ResetSelection();
+            else
+                UpdateLenses();
+        }
+        else if (change.Property == IsVisibleProperty && !IsVisible)
+        {
             ResetSelection();
+        }
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)

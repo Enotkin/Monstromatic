@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Monstromatic.ViewModels"
              xmlns:utils="clr-namespace:Monstromatic.Utils"
-             mc:Ignorable="d" d:DesignWidth="140" d:DesignHeight="122"
+             mc:Ignorable="d" d:DesignWidth="75" d:DesignHeight="164"
              x:Class="Monstromatic.Views.SkillCounterView"
              x:DataType="viewModels:SkillCounterViewModel"
-             Background="Transparent" Focusable="True"
+             Background="Transparent" Focusable="True" ClipToBounds="False"
              Design.DataContext="{Binding Source={StaticResource DesignVmLocator}, Path=SkillCounterViewModel}">
     <UserControl.Resources>
         <utils:ModificatorTextConverter x:Key="ModificatorTextConverter" />
@@ -18,7 +18,7 @@
             <Setter Property="MinWidth" Value="0" />
             <Setter Property="MinHeight" Value="0" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="CornerRadius" Value="5" />
             <Setter Property="Background" Value="#403C344F" />
@@ -27,10 +27,11 @@
         </Style>
     </UserControl.Styles>
 
-    <!-- Fixed slots have enough inset for the fully magnified lens at either edge. -->
-    <Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid Width="140" Height="122">
-            <Grid x:Name="Lens" Width="112" Height="96" RowDefinitions="32,40,24"
+    <!-- Values keep their readable size even with six skills in a narrow window.
+         The row reserves vertical room for the enlarged controls. -->
+        <Grid Height="164">
+            <Grid x:Name="Lens" Width="67" Height="82" RowDefinitions="22,38,22"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
                   RenderTransform="scale(1)" RenderTransformOrigin="50%,50%">
                 <Grid.Transitions>
                     <Transitions>
@@ -39,7 +40,7 @@
                     </Transitions>
                 </Grid.Transitions>
                 <Border x:Name="LensGlow" Grid.RowSpan="3" Margin="-2"
-                        Background="#283E3159" BorderBrush="#665F4B82" BorderThickness="1"
+                        Background="#EE30283E" BorderBrush="#A8896AB8" BorderThickness="1"
                         CornerRadius="9" Opacity="0" IsHitTestVisible="False">
                     <Border.Transitions>
                         <Transitions>
@@ -50,21 +51,23 @@
                 <Border ToolTip.Tip="{Binding CommentsToolTipText}">
                     <Viewbox Stretch="Uniform" StretchDirection="DownOnly" Margin="3,0">
                         <TextBlock Text="{Binding SkillName}" Foreground="White"
-                                   FontSize="16" FontWeight="SemiBold" TextAlignment="Center" />
+                                   FontSize="13" FontWeight="SemiBold" TextAlignment="Center" />
                     </Viewbox>
                 </Border>
-                <StackPanel Grid.Row="1" Orientation="Horizontal"
+                <Viewbox Grid.Row="1" Stretch="Uniform" StretchDirection="DownOnly">
+                <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock x:Name="CurrentSkillValue" Text="{Binding SkillValue}"
                                Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
-                               FontSize="36" VerticalAlignment="Center" />
+                               FontSize="32" LineHeight="38" VerticalAlignment="Center" />
                     <TextBlock Text="{Binding Modificator, Converter={StaticResource ModificatorTextConverter}, Mode=OneWay}"
                                Foreground="{Binding Modificator, Converter={StaticResource ModificatorColorConverter}}"
-                               FontSize="15" VerticalAlignment="Bottom" Margin="2,0,0,5" />
+                               FontSize="12" VerticalAlignment="Bottom" Margin="2,0,0,5" />
                 </StackPanel>
+                </Viewbox>
                 <!-- Reserve the strip so revealing actions cannot shift the value. -->
                 <Grid x:Name="SkillActions" Grid.Row="2" ColumnDefinitions="*,*,*"
-                      ColumnSpacing="4" Margin="8,1,8,1" Opacity="0"
+                      ColumnSpacing="3" Margin="2,1,2,1" Opacity="0"
                       IsHitTestVisible="False" IsEnabled="False">
                     <Grid.Transitions>
                         <Transitions>
@@ -83,5 +86,4 @@
                 </Grid>
             </Grid>
         </Grid>
-    </Viewbox>
 </UserControl>

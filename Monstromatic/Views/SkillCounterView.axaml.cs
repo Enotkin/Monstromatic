@@ -18,6 +18,7 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
     private readonly Grid _actions;
     private readonly Border _glow;
     private double _targetScale = 1;
+    private double _targetOffset;
     private bool _showActions;
 
     public SkillCounterView()
@@ -28,13 +29,29 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
         _glow = this.GetControl<Border>("LensGlow");
     }
 
-    internal void SetLens(double scale, bool showActions)
+    internal double LensWidth => _lens.Width;
+
+    internal Rect? GetLensBounds(Visual relativeTo) => GetBounds(_lens, relativeTo);
+
+    internal bool HitActions(Point position, Visual relativeTo) =>
+        _showActions && GetBounds(_actions, relativeTo) is { } bounds && bounds.Contains(position);
+
+    private static Rect? GetBounds(Control control, Visual relativeTo)
     {
-        if (Math.Abs(_targetScale - scale) > 0.0001)
+        var topLeft = control.TranslatePoint(default, relativeTo);
+        var bottomRight = control.TranslatePoint(new Point(control.Bounds.Width, control.Bounds.Height), relativeTo);
+        return topLeft is { } start && bottomRight is { } end ? new Rect(start, end) : null;
+    }
+
+    internal void SetLens(double scale, double offset, bool showActions)
+    {
+        if (Math.Abs(_targetScale - scale) > 0.0001 || Math.Abs(_targetOffset - offset) > 0.01)
         {
             _targetScale = scale;
-            var transform = new TransformOperations.Builder(1);
+            _targetOffset = offset;
+            var transform = new TransformOperations.Builder(2);
             transform.AppendScale(scale, scale);
+            transform.AppendTranslate(offset, 0);
             _lens.RenderTransform = transform.Build();
         }
         if (_showActions != showActions)
@@ -58,7 +75,7 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
     {
         _lensPanel?.Unregister(this);
         _lensPanel = null;
-        SetLens(1, false);
+        SetLens(1, 0, false);
         base.OnDetachedFromVisualTree(e);
     }
 
@@ -66,6 +83,16 @@ public partial class SkillCounterView : ReactiveUserControl<SkillCounterViewMode
     {
         base.OnDataContextChanged(e);
         _lensPanel?.ResetSelection();
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == BoundsProperty && _lens != null)
+        {
+            _lens.Width = Math.Clamp(Bounds.Width - 8, 16, 112);
+            _lensPanel?.RefreshLayout();
+        }
     }
 
     protected override void OnGotFocus(GotFocusEventArgs e)
